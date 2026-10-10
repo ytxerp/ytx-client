@@ -355,24 +355,24 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="101"/>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="112"/>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="122"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="104"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="115"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="125"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="101"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="104"/>
         <source>Asset, liability, and equity nodes must be different.</source>
         <translation>资产、负债和所有者权益节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="112"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="115"/>
         <source>Selected balance sheet node no longer exists.</source>
         <translation>所选的资产负债表节点已不存在。</translation>
     </message>
     <message>
-        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="122"/>
+        <location filename="../../dashboard/balance_sheet/balancesheetdialog.cc" line="125"/>
         <source>Asset, liability, and equity nodes must not have ancestor-descendant relationships.</source>
         <translation>资产、负债和所有者权益节点之间不得存在祖先-后代关系。</translation>
     </message>
@@ -561,24 +561,24 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="69"/>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="79"/>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="88"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="66"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="76"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="85"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="69"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="66"/>
         <source>Income and expense nodes must be different.</source>
         <translation>收入和支出节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="79"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="76"/>
         <source>Selected income statement node no longer exists.</source>
         <translation>所选利润表节点不再存在。</translation>
     </message>
     <message>
-        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="88"/>
+        <location filename="../../dashboard/income_statement/incomestatementdialog.cc" line="85"/>
         <source>Income and expense nodes must not have ancestor-descendant relationships.</source>
         <translation>收入和支出节点不能存在祖先-后代关系。</translation>
     </message>
@@ -1310,7 +1310,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="720"/>
-        <location filename="../../mainwindow/mainwindow_settlement_view.cc" line="15"/>
+        <location filename="../../mainwindow/mainwindow_settlement_view.cc" line="14"/>
         <source>Settlement View</source>
         <translation>结算图</translation>
     </message>
@@ -1348,8 +1348,8 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="541"/>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="18"/>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="82"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="20"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="95"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
@@ -1357,9 +1357,9 @@
         <location filename="../../mainwindow/mainwindow.ui" line="549"/>
         <location filename="../../mainwindow/mainwindow.ui" line="552"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="65"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="20"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="18"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="52"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="78"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -2040,28 +2040,28 @@
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="679"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="679"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="691"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="693"/>
         <source>A new version %1 is available.
 
 Would you like to download it now?</source>
@@ -2070,12 +2070,12 @@ Would you like to download it now?</source>
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="704"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="704"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -2327,7 +2327,7 @@ Would you like to download it now?</source>
         <translation>替换</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="108"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="162"/>
         <source>Statement Detail</source>
         <translation>帐单明细</translation>
     </message>
@@ -2463,34 +2463,34 @@ Do you want to save them before closing?</source>
         <translation>提交</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="104"/>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="125"/>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="130"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="107"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="128"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="133"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="104"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="107"/>
         <source>Please select both the closing node and the summary node.</source>
         <translation>请选择结转节点和汇总节点后再继续。</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="125"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="128"/>
         <source>Closing and summary nodes must be different.</source>
         <translation>结转和汇总节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="130"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="133"/>
         <source>Closing and summary nodes must not have ancestor-descendant relationships.</source>
         <translation>结转和汇总节点之间不得存在祖先-后代关系。</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="175"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="178"/>
         <source>Information</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../finance/period_close/periodclosedialog.cc" line="175"/>
+        <location filename="../../finance/period_close/periodclosedialog.cc" line="178"/>
         <source>The preview is empty. Nothing to submit.</source>
         <translation>预览结果为空，没有可提交的结转内容。</translation>
     </message>
@@ -2631,14 +2631,12 @@ Do you want to save them before closing?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../global/exportexcel.cc" line="70"/>
         <source>Code</source>
-        <translation>编号</translation>
+        <translation type="vanished">编号</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="71"/>
         <source>Description</source>
-        <translation>描述</translation>
+        <translation type="vanished">描述</translation>
     </message>
     <message>
         <location filename="../../delegate/color.cc" line="37"/>
@@ -2646,74 +2644,72 @@ Do you want to save them before closing?</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="71"/>
         <source>UnitPrice</source>
-        <translation>单价</translation>
+        <translation type="vanished">单价</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="70"/>
         <source>InternalSku</source>
-        <translation>内部货号</translation>
+        <translation type="vanished">内部货号</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="28"/>
+        <location filename="../../global/exporthub.cc" line="26"/>
+        <location filename="../../global/exporthub.cc" line="49"/>
         <source>The export completed successfully.</source>
         <translation>导出成功。</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="31"/>
+        <location filename="../../global/exporthub.cc" line="29"/>
+        <location filename="../../global/exporthub.cc" line="52"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="31"/>
+        <location filename="../../global/exporthub.cc" line="29"/>
+        <location filename="../../global/exporthub.cc" line="52"/>
         <source>The export failed. The incomplete file has been removed.</source>
         <translation>导出失败，已删除不完整的文件。</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="70"/>
         <source>ExternalSku</source>
-        <translation>外部货号</translation>
+        <translation type="vanished">外部货号</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="70"/>
         <source>Count</source>
-        <translation>计数</translation>
+        <translation type="vanished">计数</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="71"/>
         <source>Measure</source>
-        <translation>度量</translation>
+        <translation type="vanished">度量</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="71"/>
         <source>Amount</source>
-        <translation>金额</translation>
+        <translation type="vanished">金额</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="102"/>
         <source>Total</source>
-        <translation>合计</translation>
+        <translation type="vanished">合计</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="28"/>
+        <location filename="../../global/exporthub.cc" line="26"/>
+        <location filename="../../global/exporthub.cc" line="49"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="48"/>
+        <location filename="../../global/exporthub.cc" line="68"/>
+        <location filename="../../global/exporthub.cc" line="105"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="63"/>
+        <location filename="../../global/exporthub.cc" line="83"/>
+        <location filename="../../global/exporthub.cc" line="120"/>
         <source>Period</source>
         <translation>周期</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="70"/>
         <source>Date</source>
-        <translation>日期</translation>
+        <translation type="vanished">日期</translation>
     </message>
     <message>
         <location filename="../../utils/mainwindowutils.cc" line="171"/>
@@ -3208,27 +3204,27 @@ Do you want to save them before closing?</source>
 <context>
     <name>SettlementPrimaryWidget</name>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="98"/>
+        <location filename="../../order/settlement/settlementprimarywidget.ui" line="98"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="105"/>
+        <location filename="../../order/settlement/settlementprimarywidget.ui" line="105"/>
         <source>Insert</source>
         <translation>新建</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="119"/>
+        <location filename="../../order/settlement/settlementprimarywidget.ui" line="119"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.cc" line="113"/>
+        <location filename="../../order/settlement/settlementprimarywidget.cc" line="116"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.cc" line="114"/>
+        <location filename="../../order/settlement/settlementprimarywidget.cc" line="117"/>
         <source>The released settlement cannot be deleted.
 Please recall it first and try again.</source>
         <translation>已发布的结算单无法删除。
@@ -3238,32 +3234,32 @@ Please recall it first and try again.</source>
 <context>
     <name>SettlementSecondaryWidget</name>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.ui" line="80"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.ui" line="80"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.ui" line="99"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.ui" line="99"/>
         <source>yyyy/MM/dd HH:mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.ui" line="115"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.ui" line="115"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.ui" line="125"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.ui" line="125"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.cc" line="96"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.cc" line="96"/>
         <source>Data Outdated</source>
         <translation>数据已过期</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement/settlementsecondarywidget.cc" line="96"/>
+        <location filename="../../order/settlement/settlementsecondarywidget.cc" line="96"/>
         <source>The data has changed. Please refresh and try again.</source>
         <translation>数据已发生变化，请刷新后重试。</translation>
     </message>
@@ -3271,12 +3267,12 @@ Please recall it first and try again.</source>
 <context>
     <name>SettlementViewWidget</name>
     <message>
-        <location filename="../../finance/settlement_view/settlementviewwidget.ui" line="14"/>
+        <location filename="../../order/settlement_view/settlementviewwidget.ui" line="14"/>
         <source>Settlement View</source>
         <translation>结算图</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlementviewwidget.ui" line="86"/>
+        <location filename="../../order/settlement_view/settlementviewwidget.ui" line="86"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -3284,22 +3280,27 @@ Please recall it first and try again.</source>
 <context>
     <name>StatementPrimaryWidget</name>
     <message>
-        <location filename="../../finance/statement/statementprimarywidget.ui" line="95"/>
+        <location filename="../../order/statement/statementprimarywidget.ui" line="88"/>
+        <source>Clear</source>
+        <translation>清空</translation>
+    </message>
+    <message>
+        <location filename="../../order/statement/statementprimarywidget.ui" line="108"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementprimarywidget.ui" line="102"/>
+        <location filename="../../order/statement/statementprimarywidget.ui" line="115"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementprimarywidget.ui" line="109"/>
+        <location filename="../../order/statement/statementprimarywidget.ui" line="122"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementprimarywidget.ui" line="116"/>
+        <location filename="../../order/statement/statementprimarywidget.ui" line="129"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -3307,55 +3308,65 @@ Please recall it first and try again.</source>
 <context>
     <name>StatementSecondaryWidget</name>
     <message>
-        <location filename="../../finance/statement/statementsecondarywidget.ui" line="95"/>
+        <location filename="../../order/statement/statementsecondarywidget.ui" line="95"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementsecondarywidget.ui" line="102"/>
+        <location filename="../../order/statement/statementsecondarywidget.ui" line="102"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementsecondarywidget.ui" line="109"/>
+        <location filename="../../order/statement/statementsecondarywidget.ui" line="109"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementsecondarywidget.ui" line="116"/>
+        <location filename="../../order/statement/statementsecondarywidget.ui" line="116"/>
+        <source>Export</source>
+        <translation>导出</translation>
+    </message>
+    <message>
+        <location filename="../../order/statement/statementsecondarywidget.ui" line="123"/>
         <source>Fetch</source>
         <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../../order/statement/statementsecondarywidget.cc" line="176"/>
+        <source>Export Excel</source>
+        <translation>导出 Excel</translation>
     </message>
 </context>
 <context>
     <name>StatementTertiaryWidget</name>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.ui" line="95"/>
+        <location filename="../../order/statement/statementtertiarywidget.ui" line="98"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.ui" line="102"/>
+        <location filename="../../order/statement/statementtertiarywidget.ui" line="105"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.ui" line="109"/>
+        <location filename="../../order/statement/statementtertiarywidget.ui" line="112"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.ui" line="116"/>
+        <location filename="../../order/statement/statementtertiarywidget.ui" line="119"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.ui" line="123"/>
+        <location filename="../../order/statement/statementtertiarywidget.ui" line="126"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../finance/statement/statementtertiarywidget.cc" line="158"/>
+        <location filename="../../order/statement/statementtertiarywidget.cc" line="171"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -3696,37 +3707,37 @@ Please recall it before deleting.</source>
 <context>
     <name>settlement_view::Model</name>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="65"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="65"/>
         <source>Total</source>
         <translation>合计</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="202"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="202"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="203"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="203"/>
         <source>Previous Balance</source>
         <translation>期初余额</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="216"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="216"/>
         <source>Current Amount</source>
         <translation>本期金额</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="217"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="217"/>
         <source>Current Settled</source>
         <translation>本期已结</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="218"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="218"/>
         <source>Current Unsettled</source>
         <translation>本期未结</translation>
     </message>
     <message>
-        <location filename="../../finance/settlement_view/settlement_view_model.cc" line="219"/>
+        <location filename="../../order/settlement_view/settlement_view_model.cc" line="219"/>
         <source>Current Balance</source>
         <translation>期末余额</translation>
     </message>
@@ -3734,25 +3745,22 @@ Please recall it before deleting.</source>
 <context>
     <name>statement::PrimaryModel</name>
     <message>
-        <location filename="../../finance/statement/statementprimarymodel.cc" line="58"/>
         <source>Total</source>
-        <translation>合计</translation>
+        <translation type="vanished">合计</translation>
     </message>
 </context>
 <context>
     <name>statement::SecondaryModel</name>
     <message>
-        <location filename="../../finance/statement/statementsecondarymodel.cc" line="61"/>
         <source>Total</source>
-        <translation>合计</translation>
+        <translation type="vanished">合计</translation>
     </message>
 </context>
 <context>
     <name>statement::TertiaryModel</name>
     <message>
-        <location filename="../../finance/statement/statementtertiarymodel.cc" line="59"/>
         <source>Total</source>
-        <translation>合计</translation>
+        <translation type="vanished">合计</translation>
     </message>
 </context>
 </TS>
