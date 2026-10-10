@@ -7,7 +7,7 @@
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "global/exportexcel.h"
+#include "global/exporthub.h"
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 #include "statementenum.h"
@@ -181,7 +181,7 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
 
     const auto lines { BuildExportLines(header, list, summary) };
 
-    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, unit_string, range_, lines);
+    ExportHub::Instance().StatementTertiaryAsync(destination, partner_name_, unit_string, range_, lines);
 }
 
 QList<QVariantList> StatementTertiaryWidget::BuildExportLines(CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary)

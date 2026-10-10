@@ -1,4 +1,4 @@
-#include "exportexcel.h"
+#include "exporthub.h"
 
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <QtCore/qfuturewatcher.h>
@@ -11,7 +11,7 @@
 #include "document.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementTertiaryAsync(
+void ExportHub::StatementTertiaryAsync(
     CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
     auto future = QtConcurrent::run([=]() -> bool { return StatementTertiary(path, partner_name, unit_string, range, lines); });
@@ -34,7 +34,7 @@ void ExportExcel::StatementTertiaryAsync(
     watcher->setFuture(future);
 }
 
-void ExportExcel::StatementSecondaryAsync(
+void ExportHub::StatementSecondaryAsync(
     CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
     auto future = QtConcurrent::run([=]() -> bool { return StatementSecondary(path, partner_name, unit_string, range, lines); });
@@ -57,7 +57,7 @@ void ExportExcel::StatementSecondaryAsync(
     watcher->setFuture(future);
 }
 
-bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+bool ExportHub::StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
     // Create excel document
     yxlsx::Document d(path);
@@ -94,8 +94,7 @@ bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CStrin
     return d.Save();
 }
 
-bool ExportExcel::StatementSecondary(
-    CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+bool ExportHub::StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
     // Create excel document
     yxlsx::Document d(path);

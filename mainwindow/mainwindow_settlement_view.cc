@@ -8,13 +8,11 @@ void MainWindow::on_actionSettlementView_triggered()
     Q_ASSERT(IsOrderSection(start_));
 
     const QUuid widget_id { QUuid::createUuidV7() };
-
     auto* widget { new SettlementViewWidget(sc_p_.tree_model->LeafPath(), widget_id, sc_->section_config.amount_decimal, start_, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement View")) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
-
         tab_bar->setTabData(tab_index, widget_id);
     }
 

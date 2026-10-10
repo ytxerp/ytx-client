@@ -22,25 +22,25 @@
 #include "component/using.h"
 #include "utils/daterange.h"
 
-class ExportExcel {
+class ExportHub {
 public:
-    static ExportExcel& Instance()
+    static ExportHub& Instance()
     {
-        static ExportExcel instance {};
+        static ExportHub instance {};
         return instance;
     }
 
     void StatementTertiaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
     void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
 
-    ExportExcel(const ExportExcel&) = delete;
-    ExportExcel& operator=(const ExportExcel&) = delete;
-    ExportExcel(ExportExcel&&) = delete;
-    ExportExcel& operator=(ExportExcel&&) = delete;
+    ExportHub(const ExportHub&) = delete;
+    ExportHub& operator=(const ExportHub&) = delete;
+    ExportHub(ExportHub&&) = delete;
+    ExportHub& operator=(ExportHub&&) = delete;
 
 private:
-    ExportExcel() = default;
-    ~ExportExcel() = default;
+    ExportHub() = default;
+    ~ExportHub() = default;
 
     static bool StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
     static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);

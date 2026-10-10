@@ -8,7 +8,7 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
-#include "global/exportexcel.h"
+#include "global/exporthub.h"
 #include "statementenum.h"
 #include "ui_statementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
@@ -186,7 +186,7 @@ void StatementSecondaryWidget::on_pushButtonExport_clicked()
 
     const auto lines { BuildExportLines(header, list, summary) };
 
-    ExportExcel::Instance().StatementSecondaryAsync(destination, partner_name_, unit_string, range_, lines);
+    ExportHub::Instance().StatementSecondaryAsync(destination, partner_name_, unit_string, range_, lines);
 }
 
 QList<QVariantList> StatementSecondaryWidget::BuildExportLines(CStringList& header, const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary)

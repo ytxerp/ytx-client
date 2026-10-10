@@ -212,7 +212,7 @@ set(HEADERS
     global/dailylogger.h
     global/entrypool.h
     global/entryshadowpool.h
-    global/exportexcel.h
+    global/exporthub.h
     global/logininfo.h
     global/masterdataregistry.h
     global/nodepool.h
@@ -409,7 +409,7 @@ set(SOURCES
     finance/period_close/periodclosedialog.cc
     finance/period_close/periodclosemodel.cc
     global/dailylogger.cc
-    global/exportexcel.cc
+    global/exporthub.cc
     global/logininfo.cc
     global/partner_inventory_registry.cc
     global/password_encryption.cc
