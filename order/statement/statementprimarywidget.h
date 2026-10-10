@@ -27,7 +27,7 @@
 #include "enum/section.h"
 #include "statementprimarymodel.h"
 #include "table/filterinputmodel.h"
-#include "table/tablefilterproxymodel.h"
+#include "table/filterproxymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -82,7 +82,7 @@ private:
 
     statement::PrimaryModel* data_model_ {};
     FilterInputModel* filter_model_ {};
-    TableFilterProxyModel* filter_proxy_ {};
+    FilterProxyModel* filter_proxy_ {};
 
     QTimer* cooldown_timer_ { nullptr };
     QButtonGroup* unit_group_ {};

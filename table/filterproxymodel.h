@@ -22,11 +22,11 @@
 #include <QHash>
 #include <QSortFilterProxyModel>
 
-class TableFilterProxyModel final : public QSortFilterProxyModel {
+class FilterProxyModel final : public QSortFilterProxyModel {
     Q_OBJECT
 
 public:
-    explicit TableFilterProxyModel(QObject* parent = nullptr)
+    explicit FilterProxyModel(QObject* parent = nullptr)
         : QSortFilterProxyModel(parent)
     {
         setFilterKeyColumn(-1);

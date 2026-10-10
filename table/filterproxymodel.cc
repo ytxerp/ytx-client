@@ -1,6 +1,6 @@
-#include "tablefilterproxymodel.h"
+#include "filterproxymodel.h"
 
-void TableFilterProxyModel::RFilterChanged(int column, const QVariant& value)
+void FilterProxyModel::RFilterChanged(int column, const QVariant& value)
 {
     if (column < 0)
         return;
@@ -35,7 +35,7 @@ void TableFilterProxyModel::RFilterChanged(int column, const QVariant& value)
     endFilterChange(QSortFilterProxyModel::Direction::Rows);
 }
 
-void TableFilterProxyModel::RFiltersCleared()
+void FilterProxyModel::RFiltersCleared()
 {
     if (filters_.isEmpty())
         return;
@@ -47,7 +47,7 @@ void TableFilterProxyModel::RFiltersCleared()
     endFilterChange(QSortFilterProxyModel::Direction::Rows);
 }
 
-bool TableFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+bool FilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
     if (filters_.isEmpty())
         return true;

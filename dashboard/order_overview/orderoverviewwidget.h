@@ -25,7 +25,7 @@
 #include "dashboard/order_overview/orderoverviewmodel.h"
 #include "enum/section.h"
 #include "table/filterinputmodel.h"
-#include "table/tablefilterproxymodel.h"
+#include "table/filterproxymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -65,7 +65,7 @@ private:
 
     order_overview::Model* data_model_ {};
     FilterInputModel* filter_model_ {};
-    TableFilterProxyModel* filter_proxy_ {};
+    FilterProxyModel* filter_proxy_ {};
 
     QTimer* cooldown_timer_ { nullptr };
     const QUuid widget_id_ {};

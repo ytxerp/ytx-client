@@ -27,7 +27,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "table/filterinputmodel.h"
-#include "table/tablefilterproxymodel.h"
+#include "table/filterproxymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -71,5 +71,5 @@ private:
 
     const QUuid widget_id_ {};
     FilterInputModel* filter_model_ {};
-    TableFilterProxyModel* filter_proxy_ {};
+    FilterProxyModel* filter_proxy_ {};
 };

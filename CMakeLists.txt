@@ -263,13 +263,13 @@ set(HEADERS
     table/entry.h
     table/entryshadow.h
     table/filterinputmodel.h
+    table/filterproxymodel.h
     table/model/tablemodel.h
     table/model/tablemodelf.h
     table/model/tablemodeli.h
     table/model/tablemodelo.h
     table/model/tablemodelp.h
     table/model/tablemodelt.h
-    table/tablefilterproxymodel.h
     table/tablesummarymodel.h
     table/unitmodel.h
     table/widget/tablewidget.h
@@ -480,13 +480,13 @@ set(SOURCES
     table/entry.cc
     table/entryshadow.cc
     table/filterinputmodel.cc
+    table/filterproxymodel.cc
     table/model/tablemodel.cc
     table/model/tablemodelf.cc
     table/model/tablemodeli.cc
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     table/model/tablemodelt.cc
-    table/tablefilterproxymodel.cc
     table/tablesummarymodel.cc
     table/unitmodel.cc
     table/widget/tablewidgetfipt.cc
