@@ -31,11 +31,7 @@ void TableModel::RDirectionRule(bool value)
     EmitDataChanged(0, rowCount() - 1, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 }
 
-void TableModel::RRefreshStatus()
-{
-    const int column { entry::StatusColumn(section_) };
-    EmitDataChanged(0, rowCount() - 1, column, column);
-}
+void TableModel::RRefreshBatchEntries(int column) { EmitDataChanged(0, rowCount() - 1, column, column); }
 
 void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 {
@@ -117,6 +113,15 @@ void TableModel::MarkEntries(MarkOperation operation)
 
     const int column { entry::StatusColumn(section_) };
     EmitDataChanged(0, rowCount() - 1, column, column);
+}
+
+void TableModel::LockEntries(bool locked)
+{
+    if (shadow_list_.isEmpty())
+        return;
+
+    const QJsonObject message { JsonGen::LockEntries(section_, node_id_, locked) };
+    WebSocket::Instance()->SendMessage(WsKey::kEntriesLock, message);
 }
 
 void TableModel::AccumulateBalance(int start)

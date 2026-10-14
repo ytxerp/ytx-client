@@ -232,6 +232,8 @@ private:
     void UpdateEntryNumeric(const QJsonObject& obj);
     void OnEntryLockedUpdate(const QJsonObject& obj);
     void OnEntryLockedUpdateDeny(const QJsonObject& obj);
+    void OnLockEntries(const QJsonObject& obj);
+    void OnEntriesLockDeny(const QJsonObject& obj);
 
 private:
     QWebSocket socket_ {};

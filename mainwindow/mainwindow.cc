@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget* parent)
     SignalBlocker blocker(this);
 
     IniSectionGroup();
-    IniMarkGroup();
     InitSystemTray();
     InitStatusLabel();
 
@@ -229,34 +228,6 @@ void MainWindow::IniSectionGroup()
                 btn->click();
         });
     }
-}
-
-void MainWindow::IniMarkGroup()
-{
-    mark_group_ = new QActionGroup(this);
-
-    ui->actionMarkAll->setData(std::to_underlying(MarkOperation::kSelect));
-    ui->actionMarkNone->setData(std::to_underlying(MarkOperation::kClear));
-    ui->actionMarkToggle->setData(std::to_underlying(MarkOperation::kToggle));
-
-    mark_group_->addAction(ui->actionMarkAll);
-    mark_group_->addAction(ui->actionMarkNone);
-    mark_group_->addAction(ui->actionMarkToggle);
-
-    connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
-        const MarkOperation operation { action->data().toInt() };
-
-        auto* widget { sc_->tab_widget->currentWidget() };
-
-        if (IsTableWidgetFIPT(widget)) {
-            RMarkEntries(operation);
-            return;
-        }
-
-        if (IsStatementTertiaryWidget(widget)) {
-            RStatementMarkEntries(operation);
-        }
-    });
 }
 
 void MainWindow::RFreeWidget(Section section, const QUuid& node_id)

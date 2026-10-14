@@ -99,6 +99,12 @@ private slots:
     void on_actionSettlementView_triggered();
     void on_actionOrderOverview_triggered();
 
+    void on_actionMarkAll_triggered();
+    void on_actionMarkNone_triggered();
+    void on_actionMarkToggle_triggered();
+    void on_actionLockAll_triggered();
+    void on_actionUnlockAll_triggered();
+
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
     void tabWidget_tabCloseRequestedFIT(int index);
@@ -118,7 +124,6 @@ private slots:
     void RAccountName(const QString& name);
     void RAccountUsername(const QJsonObject& obj);
 
-    void RMarkEntries(MarkOperation operation);
     void RStatementMarkEntries(MarkOperation operation);
 
     void RDenyConnection();
@@ -304,12 +309,14 @@ private:
     void SetLoginAction(bool enable) const;
 
     void IniSectionGroup();
-    void IniMarkGroup();
 
     void FocusTabWidget(const QUuid& node_id) const;
 
     void RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRole role);
     void WriteConfig();
+
+    void MarkEntries(MarkOperation operation);
+    void LockEntries(bool locked);
 
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
@@ -363,7 +370,6 @@ private:
     QNetworkAccessManager* network_manager_ {};
 
     QButtonGroup* section_group_ {};
-    QActionGroup* mark_group_ {};
 
     SectionContext* sc_ {};
 

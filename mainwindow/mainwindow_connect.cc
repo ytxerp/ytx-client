@@ -13,7 +13,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry, Qt::UniqueConnection);
@@ -39,7 +39,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry, Qt::UniqueConnection);
@@ -65,7 +65,7 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry, Qt::UniqueConnection);
@@ -93,7 +93,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
     connect(ui->tabWidgetP, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetP, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);

@@ -46,7 +46,7 @@ signals:
     void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id = {});
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
-    void SRefreshStatus(const QSet<QUuid>& affected_node);
+    void SRefreshBatchEntries(const QSet<QUuid>& affected_node, int column);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
@@ -76,6 +76,7 @@ public:
     void PeriodClose(const QJsonArray& array);
 
     void MarkEntries(const QUuid& node_id, MarkOperation operation);
+    void LockEntries(const QUuid& node_id, bool is_locked);
     void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:

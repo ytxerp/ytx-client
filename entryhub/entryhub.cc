@@ -346,7 +346,32 @@ void EntryHub::MarkEntries(const QUuid& node_id, MarkOperation operation)
         }
     }
 
-    emit SRefreshStatus(affected_node);
+    if (!affected_node.isEmpty()) {
+        const int column { entry::StatusColumn(section_) };
+        emit SRefreshBatchEntries(affected_node, column);
+    }
+}
+
+void EntryHub::LockEntries(const QUuid& node_id, bool is_locked)
+{
+    QSet<QUuid> affected_node {};
+
+    for (auto* entry : std::as_const(entry_cache_)) {
+        if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
+            if (entry->is_locked == is_locked)
+                continue;
+
+            entry->is_locked = is_locked;
+
+            affected_node.insert(entry->lhs_node);
+            affected_node.insert(entry->rhs_node);
+        }
+    }
+
+    if (!affected_node.isEmpty()) {
+        const int column { entry::IsLockedColumn(section_) };
+        emit SRefreshBatchEntries(affected_node, column);
+    }
 }
 
 void EntryHub::MarkEntry(Entry* entry, MarkOperation operation)

@@ -44,6 +44,7 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id, int version);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, int version);
 
 QJsonObject MarkEntries(Section section, CUuid& node_id, int operation);
+QJsonObject LockEntries(Section section, CUuid& node_id, bool is_locked);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update, int version);
 QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side, int version);
 QJsonObject EntryMessage(Section section, CUuid& entry_id);

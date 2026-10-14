@@ -415,6 +415,9 @@
    <addaction name="actionMarkToggle"/>
    <addaction name="actionMarkNone"/>
    <addaction name="separator"/>
+   <addaction name="actionLockAll"/>
+   <addaction name="actionUnlockAll"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionInsertNode">
    <property name="text">
@@ -726,6 +729,22 @@
   <action name="actionOrderOverview">
    <property name="text">
     <string>Overview</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionLockAll">
+   <property name="text">
+    <string>Lock All</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionUnlockAll">
+   <property name="text">
+    <string>Unlock All</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

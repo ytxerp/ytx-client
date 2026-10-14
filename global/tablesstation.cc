@@ -81,7 +81,7 @@ void TableSStation::RAppendEntries(const QUuid& node_id, const EntryList& entry_
     emit SAppendEntries(entry_list);
 }
 
-void TableSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
+void TableSStation::RRefreshBatchEntries(const QSet<QUuid>& affected_node, int column)
 {
     for (const auto& node_id : affected_node) {
         Q_ASSERT(!node_id.isNull());
@@ -90,8 +90,8 @@ void TableSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
         if (!model)
             continue;
 
-        connect(this, &TableSStation::SRefreshStatus, model, &TableModel::RRefreshStatus, Qt::SingleShotConnection);
-        emit SRefreshStatus();
+        connect(this, &TableSStation::SRefreshBatchEntries, model, &TableModel::RRefreshBatchEntries, Qt::SingleShotConnection);
+        emit SRefreshBatchEntries(column);
     }
 }
 

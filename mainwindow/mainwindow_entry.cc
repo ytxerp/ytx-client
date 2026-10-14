@@ -239,7 +239,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     sc->widget_hash.insert(node_id, wc);
 }
 
-void MainWindow::RMarkEntries(MarkOperation operation)
+void MainWindow::MarkEntries(MarkOperation operation)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
@@ -249,3 +249,24 @@ void MainWindow::RMarkEntries(MarkOperation operation)
     auto table_model { leaf_widget->Model() };
     table_model->MarkEntries(operation);
 }
+
+void MainWindow::on_actionMarkAll_triggered() { MarkEntries(MarkOperation::kSelect); }
+
+void MainWindow::on_actionMarkNone_triggered() { MarkEntries(MarkOperation::kClear); }
+
+void MainWindow::on_actionMarkToggle_triggered() { MarkEntries(MarkOperation::kToggle); }
+
+void MainWindow::LockEntries(bool locked)
+{
+    auto* current_widget { sc_->tab_widget->currentWidget() };
+
+    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
+    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
+
+    auto* table_model { leaf_widget->Model() };
+    table_model->LockEntries(locked);
+}
+
+void MainWindow::on_actionLockAll_triggered() { LockEntries(true); }
+
+void MainWindow::on_actionUnlockAll_triggered() { LockEntries(false); }

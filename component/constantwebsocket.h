@@ -107,18 +107,25 @@ enum class WsKey : uint16_t {
 
     // --- Entry ---
     kTableAck = 1600,
+
+    // Entry CRUD
     kEntryInsert = 1601,
     kEntryUpdate = 1602,
     kEntryDelete = 1603,
-    kEntriesMark = 1604,
-    kEntryLinkedNodeUpdate = 1605,
-    kEntryRateUpdate = 1606,
-    kEntryNumericUpdate = 1607,
-    kEntryLockedUpdate = 1608,
-    kEntryLockedUpdateDeny = 1609,
 
-    kEntryDescriptionSearch = 1610,
-    kEntryTagSearch = 1611,
+    // Entry field updates
+    kEntryLinkedNodeUpdate = 1610,
+    kEntryRateUpdate = 1611,
+    kEntryNumericUpdate = 1612,
+    kEntryLockedUpdate = 1613,
+
+    // Batch operations
+    kEntriesMark = 1620,
+    kEntriesLock = 1621,
+
+    // Search
+    kEntryDescriptionSearch = 1650,
+    kEntryTagSearch = 1651,
 
     // --- Misc ---
     kOperationDeny = 1700,
@@ -126,6 +133,8 @@ enum class WsKey : uint16_t {
     kOrderPermissionDeny = 1720,
     kSettlementPermissionDeny = 1730,
     kNodePermissionDeny = 1740,
+    kEntryLockedUpdateDeny = 1750,
+    kEntriesLockDeny = 1751,
 
     // --- Profile ---
     kAccountNameUpdate = 1800,
@@ -318,6 +327,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kEntryLockedUpdate";
     case WsKey::kEntryLockedUpdateDeny:
         return "kEntryLockedUpdateDeny";
+    case WsKey::kEntriesLock:
+        return "kEntriesLock";
+    case WsKey::kEntriesLockDeny:
+        return "kEntriesLockDeny";
 
         // --- Order ---
     case WsKey::kOrderInsertSave:

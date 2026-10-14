@@ -60,7 +60,7 @@ public slots:
     void RDeleteEntries(const QSet<QUuid>& entry_id_set);
 
     void RUpdateBalance(const QUuid& entry_id);
-    void RRefreshStatus();
+    void RRefreshBatchEntries(int column);
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RDirectionRule(bool value);
@@ -86,6 +86,7 @@ public:
     virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
 
     void MarkEntries(MarkOperation operation);
+    void LockEntries(bool locked);
     void FlushTimers();
 
 protected:

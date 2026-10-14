@@ -521,4 +521,13 @@ QJsonObject OrderOverviewAck(Section section, CUuid& widget_id, const utils::Dat
     return message;
 }
 
+QJsonObject LockEntries(Section section, CUuid& node_id, bool is_locked)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kIsLocked, is_locked);
+    return message;
+}
+
 }

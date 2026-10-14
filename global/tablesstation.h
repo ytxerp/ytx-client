@@ -45,7 +45,7 @@ signals:
 
     void SUpdateBalance(const QUuid& entry_id);
     void SDirectionRule(bool rule);
-    void SRefreshStatus();
+    void SRefreshBatchEntries(int column);
 
     void SAppendEntries(const EntryList& entry_list);
     void SDeleteEntries(const QSet<QUuid>& entry_id_set);
@@ -57,7 +57,7 @@ public slots:
     void RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id = {});
 
     void RDirectionRule(const QUuid& node_id, bool rule);
-    void RRefreshStatus(const QSet<QUuid>& affected_node);
+    void RRefreshBatchEntries(const QSet<QUuid>& affected_node, int column);
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // receive from EntryHub

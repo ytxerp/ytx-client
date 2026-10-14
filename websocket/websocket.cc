@@ -247,6 +247,8 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kEntryLockedUpdate] = [this](const QJsonObject& obj) { OnEntryLockedUpdate(obj); };
     handler_obj_[WsKey::kEntryLockedUpdateDeny] = [this](const QJsonObject& obj) { OnEntryLockedUpdateDeny(obj); };
+    handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnLockEntries(obj); };
+    handler_obj_[WsKey::kEntriesLockDeny] = [this](const QJsonObject& obj) { OnEntriesLockDeny(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -1011,6 +1013,19 @@ void WebSocket::OnEntryLockedUpdateDeny(const QJsonObject& obj)
 
     emit SPermissionDeny();
 }
+
+void WebSocket::OnLockEntries(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    auto entry_hub { entry_hub_hash_.value(section) };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const bool is_locked { obj.value(kIsLocked).toBool() };
+
+    Q_ASSERT(entry_hub);
+    entry_hub->LockEntries(node_id, is_locked);
+}
+
+void WebSocket::OnEntriesLockDeny(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
 
 void WebSocket::SearchEntry(const QJsonObject& obj)
 {
