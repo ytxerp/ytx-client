@@ -338,12 +338,16 @@ void EntryHub::MarkEntries(const QUuid& node_id, MarkOperation operation)
     QSet<QUuid> affected_node {};
 
     for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
-            MarkEntry(entry, operation);
+        if (entry->lhs_node != node_id && entry->rhs_node != node_id)
+            continue;
 
-            affected_node.insert(entry->lhs_node);
-            affected_node.insert(entry->rhs_node);
-        }
+        if (operation != MarkOperation::kToggle && entry->status == std::to_underlying(operation))
+            continue;
+
+        MarkEntry(entry, operation);
+
+        affected_node.insert(entry->lhs_node);
+        affected_node.insert(entry->rhs_node);
     }
 
     if (!affected_node.isEmpty()) {
