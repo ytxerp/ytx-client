@@ -1441,7 +1441,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="591"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="83"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="51"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="71"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="83"/>
@@ -1505,13 +1505,13 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="225"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="241"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="258"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="273"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="288"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="302"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="319"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="333"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="350"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="367"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="274"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="290"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="305"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="323"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="337"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="354"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="371"/>
         <source>Tag</source>
         <translation>标签</translation>
     </message>
@@ -1521,17 +1521,17 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="213"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="227"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="259"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="274"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="289"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="303"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="334"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="351"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="368"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="275"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="291"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="306"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="338"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="355"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="372"/>
         <source>Document</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="54"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="74"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="86"/>
@@ -1651,7 +1651,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="196"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="212"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="226"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="393"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="397"/>
         <source>Color</source>
         <translation>颜色</translation>
     </message>
@@ -1671,15 +1671,15 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="224"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="240"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="256"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="272"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="287"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="301"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="318"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="331"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="349"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="366"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="386"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="398"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="273"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="289"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="304"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="322"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="335"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="353"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="370"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="390"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="402"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
@@ -1694,14 +1694,14 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="165"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="236"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="253"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="269"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="284"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="299"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="325"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="343"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="360"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="381"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="391"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="270"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="286"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="302"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="329"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="347"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="364"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="385"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="395"/>
         <source>Issued Time</source>
         <translation>日期</translation>
     </message>
@@ -1719,12 +1719,12 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="223"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="239"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="255"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="271"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="286"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="300"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="326"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="344"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="361"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="272"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="288"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="303"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="330"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="348"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="365"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
@@ -1763,9 +1763,9 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="125"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="134"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="146"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="313"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="383"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="395"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="317"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="387"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="399"/>
         <source>Count</source>
         <translation>计数</translation>
     </message>
@@ -1774,9 +1774,9 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="126"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="135"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="147"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="314"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="384"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="396"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="318"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="388"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="400"/>
         <source>Measure</source>
         <translation>度量</translation>
     </message>
@@ -1791,7 +1791,7 @@
         <translation>金额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="90"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="12"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="138"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="151"/>
@@ -1800,13 +1800,13 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="228"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="238"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="260"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="275"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="290"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="304"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="317"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="335"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="352"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="369"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="276"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="292"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="307"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="321"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="339"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="356"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="373"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
@@ -1819,9 +1819,9 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="145"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="305"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="312"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="392"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="309"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="316"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="396"/>
         <source>Internal SKU</source>
         <translation>内部货号</translation>
     </message>
@@ -1829,18 +1829,18 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="16"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="148"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="198"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="306"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="315"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="385"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="397"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="310"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="319"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="389"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="401"/>
         <source>Unit Price</source>
         <translation>单价</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="152"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="307"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="320"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="394"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="311"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="324"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="398"/>
         <source>External SKU</source>
         <translation>外部货号</translation>
     </message>
@@ -1902,103 +1902,111 @@
         <translation>汇率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="261"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="276"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="291"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="262"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="278"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="294"/>
         <source>Linked Node</source>
         <translation>关联</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="262"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="277"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="292"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="263"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="279"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="295"/>
         <source>Debit</source>
         <translation>借方</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="263"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="278"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="293"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="264"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="280"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="296"/>
         <source>Credit</source>
         <translation>贷方</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="264"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="279"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="294"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="265"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="281"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="297"/>
         <source>Balance</source>
         <translation>余额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="270"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="285"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="271"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="287"/>
         <source>Unit Cost</source>
         <translation>成本</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="316"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="387"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="399"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="320"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="391"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="403"/>
         <source>Gross</source>
         <translation>总额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="328"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="332"/>
         <source>LHS FX Rate</source>
         <translation>左汇率</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="61"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="329"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="347"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="364"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="333"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="351"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="368"/>
         <source>LHS Debit</source>
         <translation>左借方</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="62"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="330"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="348"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="365"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="334"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="352"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="369"/>
         <source>LHS Credit</source>
         <translation>左贷方</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="65"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="336"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="353"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="370"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="340"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="357"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="374"/>
         <source>RHS Credit</source>
         <translation>右贷方</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="66"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="337"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="354"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="371"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="341"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="358"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="375"/>
         <source>RHS Debit</source>
         <translation>右借方</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="338"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="261"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="277"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="293"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="308"/>
+        <source>Locked</source>
+        <translation>锁定</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="342"/>
         <source>RHS FX Rate</source>
         <translation>右汇率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="346"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="363"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="350"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="367"/>
         <source>LHS Unit Cost</source>
         <translation>左成本</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="355"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="372"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="359"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="376"/>
         <source>RHS Unit Cost</source>
         <translation>右成本</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="382"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="386"/>
         <source>Customer</source>
         <translation>客户</translation>
     </message>
@@ -2020,7 +2028,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="64"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="257"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="332"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="336"/>
         <source>Cash Kind</source>
         <translation>现金流</translation>
     </message>
@@ -2080,6 +2088,7 @@ Would you like to download it now?</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_entry.cc" line="155"/>
         <location filename="../../mainwindow/mainwindow_order.cc" line="135"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
@@ -2232,22 +2241,22 @@ Would you like to download it now?</source>
         <location filename="../../mainwindow/mainwindow_header.cc" line="24"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="60"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="252"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="268"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="283"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="298"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="311"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="327"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="345"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="362"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="269"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="285"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="301"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="315"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="331"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="349"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="366"/>
         <source>LHS Node</source>
         <translation>左节点</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="25"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="67"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="339"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="356"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="373"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="343"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="360"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="377"/>
         <source>RHS Node</source>
         <translation>右节点</translation>
     </message>
@@ -2287,22 +2296,32 @@ Would you like to download it now?</source>
         <translation>撤回</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="80"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="77"/>
+        <source>Lock</source>
+        <translation>加锁</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="78"/>
+        <source>Unlock</source>
+        <translation>解锁</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="83"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
         <source>Numeric</source>
         <translation>数值</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
         <source>Rate</source>
         <translation>比率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="89"/>
         <source>Content</source>
         <translation>内容</translation>
     </message>
@@ -2346,6 +2365,11 @@ Would you like to download it now?</source>
         <location filename="../../mainwindow/mainwindow_entry.cc" line="54"/>
         <source>Are you sure you want to delete this entry?&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: You can disable this confirmation in Preferences.&lt;/i&gt;</source>
         <translation>确定要删除该记录吗？&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作为永久删除，无法撤销。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：您可以在“首选项”中关闭此提示。&lt;/i&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_entry.cc" line="155"/>
+        <source>This entry is locked and cannot be modified.</source>
+        <translation>这条记录已经锁定，无法修改。</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_global.cc" line="49"/>
@@ -3062,33 +3086,43 @@ Do you want to save them before closing?</source>
     </message>
     <message>
         <location filename="../../workspace/sectionpermissions.cc" line="10"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="15"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="17"/>
         <source>Read Only</source>
         <translation>只读</translation>
     </message>
     <message>
         <location filename="../../workspace/sectionpermissions.cc" line="11"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="16"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="18"/>
         <source>Read Write</source>
         <translation>读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="17"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="12"/>
+        <source>Lock</source>
+        <translation>加锁</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="13"/>
+        <source>Unlock</source>
+        <translation>解锁</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="18"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
         <source>Unrelease</source>
         <translation>取消发布</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="21"/>
         <source>Settle</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="22"/>
         <source>Unsettle</source>
         <translation>取消结算</translation>
     </message>
