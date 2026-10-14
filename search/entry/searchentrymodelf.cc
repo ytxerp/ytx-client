@@ -47,6 +47,8 @@ QVariant EntryModelF::data(const QModelIndex& index, int role) const
         return d_entry->rhs_node;
     case FullEntryEnumF::kCashKind:
         return std::to_underlying(d_entry->cash_kind);
+    case FullEntryEnumF::kIsLocked:
+        return d_entry->is_locked;
     }
 }
 
@@ -89,6 +91,8 @@ void EntryModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case FullEntryEnumF::kCashKind:
             return utils::CompareMember(d_lhs, d_rhs, &EntryF::cash_kind, order);
+        case FullEntryEnumF::kIsLocked:
+            return utils::CompareMember(lhs, rhs, &Entry::is_locked, order);
         }
     };
 

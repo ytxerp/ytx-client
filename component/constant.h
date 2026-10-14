@@ -230,6 +230,7 @@ inline const QString kState = QStringLiteral("state");
 inline const QString kUnit = QStringLiteral("unit");
 inline const QString kUnitCost = QStringLiteral("unit_cost");
 inline const QString kUnitPrice = QStringLiteral("unit_price");
+inline const QString kIsLocked = QStringLiteral("is_locked");
 
 inline const QString kCreatedTime = QStringLiteral("created_time");
 inline const QString kVersion = QStringLiteral("version");

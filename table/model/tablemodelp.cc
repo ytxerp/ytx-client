@@ -181,6 +181,8 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
         return d_entry->rhs_node;
     case EntryEnumP::kExternalSku:
         return d_entry->external_sku;
+    case EntryEnumP::kIsLocked:
+        return d_entry->is_locked;
     }
 }
 
@@ -237,6 +239,9 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     case EntryEnumP::kLhsNode:
         return false;
+    case EntryEnumP::kIsLocked:
+        entry::UpdateField(changes, entry, kIsLocked, value.toBool(), &Entry::is_locked, [this, id]() { RestartTimer(id); });
+        break;
     }
 
     auto& registry { PartnerInventoryRegistry::Instance() };
@@ -283,6 +288,8 @@ void TableModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kLhsNode:
             return false;
+        case EntryEnumP::kIsLocked:
+            return utils::CompareMember(lhs, rhs, &Entry::is_locked, order);
         }
     };
 
@@ -308,6 +315,7 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     case EntryEnumP::kDocument:
     case EntryEnumP::kTag:
     case EntryEnumP::kStatus:
+    case EntryEnumP::kIsLocked:
     case EntryEnumP::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
         break;

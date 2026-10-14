@@ -84,6 +84,7 @@ void SearchDialog::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsNode), table_path_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), check_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIsLocked), check_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kDocument), document_);

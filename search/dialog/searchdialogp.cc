@@ -36,6 +36,7 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), check_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsLocked), check_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag_);

@@ -40,6 +40,8 @@ QVariant EntryModelP::data(const QModelIndex& index, int role) const
         return d_entry->unit_price;
     case EntryEnumP::kRhsNode:
         return d_entry->rhs_node;
+    case EntryEnumP::kIsLocked:
+        return d_entry->is_locked;
     }
 }
 
@@ -72,6 +74,8 @@ void EntryModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+        case EntryEnumP::kIsLocked:
+            return utils::CompareMember(lhs, rhs, &Entry::is_locked, order);
         }
     };
 

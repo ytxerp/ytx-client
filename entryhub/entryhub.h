@@ -68,6 +68,8 @@ public:
 
     void UpdateVersion(const QUuid& id, int version);
     void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side);
+    void UpdateEntryLocked(const QUuid& entry_id, int version, bool is_locked);
+    void UpdateEntryLockedDeny(const QUuid& entry_id);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);

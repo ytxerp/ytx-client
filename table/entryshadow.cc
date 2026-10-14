@@ -19,6 +19,7 @@ void EntryShadow::BindEntry(Entry* base, BindingMode mode)
     status = &base->status;
     sync_state = &base->sync_state;
     version = &base->version;
+    is_locked = &base->is_locked;
 
     binding_mode = mode;
 

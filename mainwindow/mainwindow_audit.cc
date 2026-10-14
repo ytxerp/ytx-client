@@ -74,6 +74,8 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetOperation::kRelease), tr("Release") },
         { std::to_underlying(TargetOperation::kRecall), tr("Recall") },
         { std::to_underlying(TargetOperation::kPeriodClose), tr("Period Close") },
+        { std::to_underlying(TargetOperation::kLock), tr("Lock") },
+        { std::to_underlying(TargetOperation::kUnlock), tr("Unlock") },
     };
 
     audit_info_.target_field_map = {
@@ -83,6 +85,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetField::kNumeric), tr("Numeric") },
         { std::to_underlying(TargetField::kRate), tr("Rate") },
         { std::to_underlying(TargetField::kLinkedNode), tr("Linked Node") },
+        { std::to_underlying(TargetField::kLock), QString() },
         { std::to_underlying(TargetField::kContent), tr("Content") },
         { std::to_underlying(TargetField::kStatus), tr("Status") },
     };

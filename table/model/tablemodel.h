@@ -49,6 +49,9 @@ signals:
     // send to entryhub, FIPT
     void STransferEntry(Entry* entry);
 
+    // send to MainWindow
+    void SEntryLocked();
+
 public slots:
     virtual void RAppendEntries(const EntryList& entry_list);
     virtual void RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id = {});
@@ -96,6 +99,7 @@ protected:
         return false;
     }
 
+    bool UpdateLocked(EntryShadow* shadow, bool value);
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row);
     void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id);

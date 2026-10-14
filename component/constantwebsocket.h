@@ -114,6 +114,8 @@ enum class WsKey : uint16_t {
     kEntryLinkedNodeUpdate = 1605,
     kEntryRateUpdate = 1606,
     kEntryNumericUpdate = 1607,
+    kEntryLockedUpdate = 1608,
+    kEntryLockedUpdateDeny = 1609,
 
     kEntryDescriptionSearch = 1610,
     kEntryTagSearch = 1611,
@@ -312,6 +314,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kEntryRateUpdate";
     case WsKey::kEntryNumericUpdate:
         return "kEntryNumericUpdate";
+    case WsKey::kEntryLockedUpdate:
+        return "kEntryLockedUpdate";
+    case WsKey::kEntryLockedUpdateDeny:
+        return "kEntryLockedUpdateDeny";
 
         // --- Order ---
     case WsKey::kOrderInsertSave:

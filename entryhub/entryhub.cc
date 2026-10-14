@@ -168,6 +168,34 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
     emit SAttachEntry(new_node_id, entry);
 }
 
+void EntryHub::UpdateEntryLocked(const QUuid& entry_id, int version, bool is_locked)
+{
+    auto it = entry_cache_.constFind(entry_id);
+    if (it == entry_cache_.constEnd())
+        return;
+
+    auto* entry = it.value();
+
+    entry->is_locked = is_locked;
+    entry->version = version;
+
+    entry->sync_state = SyncState::kSynced;
+
+    const int locked_column { entry::IsLockedColumn(section_) };
+    emit SRefreshField(entry->lhs_node, entry_id, locked_column, locked_column);
+    emit SRefreshField(entry->rhs_node, entry_id, locked_column, locked_column);
+}
+
+void EntryHub::UpdateEntryLockedDeny(const QUuid& entry_id)
+{
+    auto it = entry_cache_.constFind(entry_id);
+    if (it == entry_cache_.constEnd())
+        return;
+
+    auto* entry = it.value();
+    entry->sync_state = SyncState::kSynced;
+}
+
 /**
  * @brief Returns SQL to remove indirect relationships in a branch (obsolete).
  *

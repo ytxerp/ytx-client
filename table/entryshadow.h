@@ -37,6 +37,7 @@ struct EntryShadow {
     double* lhs_rate {};
     double* rhs_rate {};
     SyncState* sync_state {};
+    bool* is_locked {};
 
     double* lhs_debit {};
     double* lhs_credit {};

@@ -37,3 +37,9 @@ enum class SettlementStatus { kRecalled = 0, kReleased };
 
 /** @brief EntryStatus of an entry. */
 enum class EntryStatus { kUnmarked = 0, kMarked };
+
+/** @brief Lock status of an entry. */
+enum class LockStatus {
+    kUnlocked = 0,
+    kLocked = 1,
+};

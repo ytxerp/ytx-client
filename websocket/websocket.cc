@@ -244,6 +244,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kPartnerEntryDelete] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
     handler_obj_[WsKey::kPartnerEntryInsert] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
     handler_obj_[WsKey::kPartnerNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
+
+    handler_obj_[WsKey::kEntryLockedUpdate] = [this](const QJsonObject& obj) { OnEntryLockedUpdate(obj); };
+    handler_obj_[WsKey::kEntryLockedUpdateDeny] = [this](const QJsonObject& obj) { OnEntryLockedUpdateDeny(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -982,6 +985,31 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     }
 
     entry_hub->UpdateEntryNumeric(entry_id, update, version);
+}
+
+void WebSocket::OnEntryLockedUpdate(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    auto entry_hub { entry_hub_hash_.value(section) };
+    const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
+    const int version { obj.value(kVersion).toInt() };
+    const bool is_locked { obj.value(kIsLocked).toBool() };
+
+    Q_ASSERT(entry_hub);
+
+    entry_hub->UpdateEntryLocked(entry_id, version, is_locked);
+}
+
+void WebSocket::OnEntryLockedUpdateDeny(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    auto entry_hub { entry_hub_hash_.value(section) };
+    const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
+
+    Q_ASSERT(entry_hub);
+    entry_hub->UpdateEntryLockedDeny(entry_id);
+
+    emit SPermissionDeny();
 }
 
 void WebSocket::SearchEntry(const QJsonObject& obj)

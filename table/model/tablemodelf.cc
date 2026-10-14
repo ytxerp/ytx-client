@@ -49,6 +49,8 @@ QVariant TableModelF::data(const QModelIndex& index, int role) const
         return d_shadow->balance;
     case EntryEnumF::kCashKind:
         return std::to_underlying(*d_shadow->cash_kind);
+    case EntryEnumF::kIsLocked:
+        return *d_shadow->is_locked;
     }
 }
 
@@ -79,6 +81,9 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     case EntryEnumF::kStatus:
         entry::UpdateShadowField(changes, shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id]() { RestartTimer(id); });
+        break;
+    case EntryEnumF::kIsLocked:
+        UpdateLocked(shadow, value.toBool());
         break;
     case EntryEnumF::kDescription:
         entry::UpdateShadowField(changes, shadow, kDescription, value.toString(), &EntryShadow::description, [this, id]() { RestartTimer(id); });
@@ -205,6 +210,11 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
 
 bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side)
 {
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     const double lhs_old_debit { *shadow->lhs_debit };
     const double lhs_old_credit { *shadow->lhs_credit };
     const double lhs_rate { *shadow->lhs_rate };
@@ -345,6 +355,11 @@ bool LeafModelF::UpdateCredit(EntryShadow* shadow, double value, int row)
 
 bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
 {
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     if (value <= 0)
         return false;
 

@@ -30,6 +30,8 @@ void Entry::ReadJson(const QJsonObject& object)
         rhs_node = QUuid(val.toString());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
+    if (const auto val = object.value(kIsLocked); val.isBool())
+        is_locked = val.toBool();
     if (const auto val = object.value(kLhsRate); val.isString())
         lhs_rate = val.toString().toDouble();
     if (const auto val = object.value(kRhsRate); val.isString())
@@ -85,6 +87,8 @@ void EntryP::ReadJson(const QJsonObject& object)
         version = val.toInt();
     if (const auto val = object.value(kUnitPrice); val.isString())
         unit_price = val.toString().toDouble();
+    if (const auto val = object.value(kIsLocked); val.isBool())
+        is_locked = val.toBool();
 
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);

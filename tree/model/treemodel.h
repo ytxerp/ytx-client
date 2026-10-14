@@ -51,7 +51,6 @@ signals:
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(Section section, const QUuid& node_id);
-    void SMessage(QMessageBox::Icon icon, const QString& message);
 
     // send to NodeWidget
     void SSyncValue();

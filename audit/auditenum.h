@@ -28,14 +28,23 @@ enum class TargetType {
 };
 
 enum class TargetOperation {
-    kInsert = 0,
-    kUpdate = 1,
-    kDelete = 2,
-    kMove = 3,
-    kReplace = 4,
-    kRelease = 5,
-    kRecall = 6,
-    kPeriodClose = 7,
+    // Data: 100–199
+    kInsert = 100,
+    kUpdate = 101,
+    kDelete = 102,
+    kMove = 103,
+    kReplace = 104,
+
+    // --- Order workflow: 200–219 ---
+    kRelease = 200,
+    kRecall = 201,
+
+    // --- Finance: 220–239 ---
+    kPeriodClose = 220,
+
+    // Lock: 300–399
+    kLock = 300,
+    kUnlock = 301,
 };
 
 enum class RowField {
@@ -56,18 +65,19 @@ enum class RowField {
 enum class TargetField {
     kNone = 0,
 
-    // --- Node ---
-    kName = 1,
-    kDirectionRule = 2,
+    // --- Node: 100–199 ---
+    kName = 100,
+    kDirectionRule = 101,
 
-    // --- Entry ---
-    kNumeric = 3,
-    kRate = 4,
-    kLinkedNode = 5,
+    // --- Entry: 200–299 ---
+    kNumeric = 200,
+    kRate = 201,
+    kLinkedNode = 202,
+    kLock = 203,
 
-    // --- Common ---
-    kStatus = 6,
-    kContent = 7,
+    // --- Common: 300–399 ---
+    kStatus = 300,
+    kContent = 301,
 };
 
 }

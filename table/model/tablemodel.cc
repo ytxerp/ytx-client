@@ -178,6 +178,11 @@ void TableModel::FlushTimers()
 
 bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side)
 {
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     const double lhs_old_debit { *shadow->lhs_debit };
     const double lhs_old_credit { *shadow->lhs_credit };
 
@@ -244,6 +249,11 @@ bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, Numer
 
 bool TableModel::UpdateRate(EntryShadow* shadow, double value)
 {
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     if (value < 0)
         return false;
 
@@ -258,7 +268,6 @@ bool TableModel::UpdateRate(EntryShadow* shadow, double value)
         return false;
 
     QJsonObject update {};
-    update.insert(kVersion, *shadow->version);
     update.insert(kLhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
     update.insert(kRhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
 
@@ -268,8 +277,33 @@ bool TableModel::UpdateRate(EntryShadow* shadow, double value)
     return true;
 }
 
+bool TableModel::UpdateLocked(EntryShadow* shadow, bool value)
+{
+    if (*shadow->sync_state == SyncState::kUpdating)
+        return false;
+
+    if (*shadow->is_locked == value)
+        return false;
+
+    *shadow->sync_state = SyncState::kUpdating;
+
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section_));
+    message.insert(kEntryId, shadow->id->toString(QUuid::WithoutBraces));
+    message.insert(kVersion, *shadow->version);
+    message.insert(kIsLocked, value);
+
+    WebSocket::Instance()->SendMessage(WsKey::kEntryLockedUpdate, message);
+    return true;
+}
+
 bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)
 {
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     if (value.isNull())
         return false;
 
@@ -411,6 +445,8 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
         return *shadow->lhs_credit;
     case EntryEnum::kBalance:
         return shadow->balance;
+    case EntryEnum::kIsLocked:
+        return *shadow->is_locked;
     }
 }
 
@@ -441,6 +477,9 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case EntryEnum::kStatus:
         entry::UpdateShadowField(changes, shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kIsLocked:
+        UpdateLocked(shadow, value.toBool());
         break;
     case EntryEnum::kDescription:
         entry::UpdateShadowField(changes, shadow, kDescription, value.toString(), &EntryShadow::description, [this, id]() { RestartTimer(id); });
@@ -500,6 +539,8 @@ void TableModel::sort(int column, Qt::SortOrder order)
             return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
             return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
+        case EntryEnum::kIsLocked:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::is_locked, order);
         case EntryEnum::kLhsNode:
         case EntryEnum::kBalance:
             return false;
@@ -531,6 +572,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
     case EntryEnum::kDocument:
     case EntryEnum::kTag:
     case EntryEnum::kStatus:
+    case EntryEnum::kIsLocked:
     case EntryEnum::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
         break;

@@ -71,6 +71,24 @@ constexpr int LinkedNodeColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int IsLockedColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(EntryEnumF::kIsLocked);
+    case Section::kTask:
+    case Section::kInventory:
+        return std::to_underlying(EntryEnum::kIsLocked);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kIsLocked);
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr int TagColumn(Section section)
 {
     switch (section) {

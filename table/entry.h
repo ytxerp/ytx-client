@@ -37,6 +37,7 @@ struct Entry {
     QStringList tag {};
     int status {};
     QUuid rhs_node {};
+    bool is_locked {};
 
     // New local object starts as pending creation
     SyncState sync_state { SyncState::kCreating };

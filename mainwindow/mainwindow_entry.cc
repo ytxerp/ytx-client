@@ -150,6 +150,11 @@ void MainWindow::RSelectEntry(const QUuid& node_id, const QUuid& entry_id)
     view->scrollTo(target, QAbstractItemView::PositionAtCenter);
 }
 
+void MainWindow::REntryLocked()
+{
+    utils::ShowMessage(QMessageBox::Information, tr("Invalid Operation"), tr("This entry is locked and cannot be modified."), time_const::kAutoCloseMs);
+}
+
 void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 {
     auto tree_model { sc->tree_model };

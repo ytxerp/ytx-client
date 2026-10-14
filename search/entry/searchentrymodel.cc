@@ -127,6 +127,8 @@ QVariant EntryModel::data(const QModelIndex& index, int role) const
         return entry->rhs_rate;
     case FullEntryEnum::kRhsNode:
         return entry->rhs_node;
+    case FullEntryEnum::kIsLocked:
+        return entry->is_locked;
     }
 }
 
@@ -164,6 +166,8 @@ void EntryModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
         case FullEntryEnum::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+        case FullEntryEnum::kIsLocked:
+            return utils::CompareMember(lhs, rhs, &Entry::is_locked, order);
         }
     };
 

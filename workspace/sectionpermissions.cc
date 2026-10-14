@@ -9,6 +9,8 @@ std::span<const PermissionItem> PermissionItems(Section section)
     static const PermissionItem basic[] = {
         { 0b01, QObject::tr("Read Only") },
         { 0b11, QObject::tr("Read Write") },
+        { 1 << 2, QObject::tr("Lock") },
+        { 1 << 3, QObject::tr("Unlock") },
     };
 
     static const PermissionItem order[] = {

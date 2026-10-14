@@ -230,6 +230,8 @@ private:
     void UpdateEntryLinkedNode(const QJsonObject& obj);
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);
+    void OnEntryLockedUpdate(const QJsonObject& obj);
+    void OnEntryLockedUpdateDeny(const QJsonObject& obj);
 
 private:
     QWebSocket socket_ {};

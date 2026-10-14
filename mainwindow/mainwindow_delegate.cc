@@ -249,6 +249,10 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     const auto& info { sc_f_.info };
     auto* cash_kind { new IntString(info.cash_kind_model, info.cash_kind_map, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCashKind), cash_kind);
+
+    auto* lock_status { new StatusDelegate(
+        QEvent::MouseButtonDblClick, std::to_underlying(LockStatus::kUnlocked), std::to_underlying(LockStatus::kLocked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIsLocked), lock_status);
 }
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -284,6 +288,10 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
     auto* tag { new TagDelegate(sc_i_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
+
+    auto* lock_status { new StatusDelegate(
+        QEvent::MouseButtonDblClick, std::to_underlying(LockStatus::kUnlocked), std::to_underlying(LockStatus::kLocked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIsLocked), lock_status);
 }
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -319,6 +327,10 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
     auto* tag { new TagDelegate(sc_t_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
+
+    auto* lock_status { new StatusDelegate(
+        QEvent::MouseButtonDblClick, std::to_underlying(LockStatus::kUnlocked), std::to_underlying(LockStatus::kLocked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIsLocked), lock_status);
 }
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
@@ -348,6 +360,10 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
 
     auto* tag { new TagDelegate(sc_p_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
+
+    auto* lock_status { new StatusDelegate(
+        QEvent::MouseButtonDblClick, std::to_underlying(LockStatus::kUnlocked), std::to_underlying(LockStatus::kLocked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsLocked), lock_status);
 }
 
 void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const

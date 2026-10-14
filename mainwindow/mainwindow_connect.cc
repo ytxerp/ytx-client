@@ -9,7 +9,6 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
-    connect(tree_model, &TreeModel::SMessage, this, &MainWindow::RMessage, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
@@ -125,6 +124,7 @@ void MainWindow::TableConnectF(TableModel* table_model) const
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
+    connect(table_model, &TableModel::SEntryLocked, this, &MainWindow::REntryLocked);
 }
 
 void MainWindow::TableConnectI(TableModel* table_model) const
@@ -137,6 +137,7 @@ void MainWindow::TableConnectI(TableModel* table_model) const
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
+    connect(table_model, &TableModel::SEntryLocked, this, &MainWindow::REntryLocked);
 }
 
 void MainWindow::TableConnectT(TableModel* table_model) const
@@ -149,9 +150,14 @@ void MainWindow::TableConnectT(TableModel* table_model) const
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
+    connect(table_model, &TableModel::SEntryLocked, this, &MainWindow::REntryLocked);
 }
 
-void MainWindow::TableConnectP(TableModel* table_model) const { connect(table_model, &TableModel::STransferEntry, sc_p_.entry_hub, &EntryHub::RTransferEntry); }
+void MainWindow::TableConnectP(TableModel* table_model) const
+{
+    connect(table_model, &TableModel::STransferEntry, sc_p_.entry_hub, &EntryHub::RTransferEntry);
+    connect(table_model, &TableModel::SEntryLocked, this, &MainWindow::REntryLocked);
+}
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const
 {

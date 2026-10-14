@@ -97,6 +97,7 @@ private slots:
     void on_actionIncomeStatement_triggered();
     void on_actionCashFlowStatement_triggered();
     void on_actionSettlementView_triggered();
+    void on_actionOrderOverview_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -192,8 +193,7 @@ private slots:
     void RUpdateDefaultUnit(Section section, int unit);
     void RDenyDefaultUnit(const QString& section);
     void RSelectEntry(const QUuid& node_id, const QUuid& entry_id);
-
-    void on_actionOrderOverview_triggered();
+    void REntryLocked();
 
 private:
     void SetTabWidget(QTabWidget* tab_widget);
