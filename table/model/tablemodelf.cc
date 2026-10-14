@@ -159,6 +159,8 @@ void TableModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
         case EntryEnumF::kCashKind:
             return utils::CompareShadowMember(d_lhs, d_rhs, &EntryShadowF::cash_kind, order);
+        case EntryEnumF::kIsLocked:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::is_locked, order);
         case EntryEnumF::kLhsNode:
         case EntryEnumF::kBalance:
             return false;
@@ -190,6 +192,7 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
     case EntryEnumF::kDocument:
     case EntryEnumF::kTag:
     case EntryEnumF::kStatus:
+    case EntryEnumF::kIsLocked:
     case EntryEnumF::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
         break;
