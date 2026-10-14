@@ -79,13 +79,12 @@ void MainWindow::InitAuditInfo()
     };
 
     audit_info_.target_field_map = {
-        { std::to_underlying(TargetField::kNone), tr("None") },
+        { std::to_underlying(TargetField::kNone), QString() },
         { std::to_underlying(TargetField::kName), tr("Name") },
         { std::to_underlying(TargetField::kDirectionRule), tr("Direction Rule") },
         { std::to_underlying(TargetField::kNumeric), tr("Numeric") },
         { std::to_underlying(TargetField::kRate), tr("Rate") },
         { std::to_underlying(TargetField::kLinkedNode), tr("Linked Node") },
-        { std::to_underlying(TargetField::kLock), QString() },
         { std::to_underlying(TargetField::kContent), tr("Content") },
         { std::to_underlying(TargetField::kStatus), tr("Status") },
     };
