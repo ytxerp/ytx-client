@@ -107,6 +107,9 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_tertiary);
     ui->actionMarkToggle->setEnabled(is_table_fipt || is_statement_tertiary);
 
+    ui->actionLockAll->setEnabled(is_table_fipt);
+    ui->actionUnlockAll->setEnabled(is_table_fipt);
+
     ui->actionJumpEntry->setEnabled(is_table_fipt || is_table_o);
 
     ui->actionStatement->setEnabled(is_order_section);

@@ -52,6 +52,8 @@
         <file>solarized_dark/handle-v.png</file>
         <file>solarized_dark/settlement_view.png</file>
         <file>solarized_dark/order_overview.png</file>
+        <file>solarized_dark/lock.png</file>
+        <file>solarized_dark/unlock.png</file>
     </qresource>
     <qresource prefix="/policies">
         <file>policies/privacy_policy.html</file>

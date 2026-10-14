@@ -36,6 +36,9 @@ void MainWindow::SetAction(bool enable) const
     ui->actionNewBranch->setEnabled(enable);
     ui->actionJumpEntry->setEnabled(enable);
     ui->actionSettlementView->setEnabled(enable);
+    ui->actionLockAll->setEnabled(enable);
+    ui->actionUnlockAll->setEnabled(enable);
+    ui->actionOrderOverview->setEnabled(enable);
 }
 
 void MainWindow::SetLoginAction(bool enable) const
