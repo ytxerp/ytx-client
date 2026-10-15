@@ -94,7 +94,7 @@ void MainWindow::InitHeader()
 
     header_info_.inventory_heat = {
         tr("Name"),
-        tr("Placeholder"),
+        QString(),
         tr("Order Count"),
         tr("Partner Count"),
         tr("Active Months"),
@@ -105,7 +105,7 @@ void MainWindow::InitHeader()
 
     header_info_.partner_heat = {
         tr("Name"),
-        tr("Placeholder"),
+        QString(),
         tr("Order Count"),
         tr("Inventory Diversity"),
         tr("Active Months"),
