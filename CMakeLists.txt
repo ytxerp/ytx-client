@@ -55,7 +55,7 @@ endif()
 # Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
 
 if(APPLE)
-    set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
+    set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@4")
     set(zstd_ROOT "/opt/homebrew/opt/zstd")
 elseif(WIN32)
     set(OPENSSL_ROOT_DIR "D:/msys64/mingw64")
