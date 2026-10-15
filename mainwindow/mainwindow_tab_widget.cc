@@ -96,7 +96,7 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_statement_tertiary { IsStatementTertiaryWidget(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_order_section { IsOrderSection(start_) };
-    const bool is_finance_sectipn { start_ == Section::kFinance };
+    const bool is_finance_section { start_ == Section::kFinance };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
@@ -122,10 +122,10 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
     ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o);
 
-    ui->actionBalanceSheet->setEnabled(is_finance_sectipn);
-    ui->actionCashFlowStatement->setEnabled(is_finance_sectipn);
-    ui->actionIncomeStatement->setEnabled(is_finance_sectipn);
-    ui->actionPeriodClose->setEnabled(is_finance_sectipn);
+    ui->actionBalanceSheet->setEnabled(is_finance_section);
+    ui->actionCashFlowStatement->setEnabled(is_finance_section);
+    ui->actionIncomeStatement->setEnabled(is_finance_section);
+    ui->actionPeriodClose->setEnabled(is_finance_section);
 
     ui->actionHeatInventory->setEnabled(start_ == Section::kInventory);
     ui->actionHeatPartner->setEnabled(start_ == Section::kPartner);

@@ -48,8 +48,9 @@ void MainWindow::on_actionSignOut_triggered()
     UserProfile::Instance().Reset();
     PartnerInventoryRegistry::Instance().Reset();
 
-    SetAction(false);
-    SetLoginAction(false);
+    DisableActions();
+    SetLoginActions(false);
+    UpdateSessionActions(ConnectionState::Connecting, LoginState::LoggedOut);
 
     utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
     utils::SetConnectionStatus(connection_label_, ConnectionState::Connecting);
@@ -57,9 +58,7 @@ void MainWindow::on_actionSignOut_triggered()
 
 void MainWindow::RDenyConnection()
 {
-    ui->actionSignIn->setEnabled(false);
-    ui->actionSignOut->setEnabled(false);
-    ui->actionReconnect->setEnabled(true);
+    UpdateSessionActions(ConnectionState::Disconnected, LoginState::LoggedOut);
 
     utils::SetConnectionStatus(connection_label_, ConnectionState::Disconnected);
     utils::ShowMessage(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), time_const::kAutoCloseMs);
@@ -67,12 +66,20 @@ void MainWindow::RDenyConnection()
 
 void MainWindow::RAllowConnection()
 {
-    ui->actionSignIn->setEnabled(true);
-    ui->actionSignOut->setEnabled(false);
-    ui->actionReconnect->setEnabled(false);
+    UpdateSessionActions(ConnectionState::Connected, LoginState::LoggedOut);
 
-    on_actionSignIn_triggered();
     utils::SetConnectionStatus(connection_label_, ConnectionState::Connected);
+    on_actionSignIn_triggered();
+}
+
+void MainWindow::UpdateSessionActions(ConnectionState connection, LoginState login) const
+{
+    const bool connected { connection == ConnectionState::Connected };
+    const bool logged_in { login == LoginState::LoggedIn };
+
+    ui->actionSignIn->setEnabled(connected && !logged_in);
+    ui->actionSignOut->setEnabled(connected && logged_in);
+    ui->actionReconnect->setEnabled(connection == ConnectionState::Disconnected);
 }
 
 void MainWindow::RRemoteHostClosed()
@@ -130,28 +137,24 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
     }
 
     {
-        ui->actionSignIn->setEnabled(false);
-        ui->actionSignOut->setEnabled(true);
-        ui->actionReconnect->setEnabled(false);
+        UpdateSessionActions(ConnectionState::Connected, LoginState::LoggedIn);
     }
 
     {
         utils::SetLoginStatus(login_label_, LoginState::LoggedIn);
-        SetLoginAction(true);
+        SetLoginActions(true);
     }
 }
 
 void MainWindow::RDenyLogin()
 {
-    ui->actionSignIn->setEnabled(true);
-    ui->actionSignOut->setEnabled(false);
-    ui->actionReconnect->setEnabled(true);
+    UpdateSessionActions(ConnectionState::Connected, LoginState::LoggedOut);
     utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
 }
 
 void MainWindow::RFinishTreeSync()
 {
-    qDebug() << "RTreeSyncFinished";
+    qDebug() << Q_FUNC_INFO;
 
     sc_p_.tree_model->SyncFilterModels();
     sc_i_.tree_model->SyncFilterModels();

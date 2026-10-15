@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     SetIcon();
     SetUniqueConnection();
-    SetAction(false);
-    SetLoginAction(false);
+    DisableActions();
+    SetLoginActions(false);
 
     utils::SetConnectionStatus(connection_label_, ConnectionState::Connecting);
     utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
@@ -192,12 +192,6 @@ void MainWindow::ResetMainwindow()
         ui->actionName->setText(tr("Name", "Person"));
         ui->actionWorkspace->setText(tr("Workspace"));
         ui->actionExpireDate->setText(tr("Expire Date"));
-    }
-
-    {
-        ui->actionReconnect->setEnabled(true);
-        ui->actionSignIn->setEnabled(false);
-        ui->actionSignOut->setEnabled(false);
     }
 }
 

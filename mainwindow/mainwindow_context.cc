@@ -20,34 +20,34 @@
 #include "ui_mainwindow.h"
 #include "websocket/websocket.h"
 
-void MainWindow::SetAction(bool enable) const
+void MainWindow::DisableActions() const
 {
-    ui->actionAppendNode->setEnabled(enable);
-    ui->actionMarkAll->setEnabled(enable);
-    ui->actionMarkNone->setEnabled(enable);
-    ui->actionMarkToggle->setEnabled(enable);
-    ui->actionRename->setEnabled(enable);
-    ui->actionInsertNode->setEnabled(enable);
-    ui->actionDelete->setEnabled(enable);
-    ui->actionAppendEntry->setEnabled(enable);
-    ui->actionStatement->setEnabled(enable);
-    ui->actionSettlement->setEnabled(enable);
-    ui->actionClearColor->setEnabled(enable);
-    ui->actionNewBranch->setEnabled(enable);
-    ui->actionJumpEntry->setEnabled(enable);
-    ui->actionSettlementView->setEnabled(enable);
-    ui->actionLockAll->setEnabled(enable);
-    ui->actionUnlockAll->setEnabled(enable);
-    ui->actionOrderOverview->setEnabled(enable);
-    ui->actionPeriodClose->setEnabled(enable);
-    ui->actionBalanceSheet->setEnabled(enable);
-    ui->actionCashFlowStatement->setEnabled(enable);
-    ui->actionIncomeStatement->setEnabled(enable);
-    ui->actionHeatInventory->setEnabled(enable);
-    ui->actionHeatPartner->setEnabled(enable);
+    ui->actionAppendNode->setEnabled(false);
+    ui->actionMarkAll->setEnabled(false);
+    ui->actionMarkNone->setEnabled(false);
+    ui->actionMarkToggle->setEnabled(false);
+    ui->actionRename->setEnabled(false);
+    ui->actionInsertNode->setEnabled(false);
+    ui->actionDelete->setEnabled(false);
+    ui->actionAppendEntry->setEnabled(false);
+    ui->actionStatement->setEnabled(false);
+    ui->actionSettlement->setEnabled(false);
+    ui->actionClearColor->setEnabled(false);
+    ui->actionNewBranch->setEnabled(false);
+    ui->actionJumpEntry->setEnabled(false);
+    ui->actionSettlementView->setEnabled(false);
+    ui->actionLockAll->setEnabled(false);
+    ui->actionUnlockAll->setEnabled(false);
+    ui->actionOrderOverview->setEnabled(false);
+    ui->actionPeriodClose->setEnabled(false);
+    ui->actionBalanceSheet->setEnabled(false);
+    ui->actionCashFlowStatement->setEnabled(false);
+    ui->actionIncomeStatement->setEnabled(false);
+    ui->actionHeatInventory->setEnabled(false);
+    ui->actionHeatPartner->setEnabled(false);
 }
 
-void MainWindow::SetLoginAction(bool enable) const
+void MainWindow::SetLoginActions(bool enable) const
 {
     ui->actionSearch->setEnabled(enable);
     ui->actionTags->setEnabled(enable);

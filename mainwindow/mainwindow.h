@@ -305,8 +305,9 @@ private:
 
     void UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date);
 
-    void SetAction(bool enable) const;
-    void SetLoginAction(bool enable) const;
+    void DisableActions() const;
+    void SetLoginActions(bool enable) const;
+    void UpdateSessionActions(ConnectionState connection, LoginState login) const;
 
     void IniSectionGroup();
 
