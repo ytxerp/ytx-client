@@ -39,18 +39,18 @@ void MainWindow::SetAction(bool enable) const
     ui->actionLockAll->setEnabled(enable);
     ui->actionUnlockAll->setEnabled(enable);
     ui->actionOrderOverview->setEnabled(enable);
-}
-
-void MainWindow::SetLoginAction(bool enable) const
-{
-    ui->actionSearch->setEnabled(enable);
-    ui->actionTags->setEnabled(enable);
     ui->actionPeriodClose->setEnabled(enable);
     ui->actionBalanceSheet->setEnabled(enable);
     ui->actionCashFlowStatement->setEnabled(enable);
     ui->actionIncomeStatement->setEnabled(enable);
     ui->actionHeatInventory->setEnabled(enable);
     ui->actionHeatPartner->setEnabled(enable);
+}
+
+void MainWindow::SetLoginAction(bool enable) const
+{
+    ui->actionSearch->setEnabled(enable);
+    ui->actionTags->setEnabled(enable);
     ui->actionProfile->setEnabled(enable);
     ui->actionWorkspaceManager->setEnabled(enable);
     ui->actionAuditLog->setEnabled(enable);
@@ -58,9 +58,9 @@ void MainWindow::SetLoginAction(bool enable) const
 
 void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date)
 {
-    ui->actionName->setText(tr("Name", "Person") + ": " + name);
-    ui->actionWorkspace->setText(tr("Workspace") + ": " + workspace);
-    ui->actionExpireDate->setText(tr("Expire Date") + ": " + expire_date);
+    ui->actionName->setText(name);
+    ui->actionWorkspace->setText(workspace);
+    ui->actionExpireDate->setText(expire_date);
 }
 
 void MainWindow::CreateSection(SectionContext& sc, CString& name)

@@ -78,6 +78,7 @@ void Model::sort(int column, Qt::SortOrder order)
         case FullEntryEnumF::kDocument:
         case FullEntryEnumF::kTag:
         case FullEntryEnumF::kStatus:
+        case FullEntryEnumF::kIsLocked:
             return false;
         }
     };
@@ -126,6 +127,8 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return entry->rhs_node;
     case FullEntryEnumF::kCashKind:
         return std::to_underlying(entry->cash_kind);
+    case FullEntryEnumF::kIsLocked:
+        return entry->is_locked;
     }
 }
 
