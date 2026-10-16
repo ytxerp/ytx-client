@@ -27,16 +27,9 @@
 
 namespace settlement_view {
 
-enum class RowType {
-    kData,
-    kSpacer,
-    kTotal,
-};
-
 struct Row final {
-    RowType type { RowType::kData };
-
     QUuid partner_id {};
+    QString partner_path {};
 
     double previous_balance {};
     QList<double> months {};
@@ -49,6 +42,7 @@ struct Row final {
     void ReadJson(const QJsonObject& object);
 
     void Accumulate(const Row& other);
+    QList<QVariant> SummaryValues() const;
 };
 
 enum class ColumnType {
@@ -112,6 +106,26 @@ inline void Row::Accumulate(const Row& other)
     current_settled += other.current_settled;
     current_unsettled += other.current_unsettled;
     current_balance += other.current_balance;
+}
+
+inline QList<QVariant> Row::SummaryValues() const
+{
+    QList<QVariant> values {};
+    values.reserve(months.size() + 7);
+
+    values.emplaceBack(QVariant()); // kPartner
+    values.emplaceBack(previous_balance); // kPreviousBalance
+
+    for (const double amount : months)
+        values.emplaceBack(amount); // kMonth
+
+    values.emplaceBack(current_amount); // kCurrentAmount
+    values.emplaceBack(QVariant()); // kPlaceholder
+    values.emplaceBack(current_settled); // kCurrentSettled
+    values.emplaceBack(current_unsettled); // kCurrentUnsettled
+    values.emplaceBack(current_balance); // kCurrentBalance
+
+    return values;
 }
 
 }

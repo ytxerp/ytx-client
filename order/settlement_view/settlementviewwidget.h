@@ -27,6 +27,7 @@
 #include "delegate/readonly/doublenonezeror.h"
 #include "enum/section.h"
 #include "settlement_view_model.h"
+#include "table/dynamicsummarymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -41,8 +42,9 @@ public:
         const QHash<QUuid, QString>& partner_leaf_path, CUuid& widget_id, const int& amount_decimal, Section section, QWidget* parent = nullptr);
     ~SettlementViewWidget() override;
 
-    QTableView* View() const;
-    settlement_view::Model* Model() const { return model_; }
+    QTableView* DataView() const;
+    QTableView* SummaryView() const;
+    settlement_view::Model* DataModel() const { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -64,13 +66,16 @@ private:
 
     void IniWidget();
     void InitTimer();
-    void SetupColumns();
+    void RebuildColumns();
+    void InitModel(const QHash<QUuid, QString>& partner_leaf_path);
 
 private:
     Ui::SettlementViewWidget* ui;
 
     utils::DateRange range_ {};
-    settlement_view::Model* model_ {};
+    settlement_view::Model* data_model_ {};
+    DynamicSummaryModel* summary_model_ {};
+
     CUuid widget_id_ {};
     const Section section_ {};
 

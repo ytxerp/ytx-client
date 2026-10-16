@@ -260,6 +260,7 @@ set(HEADERS
     search/node/searchnodemodelo.h
     search/node/searchnodemodelp.h
     search/node/searchnodemodelt.h
+    table/dynamicsummarymodel.h
     table/entry.h
     table/entryshadow.h
     table/filterinputmodel.h
@@ -477,6 +478,7 @@ set(SOURCES
     search/node/searchnodemodelo.cc
     search/node/searchnodemodelp.cc
     search/node/searchnodemodelt.cc
+    table/dynamicsummarymodel.cc
     table/entry.cc
     table/entryshadow.cc
     table/filterinputmodel.cc

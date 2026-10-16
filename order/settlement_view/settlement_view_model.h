@@ -29,6 +29,9 @@ namespace settlement_view {
 class Model final : public QAbstractItemModel {
     Q_OBJECT
 
+signals:
+    void SSummaryChanged(const QList<QVariant>& values);
+
 public:
     explicit Model(const QHash<QUuid, QString>& partner_leaf_path, QObject* parent = nullptr);
     ~Model() override;
@@ -48,7 +51,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void Rebuild(const QJsonArray& array);
-    void RebuildHeader(const utils::DateRange& date_range);
+    bool RebuildHeader(const utils::DateRange& date_range);
 
 private:
     QList<Column> columns_ {};

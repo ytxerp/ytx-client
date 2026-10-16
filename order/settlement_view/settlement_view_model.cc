@@ -58,15 +58,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
     const auto* row { static_cast<const Row*>(index.internalPointer()) };
     const Column& column { columns_.at(index.column()) };
 
-    if (row->type == RowType::kSpacer)
-        return {};
-
-    if (row->type == RowType::kTotal && column.type == ColumnType::kPartner)
-        return tr("Total");
-
     switch (column.type) {
     case ColumnType::kPartner:
-        return partner_leaf_path_.value(row->partner_id);
+        return row->partner_path;
 
     case ColumnType::kPreviousBalance:
         return row->previous_balance;
@@ -100,10 +94,13 @@ void Model::sort(int column, Qt::SortOrder order)
 
     const Column& e_column { columns_.at(column) };
 
-    auto Compare = [this, e_column, order](const Row* lhs, const Row* rhs) -> bool {
+    if (e_column.type == ColumnType::kPlaceholder)
+        return;
+
+    auto Compare = [e_column, order](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column.type) {
         case ColumnType::kPartner:
-            return utils::CompareString(partner_leaf_path_.value(lhs->partner_id), partner_leaf_path_.value(rhs->partner_id), order);
+            return utils::CompareString(lhs->partner_path, rhs->partner_path, order);
 
         case ColumnType::kPreviousBalance:
             return utils::CompareValue(lhs->previous_balance, rhs->previous_balance, order);
@@ -130,57 +127,41 @@ void Model::sort(int column, Qt::SortOrder order)
         return false;
     };
 
-    if (rows_.size() <= 2)
-        return;
-
     emit layoutAboutToBeChanged();
-    std::ranges::sort(rows_.begin(), rows_.end() - 2, Compare);
+    std::ranges::sort(rows_, Compare);
     emit layoutChanged();
 }
 
 // Settlement view presentation:
 // - Month columns show order amounts grouped by issued time.
 // - Current Amount equals the sum of all month columns.
-// - Spacer and Total rows are always kept at the bottom.
-// - Sorting applies only to data rows.
+// - Data rows are sorted by current balance in descending order.
+// - Summary values are emitted separately for the summary view.
 void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Received empty array";
-        return;
     }
 
     QList<Row*> new_rows {};
-    new_rows.reserve(array.size() + 2);
+    new_rows.reserve(array.size());
 
-    auto* total { ResourcePool<Row>::Instance().Allocate() };
-    total->type = RowType::kTotal;
-
-    const auto month_count { std::ranges::count_if(columns_, [](const Column& column) { return column.type == ColumnType::kMonth; }) };
-    total->months.resize(month_count);
+    Row summary {};
+    summary.months.resize(columnCount() - 7);
 
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
 
         auto* row { ResourcePool<Row>::Instance().Allocate() };
         row->ReadJson(value.toObject());
+        row->partner_path = partner_leaf_path_.value(row->partner_id);
 
-        total->Accumulate(*row);
+        summary.Accumulate(*row);
         new_rows.emplaceBack(row);
     }
 
-    if (!new_rows.isEmpty()) {
-        std::ranges::sort(
-            new_rows, [](const Row* lhs, const Row* rhs) { return utils::CompareValue(lhs->current_balance, rhs->current_balance, Qt::DescendingOrder); });
-
-        auto* spacer { ResourcePool<Row>::Instance().Allocate() };
-        spacer->type = RowType::kSpacer;
-
-        new_rows.emplaceBack(spacer);
-        new_rows.emplaceBack(total);
-    } else {
-        ResourcePool<Row>::Instance().Recycle(total);
-    }
+    std::ranges::sort(
+        new_rows, [](const Row* lhs, const Row* rhs) { return utils::CompareValue(lhs->current_balance, rhs->current_balance, Qt::DescendingOrder); });
 
     beginResetModel();
 
@@ -188,17 +169,20 @@ void Model::Rebuild(const QJsonArray& array)
     rows_ = std::move(new_rows);
 
     endResetModel();
+
+    Q_ASSERT(summary.SummaryValues().size() == columnCount());
+
+    emit SSummaryChanged(summary.SummaryValues());
 }
 
-void Model::RebuildHeader(const utils::DateRange& date_range)
+bool Model::RebuildHeader(const utils::DateRange& date_range)
 {
     Q_ASSERT(date_range.IsValid());
+    qDebug() << Q_FUNC_INFO;
 
     if (range_.start == date_range.start && range_.end == date_range.end) {
-        return;
+        return false;
     }
-
-    qDebug() << Q_FUNC_INFO;
 
     beginResetModel();
 
@@ -228,5 +212,7 @@ void Model::RebuildHeader(const utils::DateRange& date_range)
     range_ = date_range;
 
     endResetModel();
+
+    return true;
 }
 }

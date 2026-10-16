@@ -11,7 +11,6 @@ SettlementViewWidget::SettlementViewWidget(
     : QWidget(parent)
     , ui(new Ui::SettlementViewWidget)
     , range_(DefaultRange())
-    , model_(new settlement_view::Model(partner_leaf_path, this))
     , widget_id_ { widget_id }
     , section_ { section }
     , amount_dlg_ { new DoubleNoneZeroR(amount_decimal, string_const::kEightDigits, this) }
@@ -19,18 +18,18 @@ SettlementViewWidget::SettlementViewWidget(
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model_);
-    model_->setParent(ui->tableView);
-
     IniWidget();
     InitTimer();
+    InitModel(partner_leaf_path);
 
     QTimer::singleShot(0, this, &SettlementViewWidget::on_pBtnFetch_clicked);
 }
 
 SettlementViewWidget::~SettlementViewWidget() { delete ui; }
 
-QTableView* SettlementViewWidget::View() const { return ui->tableView; }
+QTableView* SettlementViewWidget::DataView() const { return ui->tableView; }
+
+QTableView* SettlementViewWidget::SummaryView() const { return ui->tableViewSummary; }
 
 void SettlementViewWidget::IniWidget()
 {
@@ -50,19 +49,37 @@ void SettlementViewWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void SettlementViewWidget::SetupColumns()
+void SettlementViewWidget::RebuildColumns()
 {
-    const int column_count { model_->columnCount() };
-    if (column_count <= 0)
+    if (!data_model_->RebuildHeader(range_))
         return;
 
-    for (int column = 1; column != column_count; ++column)
+    const int column_count { data_model_->columnCount() };
+
+    summary_model_->RebuildHeader(column_count);
+
+    for (int column = 1; column != column_count; ++column) {
         ui->tableView->setItemDelegateForColumn(column, amount_dlg_);
+        ui->tableViewSummary->setItemDelegateForColumn(column, amount_dlg_);
+    }
 
     auto* header { ui->tableView->horizontalHeader() };
 
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
     header->setSectionResizeMode(column_count - 4, QHeaderView::Stretch);
+}
+
+void SettlementViewWidget::InitModel(const QHash<QUuid, QString>& partner_leaf_path)
+{
+    data_model_ = new settlement_view::Model(partner_leaf_path, this);
+    summary_model_ = new DynamicSummaryModel(data_model_->columnCount(), this);
+
+    ui->tableView->setModel(data_model_);
+    ui->tableViewSummary->setModel(summary_model_);
+
+    RebuildColumns();
+
+    connect(data_model_, &settlement_view::Model::SSummaryChanged, summary_model_, &DynamicSummaryModel::RSummaryChanged);
 }
 
 void SettlementViewWidget::on_pBtnFetch_clicked()
@@ -77,8 +94,7 @@ void SettlementViewWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    model_->RebuildHeader(range_);
-    SetupColumns();
+    RebuildColumns();
 
     qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
 

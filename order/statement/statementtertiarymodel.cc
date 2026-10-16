@@ -121,14 +121,15 @@ void TertiaryModel::sort(int column, Qt::SortOrder order)
 
     const TertiaryField e_column { column };
 
-    auto Compare = [e_column, order](const TertiaryRow* lhs, const TertiaryRow* rhs) -> bool {
+    auto Compare = [e_column, order, this](const TertiaryRow* lhs, const TertiaryRow* rhs) -> bool {
         switch (e_column) {
         case TertiaryField::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &TertiaryRow::issued_time, order);
         case TertiaryField::kInternalSku:
             return utils::CompareMember(lhs, rhs, &TertiaryRow::internal_sku, order);
         case TertiaryField::kExternalSku:
-            return false;
+            return utils::CompareString(PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, lhs->internal_sku),
+                PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, rhs->internal_sku), order);
         case TertiaryField::kCount:
             return utils::CompareMember(lhs, rhs, &TertiaryRow::count, order);
         case TertiaryField::kMeasure:
@@ -146,11 +147,8 @@ void TertiaryModel::sort(int column, Qt::SortOrder order)
         }
     };
 
-    if (list_.size() <= 2)
-        return;
-
     emit layoutAboutToBeChanged();
-    std::ranges::sort(list_.begin(), list_.end() - 2, Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 

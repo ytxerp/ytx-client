@@ -134,11 +134,8 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
         }
     };
 
-    if (list_.size() <= 2)
-        return;
-
     emit layoutAboutToBeChanged();
-    std::ranges::sort(list_.begin(), list_.end() - 2, Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 

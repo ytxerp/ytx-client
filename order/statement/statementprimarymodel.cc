@@ -79,6 +79,8 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
         return;
 
     const PrimaryField e_column { column };
+    if (e_column == PrimaryField::kPlaceholder)
+        return;
 
     auto Compare = [e_column, order](const PrimaryRow* lhs, const PrimaryRow* rhs) -> bool {
         switch (e_column) {
@@ -95,11 +97,8 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
         }
     };
 
-    if (list_.size() <= 2)
-        return;
-
     emit layoutAboutToBeChanged();
-    std::ranges::sort(list_.begin(), list_.end() - 2, Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 

@@ -17,8 +17,10 @@ void MainWindow::on_actionSettlementView_triggered()
     }
 
     {
-        auto* view { widget->View() };
-        InitTableView(view, -1);
+        auto* summary_view { widget->SummaryView() };
+        auto* data_view { widget->DataView() };
+        InitTableView(data_view, -1);
+        InitSummaryView(summary_view, data_view);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kSettlementView);
@@ -34,6 +36,6 @@ void MainWindow::RSettlementView(Section section, const QUuid& widget_id, const 
 
     auto* d_widget { static_cast<SettlementViewWidget*>(widget.data()) };
 
-    auto* model { d_widget->Model() };
+    auto* model { d_widget->DataModel() };
     model->Rebuild(array);
 }

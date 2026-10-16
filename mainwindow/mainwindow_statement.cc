@@ -130,6 +130,10 @@ void MainWindow::InitSummaryView(QTableView* summary_view, QTableView* data_view
     summary_header->setSectionsMovable(false);
     summary_header->setSectionResizeMode(QHeaderView::Fixed);
 
+    for (int column = 0; column != data_header->count(); ++column) {
+        summary_header->resizeSection(column, data_header->sectionSize(column));
+    }
+
     connect(data_header, &QHeaderView::sectionResized, summary_header,
         [summary_header](int logical_index, int, int new_size) { summary_header->resizeSection(logical_index, new_size); });
 
