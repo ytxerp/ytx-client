@@ -89,6 +89,7 @@ void MainWindow::RRemoteHostClosed()
 
     on_actionSignOut_triggered();
     utils::SetConnectionStatus(connection_label_, ConnectionState::Disconnected);
+    ui->actionReconnect->setEnabled(true);
 }
 
 void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
