@@ -163,7 +163,9 @@ void TableModel::FlushTimer(const QUuid& id)
 
     if (update.entry && !update.changes.isEmpty()) {
         const QJsonObject message { JsonGen::EntryUpdate(section_, id, update.changes, update.entry->version) };
-        WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
+
+        const auto key { section_ == Section::kPartner ? WsKey::kPartnerEntryUpdate : WsKey::kEntryUpdate };
+        WebSocket::Instance()->SendMessage(key, message);
     }
 
     if (update.timer) {
@@ -603,6 +605,11 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     auto* shadow { shadow_list_.at(row) };
     if (*shadow->sync_state == SyncState::kDeleting)
         return true;
+
+    if (*shadow->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
 
     const auto entry_id { *shadow->id };
     const int version { *shadow->version };

@@ -90,6 +90,11 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent
     if (entry->sync_state == SyncState::kDeleting)
         return true;
 
+    if (entry->is_locked) {
+        emit SEntryLocked();
+        return false;
+    }
+
     const auto entry_id { entry->id };
     const int version { entry->version };
 

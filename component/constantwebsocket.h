@@ -180,9 +180,10 @@ enum class WsKey : uint16_t {
     // --- Partner ---
     kPartnerEntryDelete = 2500,
     kPartnerEntryInsert = 2501,
-    kPartnerNodeInsert = 2502,
+    kPartnerEntryUpdate = 2502,
+    kPartnerNodeInsert = 2510,
 
-    kPartnerHeatAck = 2510,
+    kPartnerHeatAck = 2520,
 
     // --- Order ---
     kOrderInsertSave = 2600,
@@ -331,6 +332,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kEntriesLock";
     case WsKey::kEntriesLockDeny:
         return "kEntriesLockDeny";
+    case WsKey::kPartnerEntryUpdate:
+        return "kPartnerEntryUpdate";
 
         // --- Order ---
     case WsKey::kOrderInsertSave:
@@ -420,7 +423,7 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kPartnerNodeInsert:
         return "kPartnerNodeInsert";
     case WsKey::kOrderOverview:
-        return "kOrderOverview = 2623";
+        return "kOrderOverview";
     }
 }
 

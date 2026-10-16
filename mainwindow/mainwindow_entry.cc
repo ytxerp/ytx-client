@@ -152,7 +152,8 @@ void MainWindow::RSelectEntry(const QUuid& node_id, const QUuid& entry_id)
 
 void MainWindow::REntryLocked()
 {
-    utils::ShowMessage(QMessageBox::Information, tr("Invalid Operation"), tr("This entry is locked and cannot be modified."), time_const::kAutoCloseMs);
+    utils::ShowMessage(
+        QMessageBox::Information, tr("Invalid Operation"), tr("This entry is locked. The operation cannot be performed."), time_const::kAutoCloseMs);
 }
 
 void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
