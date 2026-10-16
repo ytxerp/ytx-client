@@ -15,7 +15,7 @@ void MainWindow::on_actionOrderOverview_triggered()
     auto* widget { new OrderOverviewWidget(header_info_.order_overview, widget_id, start_, this) };
 
     {
-        const int tab_index { sc_->tab_widget->addTab(widget, tr("Order Overview")) };
+        const int tab_index { sc_->tab_widget->addTab(widget, tr("Overview")) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, widget_id);
