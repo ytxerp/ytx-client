@@ -138,6 +138,7 @@ void StatementSecondaryWidget::IniWidget()
     utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
     utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
     utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
+    utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void StatementSecondaryWidget::InitTimer()
