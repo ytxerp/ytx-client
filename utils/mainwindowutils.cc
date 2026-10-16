@@ -200,14 +200,15 @@ void utils::SetPushButton(QPushButton* btn, const QKeySequence& ks)
     Q_ASSERT(btn != nullptr);
 
     btn->setShortcut(ks);
-    btn->setToolTip(QString("%1 (%2)").arg(btn->text(), ks.toString()));
+    btn->setToolTip(ks.toString(QKeySequence::NativeText));
 }
 
 void utils::SetRadioButton(QRadioButton* btn, const QKeySequence& ks)
 {
     Q_ASSERT(btn != nullptr);
+
     btn->setShortcut(ks);
-    btn->setToolTip(QString("%1 (%2)").arg(btn->text(), ks.toString()));
+    btn->setToolTip(ks.toString(QKeySequence::NativeText));
 }
 
 QUuid utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog)

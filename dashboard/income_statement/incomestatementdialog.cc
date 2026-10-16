@@ -5,6 +5,7 @@
 
 #include "component/signalblocker.h"
 #include "ui_incomestatementdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -121,6 +122,7 @@ void IncomeStatementDialog::InitDialog()
     ui->dateEditEnd->setDate(range_.end);
 
     ui->comboBoxIncome->setFocus();
+    utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void IncomeStatementDialog::InitTimer()

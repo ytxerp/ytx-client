@@ -54,13 +54,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnFetch">
-        <property name="text">
-         <string>Fetch</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -74,9 +67,16 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pBtnClear">
         <property name="text">
          <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pBtnFetch">
+        <property name="text">
+         <string>Fetch</string>
         </property>
        </widget>
       </item>
@@ -98,7 +98,6 @@
  <tabstops>
   <tabstop>dateEditStart</tabstop>
   <tabstop>dateEditEnd</tabstop>
-  <tabstop>pBtnFetch</tabstop>
   <tabstop>tableViewData</tabstop>
  </tabstops>
  <resources/>

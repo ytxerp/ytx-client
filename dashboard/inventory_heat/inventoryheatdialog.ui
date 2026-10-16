@@ -122,19 +122,22 @@
       <item row="0" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QRadioButton" name="radioButtonSale">
-          <property name="text">
-           <string>Sale</string>
+         <widget class="DateEdit" name="dateEditStart">
+          <property name="buttonSymbols">
+           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
           </property>
-          <property name="checked">
+          <property name="calendarPopup">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="radioButtonPurchase">
-          <property name="text">
-           <string>Purchase</string>
+         <widget class="DateEdit" name="dateEditEnd">
+          <property name="buttonSymbols">
+           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -152,22 +155,19 @@
          </spacer>
         </item>
         <item>
-         <widget class="DateEdit" name="dateEditStart">
-          <property name="buttonSymbols">
-           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+         <widget class="QRadioButton" name="radioButtonSale">
+          <property name="text">
+           <string>Sale</string>
           </property>
-          <property name="calendarPopup">
+          <property name="checked">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="DateEdit" name="dateEditEnd">
-          <property name="buttonSymbols">
-           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-          </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
+         <widget class="QRadioButton" name="radioButtonPurchase">
+          <property name="text">
+           <string>Purchase</string>
           </property>
          </widget>
         </item>
@@ -189,9 +189,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>dateEditStart</tabstop>
-  <tabstop>dateEditEnd</tabstop>
-  <tabstop>pushButtonFetch</tabstop>
   <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>

@@ -83,6 +83,8 @@ void SettlementPrimaryWidget::InitWidget()
 
     ui->start->setDate(range_.start);
     ui->end->setDate(range_.end);
+
+    utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void SettlementPrimaryWidget::InitTimer()

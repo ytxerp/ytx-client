@@ -6,6 +6,7 @@
 #include "component/signalblocker.h"
 #include "global/logininfo.h"
 #include "ui_auditdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -110,9 +111,11 @@ void AuditDialog::InitDialog()
 
     ui->dateEditStart->setDate(range_.start);
     ui->dateEditEnd->setDate(range_.end);
+
+    utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
-void AuditDialog::on_pushButton_clicked()
+void AuditDialog::on_pBtnClear_clicked()
 {
     filter_model_->ClearFilters();
 

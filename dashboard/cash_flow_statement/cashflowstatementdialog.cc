@@ -5,6 +5,7 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_cashflowstatementdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -89,6 +90,8 @@ void CashFlowStatementDialog::InitDialog()
     ui->splitter_root->setSizes({ 800, 200 });
     ui->splitter_h->setSizes({ 700, 300 });
     ui->splitter_v->setSizes({ 600, 400 });
+
+    utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void CashFlowStatementDialog::InitTimer()

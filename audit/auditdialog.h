@@ -49,7 +49,7 @@ private slots:
     void on_pBtnFetch_clicked();
     void on_dateEditStart_dateChanged(const QDate& date);
     void on_dateEditEnd_dateChanged(const QDate& date);
-    void on_pushButton_clicked();
+    void on_pBtnClear_clicked();
 
 private:
     void InitDialog();

@@ -7,6 +7,7 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_orderoverviewwidget.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -39,6 +40,8 @@ void OrderOverviewWidget::InitWidget()
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
     ui->start->setDate(range_.start);
     ui->end->setDate(range_.end);
+
+    utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void OrderOverviewWidget::InitModel(const QStringList& header)

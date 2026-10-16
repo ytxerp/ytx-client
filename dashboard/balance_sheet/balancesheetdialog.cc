@@ -6,6 +6,7 @@
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_balancesheetdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -49,6 +50,7 @@ void BalanceSheetDialog::InitDialog()
     ui->dateEditEnd->setDate(range_.end);
 
     ui->comboBoxAsset->setFocus();
+    utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void BalanceSheetDialog::InitTimer()

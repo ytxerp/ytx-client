@@ -6,6 +6,7 @@
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_inventoryheatdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -41,6 +42,10 @@ void InventoryHeatDialog::InitDialog()
     ui->spinBoxMinActiveMonths->setRange(1, INT_MAX);
 
     ui->pushButtonFetch->setFocus();
+
+    utils::SetRadioButton(ui->radioButtonSale, QKeySequence(Qt::CTRL | Qt::Key_1));
+    utils::SetRadioButton(ui->radioButtonPurchase, QKeySequence(Qt::CTRL | Qt::Key_2));
+    utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void InventoryHeatDialog::InitTimer()

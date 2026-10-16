@@ -3,6 +3,7 @@
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_settlementviewwidget.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -40,6 +41,8 @@ void SettlementViewWidget::IniWidget()
 
     ui->start->setDate(range_.start);
     ui->end->setDate(range_.end);
+
+    utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void SettlementViewWidget::InitTimer()

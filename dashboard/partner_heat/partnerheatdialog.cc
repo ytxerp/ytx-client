@@ -8,6 +8,7 @@
 #include "component/signalblocker.h"
 #include "enum/section.h"
 #include "ui_partnerheatdialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -43,6 +44,10 @@ void PartnerHeatDialog::InitDialog()
     ui->spinBoxMinActiveMonths->setRange(1, INT_MAX);
 
     ui->pushButtonFetch->setFocus();
+
+    utils::SetRadioButton(ui->radioButtonSale, QKeySequence(Qt::CTRL | Qt::Key_1));
+    utils::SetRadioButton(ui->radioButtonPurchase, QKeySequence(Qt::CTRL | Qt::Key_2));
+    utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
 void PartnerHeatDialog::InitTimer()
