@@ -37,8 +37,6 @@ struct SectionInfo {
     QStringList entry_header {};
     QStringList full_entry_header {};
 
-    QStringList node_referenced_header {};
-
     QMap<int, QString> unit_map {};
     QMap<int, QString> unit_symbol_map {};
     QMap<bool, QString> rule_map {};

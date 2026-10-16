@@ -338,6 +338,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Tag"),
         tr("Document"),
         tr("Status"),
+        tr("Locked"),
         tr("RHS Credit"),
         tr("RHS Debit"),
         tr("RHS FX Rate"),
@@ -355,6 +356,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Tag"),
         tr("Document"),
         tr("Status"),
+        tr("Locked"),
         tr("RHS Credit"),
         tr("RHS Debit"),
         tr("RHS Unit Cost"),
@@ -372,6 +374,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Tag"),
         tr("Document"),
         tr("Status"),
+        tr("Locked"),
         tr("RHS Credit"),
         tr("RHS Debit"),
         tr("RHS Unit Cost"),
@@ -380,29 +383,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     partner.full_entry_header = partner.entry_header;
     sale.full_entry_header = sale.entry_header;
-
-    // SaleReference
-    inventory.node_referenced_header = {
-        tr("Issued Time"),
-        tr("Customer"),
-        tr("Count"),
-        tr("Measure"),
-        tr("Unit Price"),
-        tr("Description"),
-        tr("Gross"),
-    };
-
-    partner.node_referenced_header = {
-        tr("Issued Time"),
-        tr("Internal SKU"),
-        tr("Color"),
-        tr("External SKU"),
-        tr("Count"),
-        tr("Measure"),
-        tr("Unit Price"),
-        tr("Description"),
-        tr("Gross"),
-    };
 
     purchase.node_header = sale.node_header;
     purchase.entry_header = sale.entry_header;
