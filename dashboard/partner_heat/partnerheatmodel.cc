@@ -71,6 +71,8 @@ void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
     const RowField e_column { column };
+    if (e_column == RowField::kPlaceholder)
+        return;
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
