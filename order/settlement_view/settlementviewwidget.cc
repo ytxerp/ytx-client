@@ -62,7 +62,7 @@ void SettlementViewWidget::SetupColumns()
     auto* header { ui->tableView->horizontalHeader() };
 
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(column_count - 1, QHeaderView::Stretch);
+    header->setSectionResizeMode(column_count - 4, QHeaderView::Stretch);
 }
 
 void SettlementViewWidget::on_pBtnFetch_clicked()

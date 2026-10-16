@@ -56,6 +56,7 @@ enum class ColumnType {
     kPreviousBalance,
     kMonth,
     kCurrentAmount,
+    kPlaceholder,
     kCurrentSettled,
     kCurrentUnsettled,
     kCurrentBalance,

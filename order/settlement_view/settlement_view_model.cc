@@ -85,6 +85,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
 
     case ColumnType::kCurrentBalance:
         return row->current_balance;
+
+    case ColumnType::kPlaceholder:
+        return QVariant();
     }
 
     return {};
@@ -119,6 +122,9 @@ void Model::sort(int column, Qt::SortOrder order)
 
         case ColumnType::kCurrentBalance:
             return utils::CompareValue(lhs->current_balance, rhs->current_balance, order);
+
+        case ColumnType::kPlaceholder:
+            return false;
         }
 
         return false;
@@ -197,7 +203,7 @@ void Model::RebuildHeader(const utils::DateRange& date_range)
     beginResetModel();
 
     columns_.clear();
-    rows_.clear();
+    ResourcePool<Row>::Instance().Recycle(rows_);
 
     columns_.append({ ColumnType::kPartner, tr("Partner") });
     columns_.append({ ColumnType::kPreviousBalance, tr("Previous Balance") });
@@ -214,6 +220,7 @@ void Model::RebuildHeader(const utils::DateRange& date_range)
     }
 
     columns_.append({ ColumnType::kCurrentAmount, tr("Current Amount") });
+    columns_.append({ ColumnType::kPlaceholder, QString() });
     columns_.append({ ColumnType::kCurrentSettled, tr("Current Settled") });
     columns_.append({ ColumnType::kCurrentUnsettled, tr("Current Unsettled") });
     columns_.append({ ColumnType::kCurrentBalance, tr("Current Balance") });
