@@ -24,6 +24,7 @@ enum class MemberField : int {
     kEmail,
     kUsername,
     kName,
+    kPlaceholder,
     kWorkspaceRole,
     kFinancePermissions,
     kTaskPermissions,

@@ -71,6 +71,8 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return member->purchase_permissions;
     case MemberField::kCreatedTime:
         return member->created_time;
+    case MemberField::kPlaceholder:
+        return QVariant();
     }
 }
 
@@ -133,6 +135,7 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     case MemberField::kEmail:
     case MemberField::kUsername:
     case MemberField::kName:
+    case MemberField::kPlaceholder:
     case MemberField::kCreatedTime:
         // These columns are read-only in this model
         return false;
@@ -177,6 +180,8 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Member::purchase_permissions, order);
         case MemberField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Member::created_time, order);
+        case MemberField::kPlaceholder:
+            return false;
         }
     };
 
@@ -219,6 +224,7 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
     case MemberField::kUsername:
     case MemberField::kName:
     case MemberField::kCreatedTime:
+    case MemberField::kPlaceholder:
         // Disable editing for all other columns
         flags &= ~Qt::ItemIsEditable;
         break;

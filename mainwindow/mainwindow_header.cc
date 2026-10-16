@@ -37,6 +37,7 @@ void MainWindow::InitHeader()
         tr("Email"),
         tr("Username"),
         tr("Name", "Person"),
+        QString(),
         tr("Workspace Role"),
         tr("Finance"),
         tr("Task"),
