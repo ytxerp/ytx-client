@@ -97,15 +97,11 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         LoginInfo& login_info { LoginInfo::Instance() };
         UpdateAccountInfo(login_info.Workspace(), name, expire_date);
 
-        const bool is_admin { UserProfile::Instance().WorkspaceRole() >= workspace::Role::kAdmin };
-        ui->actionWorkspaceManager->setVisible(is_admin);
-        ui->actionAuditLog->setVisible(is_admin);
-
         if (!section_settings_) {
-            const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+            const QDir config_dir { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
+            const QString file_name { utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
-            section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
+            section_settings_ = QSharedPointer<QSettings>::create(config_dir.filePath(file_name), QSettings::IniFormat);
         }
     }
 

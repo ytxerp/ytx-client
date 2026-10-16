@@ -89,30 +89,19 @@ int utils::CompareVersion(const QString& v1, const QString& v2)
 
 QString utils::AccountIniFileName(const QString& email, const QString& workspace)
 {
-    // Extract email parts
-    QString email_user { email.section('@', 0, 0) };
-    QString domain_main { email.section('@', 1, 1).section('.', 0, 0) };
+    QString file_name { email + "_" + workspace };
 
-    // Regular expression to match invalid filename characters
-    static const QRegularExpression invalid_chars { R"([\\/:*?"<>|\[\]\s.]+)" };
+    // Replace invalid characters with underscores and normalize the filename.
+    static const QRegularExpression invalid_chars { R"([^\p{L}\p{N}_]+)" };
+    static const QRegularExpression underscores { "_+" };
 
-    // Sanitize all parts by replacing invalid characters with underscore
-    email_user.replace(invalid_chars, "_");
-    domain_main.replace(invalid_chars, "_");
+    file_name.replace(invalid_chars, "_");
+    file_name.replace(underscores, "_");
 
-    QString sanitized_workspace { workspace };
-    sanitized_workspace.replace(invalid_chars, "_");
-
-    // Combine: username_domain_workspace
-    QString file_name { email_user + "_" + domain_main + "_" + sanitized_workspace };
-
-    // Clean up: remove consecutive underscores and trim
-    static const QRegularExpression kUnderscores { "_+" };
-
-    file_name.replace(kUnderscores, "_");
-    while (file_name.startsWith('_'))
+    if (file_name.startsWith('_'))
         file_name.remove(0, 1);
-    while (file_name.endsWith('_'))
+
+    if (file_name.endsWith('_'))
         file_name.chop(1);
 
     return file_name;

@@ -174,9 +174,6 @@ void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
 
-    ui->actionWorkspaceManager->setVisible(false);
-    ui->actionAuditLog->setVisible(false);
-
     utils::CloseWidgets(widget_hash_);
 
     {
