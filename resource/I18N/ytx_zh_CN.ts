@@ -925,7 +925,7 @@
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="84"/>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="174"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="178"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -991,12 +991,12 @@
         <translation>该节点仍在使用中，你想要怎么处理？</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="163"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="166"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: Consider relocating entries before deleting.&lt;/i&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：建议在删除前将该节点下的记录迁移至其他节点。&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="146"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="147"/>
         <source>Delete this order and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation>删除该订单及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
@@ -1006,27 +1006,27 @@
         <translation>将 &lt;b&gt;%1&lt;/b&gt; 替换为 &lt;b&gt;%2&lt;/b&gt;。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="153"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="155"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="222"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="209"/>
         <source>Delete %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="226"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="213"/>
         <source>The node has external references, so it can’t be deleted.</source>
         <translation>节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="255"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="242"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="256"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="243"/>
         <source>The node cannot be replaced because linked nodes or partner entries conflict with the new node.</source>
         <translation>由于自身分录或合作分录与新节点存在冲突，无法替换该节点。</translation>
     </message>
@@ -1784,6 +1784,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="150"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="162"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="167"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="323"/>
         <source>Amount</source>
         <translation>金额</translation>
     </message>
@@ -1866,6 +1867,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="205"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="219"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="250"/>
         <source>Amount Total</source>
         <translation>金额</translation>
     </message>
@@ -1885,9 +1887,8 @@
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="250"/>
         <source>Gross Total</source>
-        <translation>总额</translation>
+        <translation type="vanished">总额</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="257"/>
@@ -1930,9 +1931,8 @@
         <translation>成本</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="323"/>
         <source>Gross</source>
-        <translation>总额</translation>
+        <translation type="vanished">总额</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="336"/>
@@ -2113,113 +2113,113 @@ Would you like to download it now?</source>
         <translation>管理...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="275"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="269"/>
         <source>POS</source>
         <comment>Position</comment>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="274"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="268"/>
         <source>ITM</source>
         <comment>Item</comment>
         <translation>存货</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="320"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="311"/>
         <source>TGT</source>
         <comment>Target</comment>
         <translation>目标</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="321"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="312"/>
         <source>ACT</source>
         <comment>Action</comment>
         <translation>行为</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="365"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="353"/>
         <source>CUS</source>
         <comment>Customer</comment>
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="366"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="354"/>
         <source>EMP</source>
         <comment>Employee</comment>
         <translation>员工</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="367"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="355"/>
         <source>VEN</source>
         <comment>Vendor</comment>
         <translation>供方</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="239"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="283"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="330"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="372"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="236"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="277"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="321"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="360"/>
         <source>Inactive</source>
         <translation>停用</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="322"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="313"/>
         <source>ORG</source>
         <comment>Origin</comment>
         <translation>起源</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="408"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="453"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="393"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="435"/>
         <source>RO</source>
         <comment>Return Order</comment>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="409"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="454"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="394"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="436"/>
         <source>FO</source>
         <comment>Forward Order</comment>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="411"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="456"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="396"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="438"/>
         <source>IMM</source>
         <comment>Immediate</comment>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="412"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="457"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="397"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="439"/>
         <source>MON</source>
         <comment>Monthly</comment>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="413"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="458"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="398"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="440"/>
         <source>PEND</source>
         <comment>Pending</comment>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="418"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="463"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="403"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="445"/>
         <source>Unreleased</source>
         <comment>Filter</comment>
         <translation>草稿</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="419"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="464"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="404"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="446"/>
         <source>Released</source>
         <comment>Filter</comment>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="420"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="465"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="405"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="447"/>
         <source>Recalled</source>
         <comment>Filter</comment>
         <translation>撤回</translation>
@@ -2806,7 +2806,7 @@ Do you want to save them before closing?</source>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="20"/>
-        <location filename="../../workspace/sectionpermissions.h" line="18"/>
+        <location filename="../../workspace/sectionpermissions.h" line="20"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
@@ -2872,169 +2872,169 @@ Do you want to save them before closing?</source>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="66"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="198"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="195"/>
         <source>Sales Receipt</source>
         <translation>销售收款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="68"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="199"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="196"/>
         <source>Tax Refund</source>
         <translation>税费返还</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="70"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="200"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="197"/>
         <source>Other Operating Receipt</source>
         <translation>其他经营收款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="76"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="203"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="200"/>
         <source>Purchase Payment</source>
         <translation>采购付款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="78"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="204"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="201"/>
         <source>Salary Payment</source>
         <translation>职工薪酬</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="80"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="205"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="202"/>
         <source>Tax Payment</source>
         <translation>税费付款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="82"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="206"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="203"/>
         <source>Other Operating Payment</source>
         <translation>其他经营付款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="88"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="209"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="206"/>
         <source>Investment Receipt</source>
         <translation>收回投资</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="90"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="210"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="207"/>
         <source>Investment Income Receipt</source>
         <translation>投资收益</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="92"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="211"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="208"/>
         <source>Asset Disposal Receipt</source>
         <translation>处置资产</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="94"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="212"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="209"/>
         <source>Subsidiary Disposal Receipt</source>
         <translation>处置子公司</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="96"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="213"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="210"/>
         <source>Loan Repayment Receipt</source>
         <translation>收回贷款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="98"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="214"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="211"/>
         <source>Other Investing Receipt</source>
         <translation>其他投资收款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="104"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="217"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="214"/>
         <source>Asset Purchase Payment</source>
         <translation>购建资产</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="106"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="218"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="215"/>
         <source>Investment Payment</source>
         <translation>对外投资</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="108"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="219"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="216"/>
         <source>Subsidiary Acquisition Payment</source>
         <translation>取得子公司</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="110"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="220"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="217"/>
         <source>Loan Payment</source>
         <translation>发放贷款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="112"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="221"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="218"/>
         <source>Other Investing Payment</source>
         <translation>其他投资付款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="118"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="224"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="221"/>
         <source>Capital Contribution Receipt</source>
         <translation>吸收投资</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="120"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="225"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="222"/>
         <source>Borrowing Receipt</source>
         <translation>取得借款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="122"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="226"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="223"/>
         <source>Other Financing Receipt</source>
         <translation>其他筹资收款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="128"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="229"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="226"/>
         <source>Debt Repayment Payment</source>
         <translation>偿还债务</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="130"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="230"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="227"/>
         <source>Dividend Payment</source>
         <translation>分配股利</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="132"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="231"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="228"/>
         <source>Interest Payment</source>
         <translation>偿付利息</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="134"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="232"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="229"/>
         <source>Other Financing Payment</source>
         <translation>其他筹资付款</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="140"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="235"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="232"/>
         <source>Exchange Rate Effect</source>
         <translation>汇率影响</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="142"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="236"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="233"/>
         <source>Adjustment</source>
         <translation>调账冲销</translation>
     </message>
     <message>
         <location filename="../../finance/finance_role.cc" line="144"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="237"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="234"/>
         <source>Unclassified</source>
         <translation>未分类</translation>
     </message>
@@ -3091,27 +3091,27 @@ Do you want to save them before closing?</source>
         <translation>取消结算</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.h" line="14"/>
+        <location filename="../../workspace/sectionpermissions.h" line="16"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.h" line="16"/>
+        <location filename="../../workspace/sectionpermissions.h" line="18"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.h" line="20"/>
+        <location filename="../../workspace/sectionpermissions.h" line="22"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.h" line="22"/>
+        <location filename="../../workspace/sectionpermissions.h" line="24"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.h" line="24"/>
+        <location filename="../../workspace/sectionpermissions.h" line="26"/>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
