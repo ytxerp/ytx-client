@@ -67,6 +67,18 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     dialog->show();
 }
 
+void MainWindow::RLeafDeleteLockedDeny(Section section, const QUuid& node_id)
+{
+    auto* section_contex { GetSectionContex(section) };
+    auto model { section_contex->tree_model };
+    auto* node { model->GetNode(node_id) };
+
+    node->sync_state = SyncState::kSynced;
+
+    utils::ShowMessage(
+        QMessageBox::Information, tr("Operation Rejected"), tr("This node contains locked entries and cannot be deleted."), time_const::kAutoCloseMs);
+}
+
 void MainWindow::DeleteBranch(Node* node)
 {
     auto tree_model { sc_->tree_model };

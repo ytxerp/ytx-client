@@ -172,6 +172,7 @@ private slots:
     void RSettlementPermissionDeny(Section section, const QUuid& widget_id);
 
     void RDenyLeafDelete(const QJsonObject& obj);
+    void RLeafDeleteLockedDeny(Section section, const QUuid& node_id);
 
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
     void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array);

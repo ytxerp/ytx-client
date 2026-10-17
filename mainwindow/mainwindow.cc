@@ -435,6 +435,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SBalanceSheetAck, this, &MainWindow::RBalanceSheetAck);
     connect(WebSocket::Instance(), &WebSocket::SIncomeStatementAck, this, &MainWindow::RIncomeStatementAck);
     connect(WebSocket::Instance(), &WebSocket::SCashFlowStatementAck, this, &MainWindow::RCashFlowStatementAck);
+    connect(WebSocket::Instance(), &WebSocket::SLeafDeleteLockedDeny, this, &MainWindow::RLeafDeleteLockedDeny);
 }
 
 void MainWindow::SetIcon() const

@@ -251,6 +251,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryLockedUpdateDeny] = [this](const QJsonObject& obj) { OnEntryLockedUpdateDeny(obj); };
     handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnLockEntries(obj); };
     handler_obj_[WsKey::kEntriesLockDeny] = [this](const QJsonObject& obj) { OnEntriesLockDeny(obj); };
+    handler_obj_[WsKey::kLeafDeleteLockedDeny] = [this](const QJsonObject& obj) { OnLeafDeleteLockedDeny(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -1028,6 +1029,14 @@ void WebSocket::OnLockEntries(const QJsonObject& obj)
 }
 
 void WebSocket::OnEntriesLockDeny(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
+
+void WebSocket::OnLeafDeleteLockedDeny(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+
+    emit SLeafDeleteLockedDeny(section, node_id);
+}
 
 void WebSocket::SearchEntry(const QJsonObject& obj)
 {

@@ -86,6 +86,7 @@ signals:
     void SOrderSave(Section section, const QUuid& node_id, int version);
     void SOperationDeny();
     void SPermissionDeny();
+    void SLeafDeleteLockedDeny(Section section, const QUuid& node_id);
     void SOrderPermissionDeny(Section section, const QUuid& widget_id);
     void SSettlementPermissionDeny(Section section, const QUuid& widget_id);
     void SNodeSelect(Section section, const QUuid& node_id);
@@ -234,6 +235,7 @@ private:
     void OnEntryLockedUpdateDeny(const QJsonObject& obj);
     void OnLockEntries(const QJsonObject& obj);
     void OnEntriesLockDeny(const QJsonObject& obj);
+    void OnLeafDeleteLockedDeny(const QJsonObject& obj);
 
 private:
     QWebSocket socket_ {};
