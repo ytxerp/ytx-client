@@ -133,8 +133,8 @@ enum class WsKey : uint16_t {
     kOrderPermissionDeny = 1720,
     kSettlementPermissionDeny = 1730,
     kNodePermissionDeny = 1740,
-    kEntryLockedUpdateDeny = 1750,
-    kEntriesLockDeny = 1751,
+    kEntryLockPermissionDeny = 1750,
+    kEntriesLockPermissionDeny = 1751,
     kLeafDeleteLockedDeny = 1752,
 
     // --- Profile ---
@@ -328,12 +328,12 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kEntryNumericUpdate";
     case WsKey::kEntryLockedUpdate:
         return "kEntryLockedUpdate";
-    case WsKey::kEntryLockedUpdateDeny:
-        return "kEntryLockedUpdateDeny";
+    case WsKey::kEntryLockPermissionDeny:
+        return "kEntryLockedPermissionDeny";
     case WsKey::kEntriesLock:
         return "kEntriesLock";
-    case WsKey::kEntriesLockDeny:
-        return "kEntriesLockDeny";
+    case WsKey::kEntriesLockPermissionDeny:
+        return "kEntriesLockPermissionDeny";
     case WsKey::kPartnerEntryUpdate:
         return "kPartnerEntryUpdate";
 

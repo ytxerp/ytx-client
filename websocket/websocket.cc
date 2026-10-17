@@ -248,9 +248,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kPartnerNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
 
     handler_obj_[WsKey::kEntryLockedUpdate] = [this](const QJsonObject& obj) { OnEntryLockedUpdate(obj); };
-    handler_obj_[WsKey::kEntryLockedUpdateDeny] = [this](const QJsonObject& obj) { OnEntryLockedUpdateDeny(obj); };
-    handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnLockEntries(obj); };
-    handler_obj_[WsKey::kEntriesLockDeny] = [this](const QJsonObject& obj) { OnEntriesLockDeny(obj); };
+    handler_obj_[WsKey::kEntryLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntryLockPermissionDeny(obj); };
+    handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnEntriesLock(obj); };
+    handler_obj_[WsKey::kEntriesLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntriesLockPermissionDeny(obj); };
     handler_obj_[WsKey::kLeafDeleteLockedDeny] = [this](const QJsonObject& obj) { OnLeafDeleteLockedDeny(obj); };
 }
 
@@ -433,7 +433,7 @@ void WebSocket::OnNodePermissionDeny(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
     Q_ASSERT(tree_model != nullptr);
 
-    tree_model->PermissionDenied(node_id);
+    tree_model->RestoreSyncState(node_id);
 }
 
 void WebSocket::NotifyRegisterOutcome(const QJsonObject& obj)
@@ -489,7 +489,7 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
     Q_ASSERT(tree_model != nullptr);
 
     if (session_id == session_id_) {
-        tree_model->SyncVersion(node_id, version);
+        tree_model->UpdateVersion(node_id, version);
         return;
     }
 
@@ -1005,19 +1005,19 @@ void WebSocket::OnEntryLockedUpdate(const QJsonObject& obj)
     entry_hub->UpdateEntryLocked(entry_id, version, is_locked);
 }
 
-void WebSocket::OnEntryLockedUpdateDeny(const QJsonObject& obj)
+void WebSocket::OnEntryLockPermissionDeny(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     auto entry_hub { entry_hub_hash_.value(section) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
 
     Q_ASSERT(entry_hub);
-    entry_hub->UpdateEntryLockedDeny(entry_id);
+    entry_hub->RestoreSyncState(entry_id);
 
     emit SPermissionDeny();
 }
 
-void WebSocket::OnLockEntries(const QJsonObject& obj)
+void WebSocket::OnEntriesLock(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -1028,7 +1028,7 @@ void WebSocket::OnLockEntries(const QJsonObject& obj)
     entry_hub->LockEntries(node_id, is_locked);
 }
 
-void WebSocket::OnEntriesLockDeny(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
+void WebSocket::OnEntriesLockPermissionDeny(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
 
 void WebSocket::OnLeafDeleteLockedDeny(const QJsonObject& obj)
 {

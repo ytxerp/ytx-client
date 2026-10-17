@@ -98,7 +98,7 @@ public:
     void ApplyNode(const QUuid& ancestor, const QJsonObject& data);
 
     void SyncTotalArray(const QJsonArray& total_array);
-    void SyncVersion(const QUuid& node_id, int version);
+    void UpdateVersion(const QUuid& node_id, int version);
 
     void ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id);
     void ApplyDrag(const QUuid& ancestor, const QUuid& descendant);
@@ -131,7 +131,7 @@ public:
 
     void Reset();
     void FlushTimers();
-    void PermissionDenied(const QUuid& node_id);
+    void RestoreSyncState(const QUuid& node_id);
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline Node* GetNode(const QUuid& node_id) const

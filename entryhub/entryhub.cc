@@ -3,9 +3,9 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "enum/statusenum.h"
 #include "global/entrypool.h"
 #include "utils/entryutils.h"
-#include "websocket/jsongen.h"
 
 EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
     : QObject(parent)
@@ -186,7 +186,7 @@ void EntryHub::UpdateEntryLocked(const QUuid& entry_id, int version, bool is_loc
     emit SRefreshField(entry->rhs_node, entry_id, locked_column, locked_column);
 }
 
-void EntryHub::UpdateEntryLockedDeny(const QUuid& entry_id)
+void EntryHub::RestoreSyncState(const QUuid& entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it == entry_cache_.constEnd())

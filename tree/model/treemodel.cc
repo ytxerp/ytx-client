@@ -332,7 +332,7 @@ void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
     leaf_model_->AppendItem(node_id, path);
 }
 
-void TreeModel::SyncVersion(const QUuid& node_id, int version)
+void TreeModel::UpdateVersion(const QUuid& node_id, int version)
 {
     auto* node { GetNode(node_id) };
     if (!node)
@@ -958,7 +958,7 @@ void TreeModel::FlushTimers()
     }
 }
 
-void TreeModel::PermissionDenied(const QUuid& node_id)
+void TreeModel::RestoreSyncState(const QUuid& node_id)
 {
     auto* node { node_hash_.value(node_id, nullptr) };
     if (!node)

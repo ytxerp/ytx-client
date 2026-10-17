@@ -232,9 +232,9 @@ private:
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);
     void OnEntryLockedUpdate(const QJsonObject& obj);
-    void OnEntryLockedUpdateDeny(const QJsonObject& obj);
-    void OnLockEntries(const QJsonObject& obj);
-    void OnEntriesLockDeny(const QJsonObject& obj);
+    void OnEntryLockPermissionDeny(const QJsonObject& obj);
+    void OnEntriesLock(const QJsonObject& obj);
+    void OnEntriesLockPermissionDeny(const QJsonObject& obj);
     void OnLeafDeleteLockedDeny(const QJsonObject& obj);
 
 private:
