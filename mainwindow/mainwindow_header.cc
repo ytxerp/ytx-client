@@ -247,7 +247,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Unit"),
         tr("Count Total"),
         tr("Measure Total"),
-        tr("Gross Total"),
+        tr("Amount Total"),
     };
 
     // Entry
@@ -320,7 +320,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Count"),
         tr("Measure"),
         tr("Unit Price"),
-        tr("Gross"),
+        tr("Amount"),
         tr("Status"),
         tr("Description"),
         tr("Tag"),
