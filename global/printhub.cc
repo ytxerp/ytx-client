@@ -16,9 +16,9 @@ void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 void PrintHub::Preview()
 {
     QPrinter printer { QPrinter::ScreenResolution };
-    ApplyConfig(&printer);
 
     printer.setPrinterName(app_config_->printer);
+    ApplyConfig(&printer);
 
     QPrintPreviewDialog preview(&printer);
 
@@ -29,7 +29,6 @@ void PrintHub::Preview()
 void PrintHub::Print()
 {
     QPrinter printer(QPrinter::ScreenResolution);
-    ApplyConfig(&printer);
 
     const auto available_printers { QPrinterInfo::availablePrinterNames() };
     const QString& printer_name { app_config_->printer };
@@ -43,6 +42,7 @@ void PrintHub::Print()
         printer.setPrinterName(printer_name);
     }
 
+    ApplyConfig(&printer);
     RenderAllPages(&printer);
 }
 
@@ -294,12 +294,11 @@ void PrintHub::ReadPageConfig(QSettings& settings)
 
 void PrintHub::ApplyConfig(QPrinter* printer)
 {
-    QPageLayout layout { printer->pageLayout() };
+    const auto orientation { page_config_.orientation.compare(QStringLiteral("landscape"), Qt::CaseInsensitive) == 0 ? QPageLayout::Landscape
+                                                                                                                     : QPageLayout::Portrait };
 
-    layout.setOrientation(
-        page_config_.orientation.compare(QStringLiteral("landscape"), Qt::CaseInsensitive) == 0 ? QPageLayout::Landscape : QPageLayout::Portrait);
+    const auto page_size { page_config_.page_size.compare(QStringLiteral("A4"), Qt::CaseInsensitive) == 0 ? QPageSize::A4 : QPageSize::A5 };
 
-    layout.setPageSize(QPageSize(page_config_.page_size.compare(QStringLiteral("A4"), Qt::CaseInsensitive) == 0 ? QPageSize::A4 : QPageSize::A5));
-
-    printer->setPageLayout(layout);
+    printer->setPageSize(QPageSize(page_size));
+    printer->setPageOrientation(orientation);
 }
