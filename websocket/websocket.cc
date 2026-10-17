@@ -202,6 +202,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
+    handler_obj_[WsKey::kOrderNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
     handler_obj_[WsKey::kEntryDescriptionSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
     handler_obj_[WsKey::kEntryTagSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };

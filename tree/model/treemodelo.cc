@@ -291,6 +291,10 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
+        case NodeEnumO::kColor:
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
+        case NodeEnumO::kDocument:
+            return utils::CompareMember(lhs, rhs, &Node::document, order);
         }
     };
 
@@ -340,6 +344,10 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumO::kTag:
         return d_node->tag;
+    case NodeEnumO::kColor:
+        return d_node->color;
+    case NodeEnumO::kDocument:
+        return d_node->document;
     }
 }
 
@@ -364,7 +372,26 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumO::kTag:
         node::UpdateStringList(changes, node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
-    default:
+    case NodeEnumO::kColor:
+        node::UpdateField(changes, node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        break;
+    case NodeEnumO::kDocument:
+        node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        break;
+    case NodeEnumO::kDescription:
+        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        break;
+    case NodeEnumO::kName:
+    case NodeEnumO::kIssuedTime:
+    case NodeEnumO::kEmployeeId:
+    case NodeEnumO::kStatus:
+    case NodeEnumO::kCode:
+    case NodeEnumO::kDirectionRule:
+    case NodeEnumO::kKind:
+    case NodeEnumO::kUnit:
+    case NodeEnumO::kCountTotal:
+    case NodeEnumO::kMeasureTotal:
+    case NodeEnumO::kInitialTotal:
         return false;
     }
 
@@ -384,15 +411,19 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     case NodeEnumO::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;
-    case NodeEnumO::kCode:
     case NodeEnumO::kDescription:
+        flags |= Qt::ItemIsEditable;
+        break;
+    case NodeEnumO::kCode:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:
     case NodeEnumO::kStatus:
     case NodeEnumO::kTag:
+    case NodeEnumO::kColor:
     case NodeEnumO::kDirectionRule:
     case NodeEnumO::kKind:
     case NodeEnumO::kUnit:
+    case NodeEnumO::kDocument:
     case NodeEnumO::kCountTotal:
     case NodeEnumO::kMeasureTotal:
     case NodeEnumO::kInitialTotal:

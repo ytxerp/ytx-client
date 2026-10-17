@@ -117,6 +117,7 @@ private:
     bool UpdateCount(EntryO* entry, double value);
     bool UpdateDescription(EntryO* entry, const QString& value);
     bool UpdateTag(EntryO* entry, const QStringList& value);
+    bool UpdateDocument(EntryO* entry, const QStringList& value);
 
 private:
     const NodeO* d_node_ {};

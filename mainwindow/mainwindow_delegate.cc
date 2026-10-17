@@ -210,6 +210,12 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
     auto* tag { new TagDelegate(sc.tag_icon_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag);
+
+    auto* document { new Document(sc.shared_config.document_dir, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDocument), document);
+
+    auto* color { new Color(tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kColor), color);
 }
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -390,6 +396,9 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
     const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
     auto* tag { new TagDelegate(sc.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag);
+
+    auto* document { new Document(sc.shared_config.document_dir, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDocument), document);
 
     auto* status { new StatusDelegate(
         QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };

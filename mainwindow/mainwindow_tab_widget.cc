@@ -102,7 +102,7 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
 
     ui->actionRename->setEnabled(is_tree);
-    ui->actionClearColor->setEnabled(is_tree && !is_order_section);
+    ui->actionClearColor->setEnabled(is_tree);
 
     ui->actionMarkAll->setEnabled(is_table_fipt || is_statement_tertiary);
     ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_tertiary);

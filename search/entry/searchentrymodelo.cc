@@ -40,6 +40,8 @@ QVariant EntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->initial;
     case EntryEnumO::kStatus:
         return d_entry->status;
+    case EntryEnumO::kDocument:
+        return d_entry->document;
     }
 }
 
@@ -53,11 +55,11 @@ void EntryModelO::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case EntryEnumO::kLhsNode:
-            return utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::lhs_node, order);
         case EntryEnumO::kRhsNode:
-            return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::rhs_node, order);
         case EntryEnumO::kDescription:
-            return utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::description, order);
         case EntryEnumO::kCount:
             return utils::CompareMember(d_lhs, d_rhs, &EntryO::count, order);
         case EntryEnumO::kUnitPrice:
@@ -67,7 +69,9 @@ void EntryModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kInitial:
             return utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
         case EntryEnumO::kTag:
-            return utils::CompareMember(lhs, rhs, &Entry::tag, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::tag, order);
+        case EntryEnumO::kDocument:
+            return utils::CompareMember(lhs, rhs, &EntryO::document, order);
         case EntryEnumO::kExternalSku:
         case EntryEnumO::kStatus:
             return false;

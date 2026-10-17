@@ -81,6 +81,10 @@ QVariant NodeModelO::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumO::kTag:
         return d_node->tag;
+    case NodeEnumO::kColor:
+        return d_node->color;
+    case NodeEnumO::kDocument:
+        return d_node->document;
     }
 }
 
@@ -121,6 +125,10 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
+        case NodeEnumO::kColor:
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
+        case NodeEnumO::kDocument:
+            return utils::CompareMember(lhs, rhs, &Node::document, order);
         }
     };
 

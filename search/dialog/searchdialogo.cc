@@ -25,7 +25,8 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time_);
-
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kColor), color_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDocument), document_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
     auto* partner_name { new SearchPathTableR(partner_, view) };
@@ -42,6 +43,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), rate_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), table_path_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDocument), document_);
 
     auto* item_name { new SearchPathTableR(inventory_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), item_name);

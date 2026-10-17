@@ -240,6 +240,8 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Code"),
         tr("Description"),
         tr("Tag"),
+        tr("Color"),
+        tr("Document"),
         tr("Direction Rule"),
         tr("Kind"),
         tr("Unit"),
@@ -322,6 +324,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Status"),
         tr("Description"),
         tr("Tag"),
+        tr("Document"),
         tr("External SKU"),
     };
 

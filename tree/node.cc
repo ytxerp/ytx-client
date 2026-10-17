@@ -189,6 +189,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         code = val.toString();
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
+    if (const auto val = object.value(kColor); val.isString())
+        color = val.toString();
 
     if (const auto val = object.value(kKind); val.isDouble())
         kind = static_cast<NodeKind>(val.toInt());
@@ -214,6 +216,8 @@ void NodeO::ReadJson(const QJsonObject& object)
 
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -235,8 +239,10 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kStatus, std::to_underlying(order_status));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kVersion, version);
+    obj.insert(kColor, color);
+    obj.insert(kDocument, utils::WriteStringList(document));
 
-    // server will ignore these two values
+    // server will ignore this value
     obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
 
     return obj;

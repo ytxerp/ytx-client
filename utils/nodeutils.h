@@ -107,7 +107,7 @@ constexpr int ColorColumn(Section section)
         return std::to_underlying(NodeEnumI::kColor);
     case Section::kSale:
     case Section::kPurchase:
-        return -1;
+        return std::to_underlying(NodeEnumO::kColor);
     }
 
     Q_UNREACHABLE();

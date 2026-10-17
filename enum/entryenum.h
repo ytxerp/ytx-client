@@ -92,6 +92,7 @@ enum class EntryEnumO {
     kStatus,
     kDescription,
     kTag,
+    kDocument,
     kExternalSku,
 };
 

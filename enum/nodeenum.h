@@ -281,6 +281,8 @@ enum class NodeEnumO {
     kCode,
     kDescription,
     kTag,
+    kColor,
+    kDocument,
     kDirectionRule,
     kKind,
     kUnit,

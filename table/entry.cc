@@ -144,6 +144,8 @@ void EntryO::ReadJson(const QJsonObject& object)
         initial = val.toString().toDouble();
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject EntryO::WriteJson() const
@@ -161,6 +163,7 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kInitial, QString::number(initial, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kVersion, version);
+    obj.insert(kDocument, utils::WriteStringList(document));
 
     return obj;
 }

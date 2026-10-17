@@ -132,8 +132,6 @@ void MainWindow::on_actionClearColor_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "ClearColor action is not allowed in Sale or Purchase sections");
-
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;

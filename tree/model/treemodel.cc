@@ -938,7 +938,9 @@ void TreeModel::FlushTimer(const QUuid& id)
 
     if (update.node && !update.changes.isEmpty()) {
         const QJsonObject message { JsonGen::NodeUpdate(section_, id, update.changes, update.node->version) };
-        WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
+
+        const auto key { section_ == Section::kSale || section_ == Section::kPurchase ? WsKey::kOrderNodeUpdate : WsKey::kNodeUpdate };
+        WebSocket::Instance()->SendMessage(key, message);
     }
 
     if (update.timer) {

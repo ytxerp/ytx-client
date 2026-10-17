@@ -134,6 +134,8 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
         return d_entry->tag;
     case EntryEnumO::kStatus:
         return d_entry->status;
+    case EntryEnumO::kDocument:
+        return d_entry->document;
     }
 }
 
@@ -184,6 +186,9 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumO::kTag:
         UpdateTag(d_entry, value.toStringList());
         break;
+    case EntryEnumO::kDocument:
+        UpdateDocument(d_entry, value.toStringList());
+        break;
     case EntryEnumO::kStatus:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kExternalSku:
@@ -217,7 +222,7 @@ void TableModelO::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case EntryEnumO::kDescription:
-            return utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::description, order);
         case EntryEnumO::kRhsNode:
             return utils::CompareMember(lhs, rhs, &EntryO::rhs_node, order);
         case EntryEnumO::kUnitPrice:
@@ -229,9 +234,11 @@ void TableModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kInitial:
             return utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
         case EntryEnumO::kTag:
-            return utils::CompareMember(lhs, rhs, &EntryP::tag, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::tag, order);
+        case EntryEnumO::kDocument:
+            return utils::CompareMember(lhs, rhs, &EntryO::document, order);
         case EntryEnumO::kStatus:
-            return utils::CompareMember(lhs, rhs, &Entry::status, order);
+            return utils::CompareMember(lhs, rhs, &EntryO::status, order);
         case EntryEnumO::kLhsNode:
         case EntryEnumO::kExternalSku:
             return false;
@@ -255,6 +262,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kInitial:
     case EntryEnumO::kTag:
+    case EntryEnumO::kDocument:
     case EntryEnumO::kExternalSku:
     case EntryEnumO::kStatus:
         flags &= ~Qt::ItemIsEditable;
@@ -436,6 +444,19 @@ bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value)
         return false;
 
     entry->tag = value;
+
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
+
+    return true;
+}
+
+bool TableModelO::UpdateDocument(EntryO* entry, const QStringList& value)
+{
+    if (entry->document == value)
+        return false;
+
+    entry->document = value;
 
     if (entry->sync_state == SyncState::kSynced)
         entry->sync_state = SyncState::kUpdating;
