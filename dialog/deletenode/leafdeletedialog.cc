@@ -137,8 +137,9 @@ void LeafDeleteDialog::DeleteNode()
     if (!ui->rBtnDelete->isChecked())
         return;
 
-    const auto& path { model_->Path(node_id_) };
+    const QString path { model_->Path(node_id_) };
     QString info {};
+    WsKey key {};
 
     switch (section_) {
     case Section::kSale:
@@ -148,6 +149,7 @@ void LeafDeleteDialog::DeleteNode()
                   "<span style='color:#d32f2f; font-weight:bold;'>"
                   "⚠️ This action is permanent and cannot be undone."
                   "</span>");
+        key = WsKey::kOrderLeafDelete;
         break;
     case Section::kPartner:
         info = tr("Delete <b>%1</b> and all its entries."
@@ -156,6 +158,7 @@ void LeafDeleteDialog::DeleteNode()
                   "⚠️ This action is permanent and cannot be undone."
                   "</span>")
                    .arg(path);
+        key = WsKey::kPartnerLeafDelete;
         break;
     case Section::kFinance:
     case Section::kTask:
@@ -168,37 +171,21 @@ void LeafDeleteDialog::DeleteNode()
                   "<br><br>"
                   "<i>💡 Tip: Consider relocating entries before deleting.</i>")
                    .arg(path);
+        key = WsKey::kLeafDelete;
         break;
     }
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
-        if (model_->Path(node_id_) != path)
-            return;
-
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path, key]() {
         if (!node_ || !node_->IsValid())
             return;
 
-        WsKey key {};
-        const QJsonObject value { JsonGen::LeafDelete(info_.section, node_id_, node_->version) };
+        if (model_->Path(node_id_) != path)
+            return;
 
-        switch (section_) {
-        case Section::kSale:
-        case Section::kPurchase:
-            key = WsKey::kOrderLeafDelete;
-            break;
-        case Section::kPartner:
-            key = WsKey::kPartnerLeafDelete;
-            break;
-        case Section::kFinance:
-        case Section::kTask:
-        case Section::kInventory:
-            key = WsKey::kLeafDelete;
-            break;
-        }
-
+        const QJsonObject value { JsonGen::LeafDelete(section_, node_id_, node_->version) };
         WebSocket::Instance()->SendMessage(key, value);
         close();
     });
