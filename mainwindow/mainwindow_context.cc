@@ -156,9 +156,6 @@ void MainWindow::InitContextFinance()
     auto& tree_widget { sc_f_.tree_widget };
 
     info.section = Section::kFinance;
-    info.node = kFinanceNode;
-    info.path = kFinancePath;
-    info.entry = kFinanceEntry;
 
     for (NodeUnit c : {
              NodeUnit::USD,
@@ -267,9 +264,6 @@ void MainWindow::InitContextInventory()
     auto& tree_widget { sc_i_.tree_widget };
 
     info.section = Section::kInventory;
-    info.node = kInventoryNode;
-    info.path = kInventoryPath;
-    info.entry = kInventoryEntry;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::IItem), tr("ITM", "Item"));
     info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
@@ -313,9 +307,6 @@ void MainWindow::InitContextTask()
     auto& tree_widget { sc_t_.tree_widget };
 
     info.section = Section::kTask;
-    info.node = kTaskNode;
-    info.path = kTaskPath;
-    info.entry = kTaskEntry;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::TTarget), tr("TGT", "Target"));
     info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
@@ -358,9 +349,6 @@ void MainWindow::InitContextPartner()
     auto& section_config { sc_p_.section_config };
 
     info.section = Section::kPartner;
-    info.node = kPartnerNode;
-    info.path = kPartnerPath;
-    info.entry = kPartnerEntry;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::PCustomer), tr("CUS", "Customer"));
     info.unit_map.insert(std::to_underlying(NodeUnit::PEmployee), tr("EMP", "Employee"));
@@ -401,9 +389,6 @@ void MainWindow::InitContextSale()
     auto& tree_widget { sc_sale_.tree_widget };
 
     info.section = Section::kSale;
-    info.node = kSaleNode;
-    info.path = kSalePath;
-    info.entry = kSaleEntry;
 
     info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));
@@ -446,9 +431,6 @@ void MainWindow::InitContextPurchase()
     auto& tree_widget { sc_purchase_.tree_widget };
 
     info.section = Section::kPurchase;
-    info.node = kPurchaseNode;
-    info.path = kPurchasePath;
-    info.entry = kPurchaseEntry;
 
     info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));

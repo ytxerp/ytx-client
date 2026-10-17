@@ -16,8 +16,8 @@ void MainWindow::RApplySharedConfig(const QJsonArray& arr)
 
         const QJsonObject obj { val.toObject() };
         const Section section { obj.value(kSection).toInt() };
-        const int default_unit { obj.value(WsField::kDefaultUnit).toInt() };
-        const QString document_dir { obj.value(WsField::kDocumentDir).toString() };
+        const int default_unit { obj.value(kDefaultUnit).toInt() };
+        const QString document_dir { obj.value(kDocumentDir).toString() };
 
         auto* sc = GetSectionContex(section);
         if (!sc) {
@@ -44,7 +44,7 @@ void MainWindow::RUpdateDefaultUnit(Section section, int unit)
         sc_->tree_widget->RInitStatus();
 }
 
-void MainWindow::RDenyDefaultUnit(const QString& /*section*/)
+void MainWindow::RDenyDefaultUnit()
 {
     utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"), tr("The base currency cannot be changed because financial entries already exist."),
         time_const::kAutoCloseMs);

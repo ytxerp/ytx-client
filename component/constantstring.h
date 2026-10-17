@@ -52,6 +52,15 @@ inline const QString kMinActiveMonths = QStringLiteral("min_active_months");
 inline const QString kMinPartnerCount = QStringLiteral("min_partner_count");
 }
 
+namespace audit {
+inline const QString kTargetId { "target_id" };
+inline const QString kTargetType { "target_type" };
+inline const QString kTargetOperation { "target_operation" };
+inline const QString kTargetCode { "target_code" };
+inline const QString kBefore { "before" };
+inline const QString kAfter { "after" };
+}
+
 namespace balance_sheet {
 inline const QString kAssetId = QStringLiteral("asset_id");
 inline const QString kLiabilityId = QStringLiteral("liability_id");

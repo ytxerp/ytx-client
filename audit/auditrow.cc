@@ -3,21 +3,10 @@
 #include "component/constant.h"
 #include "component/constantstring.h"
 
-namespace audit::keys {
-constexpr QLatin1StringView kTargetId { "target_id" };
-constexpr QLatin1StringView kTargetType { "target_type" };
-constexpr QLatin1StringView kTargetOperation { "target_operation" };
-constexpr QLatin1StringView kTargetCode { "target_code" };
-constexpr QLatin1StringView kBefore { "before" };
-constexpr QLatin1StringView kAfter { "after" };
-}
-
 void audit::Row::Reset() { *this = Row {}; }
 
 void audit::Row::ReadJson(const QJsonObject& object)
 {
-    using namespace audit::keys;
-
     if (const auto val = object.value(kTargetId); val.isString())
         target_id = val.toString();
     if (const auto val = object.value(kUsername); val.isString())

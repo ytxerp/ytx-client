@@ -63,7 +63,7 @@ signals:
     void SSharedConfigApply(const QJsonArray& arr);
     void SDocumentDirUpdate(Section section, const QString& document_dir);
     void SDefaultUnitUpdate(Section section, int unit);
-    void SDefaultUnitDeny(const QString& section);
+    void SDefaultUnitDeny();
 
     void STagApply(const QJsonObject& obj);
     void STagInsert(const QJsonObject& obj);

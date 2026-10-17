@@ -432,12 +432,3 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kLeafDeleteLockedDeny";
     }
 }
-
-namespace WsField {
-inline const QString kMarkOperation { QStringLiteral("mark_operation") };
-inline const QString kNodeUpdate { QStringLiteral("node_update") };
-inline const QString kDefaultUnit { QStringLiteral("default_unit") };
-inline const QString kDocumentDir { QStringLiteral("document_dir") };
-inline const QString kKey { QStringLiteral("key") };
-inline const QString kValue { QStringLiteral("value") };
-}

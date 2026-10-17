@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QtCore/qobject.h>
+
 #include <QString>
 #include <span>
 

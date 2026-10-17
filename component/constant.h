@@ -19,13 +19,11 @@
 
 #pragma once
 
+#include <QSet>
 #include <QString>
-#include <QTime>
 
 inline const QString kStrDDCI = QStringLiteral("DDCI");
 inline const QString kStrDICD = QStringLiteral("DICD");
-
-inline const QTime kStartTime = { 0, 0 }; // 00:00
 
 // Empty & punctuation
 inline const QString kColon = QStringLiteral(":");
@@ -89,6 +87,13 @@ inline const QString kStaticNode = QStringLiteral("static_node");
 
 inline const QString kExternalSku = QStringLiteral("external_sku");
 inline const QString kInternalSku = QStringLiteral("internal_sku");
+
+inline const QString kMarkOperation { QStringLiteral("mark_operation") };
+inline const QString kNodeUpdate { QStringLiteral("node_update") };
+inline const QString kDefaultUnit { QStringLiteral("default_unit") };
+inline const QString kDocumentDir { QStringLiteral("document_dir") };
+inline const QString kKey { QStringLiteral("key") };
+inline const QString kValue { QStringLiteral("value") };
 
 inline const QString kSettlementItemDeselected = QStringLiteral("settlement_item_deselected");
 inline const QString kSettlementItemSelected = QStringLiteral("settlement_item_selected");
@@ -245,31 +250,8 @@ inline const QString kExport = QStringLiteral("export");
 
 // Constants for sections
 inline const QString kFinance = QStringLiteral("finance");
-inline const QString kFinanceNode = QStringLiteral("finance_node");
-inline const QString kFinancePath = QStringLiteral("finance_path");
-inline const QString kFinanceEntry = QStringLiteral("finance_entry");
-
 inline const QString kInventory = QStringLiteral("inventory");
-inline const QString kInventoryNode = QStringLiteral("inventory_node");
-inline const QString kInventoryPath = QStringLiteral("inventory_path");
-inline const QString kInventoryEntry = QStringLiteral("inventory_entry");
-
 inline const QString kPurchase = QStringLiteral("purchase");
-inline const QString kPurchaseNode = QStringLiteral("purchase_node");
-inline const QString kPurchasePath = QStringLiteral("purchase_path");
-inline const QString kPurchaseEntry = QStringLiteral("purchase_entry");
-
 inline const QString kSale = QStringLiteral("sale");
-inline const QString kSaleNode = QStringLiteral("sale_node");
-inline const QString kSalePath = QStringLiteral("sale_path");
-inline const QString kSaleEntry = QStringLiteral("sale_entry");
-
 inline const QString kPartner = QStringLiteral("partner");
-inline const QString kPartnerNode = QStringLiteral("partner_node");
-inline const QString kPartnerPath = QStringLiteral("partner_path");
-inline const QString kPartnerEntry = QStringLiteral("partner_entry");
-
 inline const QString kTask = QStringLiteral("task");
-inline const QString kTaskNode = QStringLiteral("task_node");
-inline const QString kTaskPath = QStringLiteral("task_path");
-inline const QString kTaskEntry = QStringLiteral("task_entry");

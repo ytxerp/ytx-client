@@ -102,7 +102,7 @@ QJsonObject MarkEntries(Section section, CUuid& node_id, int operation)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(WsField::kMarkOperation, operation);
+    message.insert(kMarkOperation, operation);
     return message;
 }
 
@@ -132,7 +132,7 @@ QJsonObject DocumentDir(Section section, CString& document_dir)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(WsField::kDocumentDir, document_dir);
+    message.insert(kDocumentDir, document_dir);
     return message;
 }
 
@@ -140,7 +140,7 @@ QJsonObject DefaultUnit(Section section, int unit)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(WsField::kDefaultUnit, unit);
+    message.insert(kDefaultUnit, unit);
     return message;
 }
 
@@ -245,7 +245,7 @@ QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update, in
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(WsField::kNodeUpdate, update);
+    message.insert(kNodeUpdate, update);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kVersion, version);
     return message;

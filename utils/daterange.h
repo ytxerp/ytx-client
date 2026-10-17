@@ -21,8 +21,6 @@
 
 #include <QDateTime>
 
-#include "component/constant.h"
-
 namespace utils {
 
 struct DateTimeRange final {
@@ -45,7 +43,8 @@ struct DateRange final {
     {
         Q_ASSERT(IsValid());
 
-        return { QDateTime(start, kStartTime).toUTC(), QDateTime(end.addDays(1), kStartTime).toUTC() };
+        static const QTime midnight { 0, 0 };
+        return { QDateTime(start, midnight).toUTC(), QDateTime(end.addDays(1), midnight).toUTC() };
     }
 
     QString ToString() const { return QStringLiteral("[%1, %2]").arg(start.toString(Qt::ISODate), end.toString(Qt::ISODate)); }

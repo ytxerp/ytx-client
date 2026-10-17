@@ -427,7 +427,7 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
     order_message.insert(kVersion, tmp_node_->version);
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_message.insert(kPartnerId, tmp_node_->partner_id.toString(QUuid::WithoutBraces));
-    order_message.insert(WsField::kNodeUpdate, pending_update_);
+    order_message.insert(kNodeUpdate, pending_update_);
 }
 
 void TableWidgetO::on_pBtnRecall_clicked()

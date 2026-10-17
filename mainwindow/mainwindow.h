@@ -197,7 +197,7 @@ private slots:
     void RApplySharedConfig(const QJsonArray& arr);
     void RUpdateDocumentDir(Section section, const QString& document_dir);
     void RUpdateDefaultUnit(Section section, int unit);
-    void RDenyDefaultUnit(const QString& section);
+    void RDenyDefaultUnit();
     void RSelectEntry(const QUuid& node_id, const QUuid& entry_id);
     void REntryLocked();
 

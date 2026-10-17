@@ -1193,7 +1193,7 @@ void WebSocket::ReleaseOrder(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const auto node_update { obj.value(WsField::kNodeUpdate).toObject() };
+    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
     auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
@@ -1228,7 +1228,7 @@ void WebSocket::SaveOrder(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const auto node_update { obj.value(WsField::kNodeUpdate).toObject() };
+    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
     auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
@@ -1289,7 +1289,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const auto node_update { obj.value(WsField::kNodeUpdate).toObject() };
+    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const int version { obj.value(kVersion).toInt() };
     const NodeUnit unit { node_update.value(kUnit).toInt() };
@@ -1441,7 +1441,7 @@ void WebSocket::MarkEntries(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const MarkOperation operation { obj.value(WsField::kMarkOperation).toInt() };
+    const MarkOperation operation { obj.value(kMarkOperation).toInt() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
 
@@ -1454,7 +1454,7 @@ void WebSocket::UpdateDocumentDir(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-    CString document_dir { obj.value(WsField::kDocumentDir).toString() };
+    CString document_dir { obj.value(kDocumentDir).toString() };
 
     if (session_id != session_id_) {
         emit SDocumentDirUpdate(section, document_dir);
@@ -1464,12 +1464,12 @@ void WebSocket::UpdateDocumentDir(const QJsonObject& obj)
 void WebSocket::UpdateDefaultUnit(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const int default_unit { obj.value(WsField::kDefaultUnit).toInt() };
+    const int default_unit { obj.value(kDefaultUnit).toInt() };
 
     emit SDefaultUnitUpdate(section, default_unit);
 }
 
-void WebSocket::DenyDefaultUnit(const QJsonObject& /*obj*/) { emit SDefaultUnitDeny(kFinance); }
+void WebSocket::DenyDefaultUnit(const QJsonObject& /*obj*/) { emit SDefaultUnitDeny(); }
 
 void WebSocket::ApplySharedConfig(const QJsonArray& arr) { emit SSharedConfigApply(arr); }
 
