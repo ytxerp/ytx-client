@@ -40,6 +40,6 @@ struct SectionContext {
 
     QHash<QUuid, WidgetContext> widget_hash {};
 
-    QHash<QUuid, tag::Row*> tag_hash {};
+    QHash<QUuid, tag::Row> tag_hash {};
     QHash<QUuid, tag::Icon> tag_icon_hash {};
 };

@@ -36,7 +36,7 @@ public:
     ~EntryModel() override { };
 
 protected:
-    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& list);
@@ -61,6 +61,6 @@ protected:
 protected:
     EntryList list_ {};
     CSectionInfo& info_;
-    const QHash<QUuid, tag::Row*>& tag_hash_ {};
+    const QHash<QUuid, tag::Row>& tag_hash_ {};
 };
 }

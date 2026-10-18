@@ -531,17 +531,13 @@ void WebSocket::ApplyTree(const QJsonObject& obj)
 void WebSocket::ApplyTag(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
-
     emit STagApply(obj);
 }
 
 void WebSocket::InsertTag(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
-
-    if (session_id != session_id_)
-        emit STagInsert(obj);
+    emit STagInsert(obj);
 }
 
 void WebSocket::UpdateTag(const QJsonObject& obj)

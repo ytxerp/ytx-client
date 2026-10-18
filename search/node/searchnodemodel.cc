@@ -6,7 +6,7 @@
 
 namespace search {
 
-NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent)
+NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }

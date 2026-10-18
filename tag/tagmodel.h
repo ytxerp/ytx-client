@@ -11,9 +11,6 @@ namespace tag {
 class Model final : public QAbstractItemModel {
     Q_OBJECT
 
-signals:
-    void SInsertLocalTag(Section section, tag::Row* tag);
-
 public:
     explicit Model(Section section, const QStringList& header, QObject* parent = nullptr);
     ~Model() override;
@@ -52,7 +49,7 @@ public:
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    void Rebuild(const QHash<QUuid, Row*>& tag_hash);
+    void Rebuild(const QHash<QUuid, Row>& tag_hash);
 
 private:
     bool UpdateName(Row* tag, const QString& new_name);
@@ -68,7 +65,6 @@ private:
     const Section section_ {};
     const QStringList& header_;
 
-    // non-owning pointers, owned by tag_hash
     QList<Row*> list_ {};
     QSet<QString> names_ {};
 

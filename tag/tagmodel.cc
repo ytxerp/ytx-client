@@ -18,7 +18,11 @@ Model::Model(Section section, const QStringList& header, QObject* parent)
 {
 }
 
-Model::~Model() { FlushTimers(); }
+Model::~Model()
+{
+    FlushTimers();
+    ResourcePool<Row>::Instance().Recycle(list_);
+}
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -153,7 +157,6 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     Row* tag { list_.at(row) };
     const QUuid tag_id { tag->id };
     const QString tag_name { tag->name };
-    const int version { tag->version };
 
     // Remove pending update to prevent delayed flush after deletion
     // Stop its timer to avoid accessing recycled member.
@@ -174,16 +177,15 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
 
     // Handle synchronization and network notification
     if (tag->sync_state == SyncState::kSynced) {
-        const QJsonObject message { JsonGen::TagDelete(section_, tag_id, version) };
+        const QJsonObject message { JsonGen::TagDelete(section_, tag_id, tag->version) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
-    } else {
-        ResourcePool<Row>::Instance().Recycle(tag);
     }
 
+    ResourcePool<Row>::Instance().Recycle(tag);
     return true;
 }
 
-void Model::Rebuild(const QHash<QUuid, Row*>& tag_hash)
+void Model::Rebuild(const QHash<QUuid, Row>& tag_hash)
 {
     QList<Row*> new_list {};
     QSet<QString> new_names {};
@@ -192,11 +194,8 @@ void Model::Rebuild(const QHash<QUuid, Row*>& tag_hash)
     new_names.reserve(tag_hash.size());
 
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-        Row* tag { it.value() };
-
-        if (!tag) {
-            continue;
-        }
+        auto* tag { ResourcePool<Row>::Instance().Allocate() };
+        *tag = it.value();
 
         new_list.append(tag);
         new_names.insert(tag->name);
@@ -205,6 +204,7 @@ void Model::Rebuild(const QHash<QUuid, Row*>& tag_hash)
     std::ranges::sort(new_list, [](const Row* lhs, const Row* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 
     beginResetModel();
+    ResourcePool<Row>::Instance().Recycle(list_);
 
     list_ = std::move(new_list);
     names_ = std::move(new_names);
@@ -303,7 +303,5 @@ void Model::TryInsert(Row* tag)
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);
-
-    emit SInsertLocalTag(section_, tag);
 }
 }

@@ -3,7 +3,6 @@
 #include <QJsonArray>
 #include <QPainter>
 
-#include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "tag/tagdialog.h"
 #include "tag/tagenum.h"
@@ -18,7 +17,6 @@ void MainWindow::on_actionTags_triggered()
     qInfo() << Q_FUNC_INFO;
 
     auto* model { new tag::Model(start_, header_info_.tag, this) };
-    connect(model, &tag::Model::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
     auto* dialog { new TagDialog(model) };
 
@@ -62,22 +60,12 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
             continue;
         }
 
-        auto* tag { ResourcePool<tag::Row>::Instance().Allocate() };
-        tag->ReadJson(tag_obj);
+        tag::Row tag {};
+        tag.ReadJson(tag_obj);
 
         sc->tag_hash.insert(id, tag);
         UpdateTagIcon(sc, tag);
     }
-}
-
-void MainWindow::RInsertLocalTag(Section section, tag::Row* tag)
-{
-    auto* sc { GetSectionContex(section) };
-    Q_ASSERT(sc);
-    Q_ASSERT(tag);
-
-    sc->tag_hash.insert(tag->id, tag);
-    UpdateTagIcon(sc, tag);
 }
 
 void MainWindow::RInsertTag(const QJsonObject& obj)
@@ -105,10 +93,10 @@ void MainWindow::RInsertTag(const QJsonObject& obj)
         return;
     }
 
-    auto* tag { ResourcePool<tag::Row>::Instance().Allocate() };
+    tag::Row tag {};
 
-    tag->ReadJson(tag_obj);
-    sc->tag_hash.insert(tag->id, tag);
+    tag.ReadJson(tag_obj);
+    sc->tag_hash.insert(tag.id, tag);
     UpdateTagIcon(sc, tag);
 }
 
@@ -136,13 +124,13 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
         return;
     }
 
-    auto* tag { it.value() };
+    auto& tag { it.value() };
 
     const QJsonObject update_obj { obj.value(kUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
-    tag->ReadJson(update_obj);
-    tag->version = version;
+    tag.ReadJson(update_obj);
+    tag.version = version;
 
     UpdateTagIcon(sc, tag);
 }
@@ -160,13 +148,8 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
         return;
     }
 
-    auto* tag { sc->tag_hash.take(id) };
-    if (tag) {
-        sc->tag_icon_hash.remove(id);
-        ResourcePool<tag::Row>::Instance().Recycle(tag);
-    } else {
-        qWarning() << "RDeleteTag: tag not found";
-    }
+    sc->tag_icon_hash.remove(id);
+    sc->tag_hash.remove(id);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
@@ -188,16 +171,16 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     tag_menu->setIcon(ui->actionTags->icon());
 
     if (!tag_hash.isEmpty()) {
-        QList<tag::Row*> list = tag_hash.values();
-        std::ranges::sort(list, [](const auto* lhs, const auto* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
+        QList<tag::Row> list = tag_hash.values();
+        std::ranges::sort(list, [](const auto& lhs, const auto& rhs) { return utils::CompareString(lhs.name, rhs.name, Qt::AscendingOrder); });
 
-        for (const auto* tag : std::as_const(list)) {
-            if (!tag || tag->id.isNull())
+        for (const auto& tag : std::as_const(list)) {
+            if (tag.id.isNull())
                 continue;
 
-            auto* tag_action { tag_menu->addAction(tag->name) };
+            auto* tag_action { tag_menu->addAction(tag.name) };
 
-            const bool is_checked { node->tag.contains(tag->id.toString(QUuid::WithoutBraces)) };
+            const bool is_checked { node->tag.contains(tag.id.toString(QUuid::WithoutBraces)) };
 
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
@@ -229,11 +212,12 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::RInsertNodeTag(const tag::Row* tag, TreeModel* model, const Node* node)
+void MainWindow::RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Node* node)
 {
-    qDebug() << "RInsertNodeTag";
+    qDebug() << Q_FUNC_INFO;
+
     auto list { node->tag };
-    list.emplaceFront(tag->id.toString(QUuid::WithoutBraces));
+    list.emplaceFront(tag.id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(node->id) };
     if (!index.isValid()) {
@@ -247,12 +231,12 @@ void MainWindow::RInsertNodeTag(const tag::Row* tag, TreeModel* model, const Nod
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveNodeTag(const tag::Row* tag, TreeModel* model, const Node* node)
+void MainWindow::RRemoveNodeTag(const tag::Row& tag, TreeModel* model, const Node* node)
 {
-    qDebug() << "RRemoveNodeTag";
+    qDebug() << Q_FUNC_INFO;
 
     auto list { node->tag };
-    list.removeAll(tag->id.toString(QUuid::WithoutBraces));
+    list.removeOne(tag.id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(node->id) };
     if (!index.isValid()) {
@@ -287,16 +271,16 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     auto* tag_menu = menu->addMenu(tr("Tags"));
 
     if (!tag_hash.isEmpty()) {
-        QList<tag::Row*> list = tag_hash.values();
-        std::ranges::sort(list, [](const auto* lhs, const auto* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
+        QList<tag::Row> list = tag_hash.values();
+        std::ranges::sort(list, [](const auto& lhs, const auto& rhs) { return utils::CompareString(lhs.name, rhs.name, Qt::AscendingOrder); });
 
-        for (const auto* tag : std::as_const(list)) {
-            if (!tag || tag->id.isNull())
+        for (const auto& tag : std::as_const(list)) {
+            if (tag.id.isNull())
                 continue;
 
-            auto* tag_action { tag_menu->addAction(tag->name) };
+            auto* tag_action { tag_menu->addAction(tag.name) };
 
-            const bool is_checked { entry->tag.contains(tag->id.toString(QUuid::WithoutBraces)) };
+            const bool is_checked { entry->tag.contains(tag.id.toString(QUuid::WithoutBraces)) };
 
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
@@ -325,12 +309,11 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row* tag)
+void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row& tag)
 {
     Q_ASSERT(sc);
-    Q_ASSERT(tag);
 
-    const QUuid& tag_id { tag->id };
+    const QUuid& tag_id { tag.id };
     if (tag_id.isNull())
         return;
 
@@ -342,12 +325,11 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row* tag)
     sc->tag_icon_hash.insert(tag_id, icon);
 }
 
-QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row* tag, bool checked)
+QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row& tag, bool checked)
 {
     Q_ASSERT(sc);
-    Q_ASSERT(tag);
 
-    const QUuid& tag_id { tag->id };
+    const QUuid& tag_id { tag.id };
     if (tag_id.isNull()) {
         return QIcon();
     }
@@ -365,11 +347,11 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row* tag, bool check
     return checked ? it->icon_checked : it->icon;
 }
 
-void MainWindow::RInsertEntryTag(const tag::Row* tag, TableModel* model, const Entry* entry)
+void MainWindow::RInsertEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry)
 {
-    qDebug() << "RInsertEntryTag";
+    qDebug() << Q_FUNC_INFO;
     auto list { entry->tag };
-    list.emplaceFront(tag->id.toString(QUuid::WithoutBraces));
+    list.emplaceFront(tag.id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(entry->id) };
     if (!index.isValid()) {
@@ -383,11 +365,11 @@ void MainWindow::RInsertEntryTag(const tag::Row* tag, TableModel* model, const E
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveEntryTag(const tag::Row* tag, TableModel* model, const Entry* entry)
+void MainWindow::RRemoveEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry)
 {
-    qDebug() << "RRemoveEntryTag";
+    qDebug() << Q_FUNC_INFO;
     auto list { entry->tag };
-    list.removeAll(tag->id.toString(QUuid::WithoutBraces));
+    list.removeOne(tag.id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(entry->id) };
     if (!index.isValid()) {

@@ -9,7 +9,7 @@
 #include <QHeaderView>
 #include <QPainter>
 
-#include "global/resourcepool.h"
+#include "component/constantint.h"
 #include "utils/templateutils.h"
 
 bool utils::PrepareNewFile(QString& file_path, CString& suffix)
@@ -146,7 +146,7 @@ void utils::ResetSectionContext(SectionContext& sc)
     sc.section_config = SectionConfig {};
     sc.shared_config = SharedConfig {};
 
-    ResourcePool<tag::Row>::Instance().Recycle(sc.tag_hash);
+    sc.tag_hash.clear();
     sc.tag_icon_hash.clear();
 }
 

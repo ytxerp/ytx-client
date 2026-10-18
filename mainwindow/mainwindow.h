@@ -144,8 +144,8 @@ private slots:
     void RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertNodeTag(const tag::Row* tag, TreeModel* model, const Node* node);
-    void RRemoveNodeTag(const tag::Row* tag, TreeModel* model, const Node* node);
+    void RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Node* node);
+    void RRemoveNodeTag(const tag::Row& tag, TreeModel* model, const Node* node);
 
     void RTreeViewDoubleClicked(const QModelIndex& index);
     void ROpenSettlementSecondaryWidget(const QModelIndex& index);
@@ -186,13 +186,12 @@ private slots:
 
     void RApplyTag(const QJsonObject& obj);
     void RInsertTag(const QJsonObject& obj);
-    void RInsertLocalTag(Section section, tag::Row* tag);
     void RUpdateTag(const QJsonObject& obj);
     void RDeleteTag(const QJsonObject& obj);
 
     void RTableViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertEntryTag(const tag::Row* tag, TableModel* model, const Entry* entry);
-    void RRemoveEntryTag(const tag::Row* tag, TableModel* model, const Entry* entry);
+    void RInsertEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry);
+    void RRemoveEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry);
 
     void RApplySharedConfig(const QJsonArray& arr);
     void RUpdateDocumentDir(Section section, const QString& document_dir);
@@ -338,9 +337,8 @@ private:
     void UpdateBranchNodeName(const QUuid& node_id);
     void UpdateMultiTabs(const QSet<QUuid>& nodes);
 
-    QIcon GetTagIcon(SectionContext* sc, const tag::Row* tag, bool checked);
-
-    void UpdateTagIcon(SectionContext* sc, const tag::Row* tag);
+    QIcon GetTagIcon(SectionContext* sc, const tag::Row& tag, bool checked);
+    void UpdateTagIcon(SectionContext* sc, const tag::Row& tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }

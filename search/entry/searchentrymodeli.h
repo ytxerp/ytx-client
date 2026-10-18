@@ -25,6 +25,6 @@ namespace search {
 class EntryModelI final : public EntryModel {
     Q_OBJECT
 public:
-    explicit EntryModelI(CSectionInfo& info, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModelI(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 };
 }

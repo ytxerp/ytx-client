@@ -10,7 +10,7 @@
 
 namespace tag {
 
-SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag_hash)
+SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row>& tag_hash)
 {
     SearchQuery query {};
 
@@ -36,12 +36,9 @@ SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag
 
     // Match tags by name.
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-        const Row* tag = it.value();
+        const Row& tag = it.value();
 
-        if (!tag)
-            continue;
-
-        if (tag_names.contains(tag->name)) {
+        if (tag_names.contains(tag.name)) {
             query.tags.insert(it.key().toString(QUuid::WithoutBraces));
         }
     }
@@ -53,7 +50,7 @@ SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag
     return query;
 }
 
-QIcon CreateIcon(const Row* tag, bool checked)
+QIcon CreateIcon(const Row& tag, bool checked)
 {
     const qreal dpr { qApp->devicePixelRatio() };
     QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
@@ -62,12 +59,12 @@ QIcon CreateIcon(const Row* tag, bool checked)
 
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(QBrush(QColor(tag->color)));
+    painter.setBrush(QBrush(QColor(tag.color)));
     painter.setPen(Qt::NoPen);
     painter.drawRoundedRect(1, 1, 15, 15, 3, 3);
 
     if (checked) {
-        painter.setPen(GetContrastColor(tag->color));
+        painter.setPen(GetContrastColor(tag.color));
         painter.setBrush(Qt::NoBrush);
         painter.drawLine(QPointF(4, 8), QPointF(7, 11));
         painter.drawLine(QPointF(7, 11), QPointF(12, 5));
@@ -79,7 +76,7 @@ QIcon CreateIcon(const Row* tag, bool checked)
     return icon;
 }
 
-QPixmap CreatePixmap(const Row* tag)
+QPixmap CreatePixmap(const Row& tag)
 {
     const qreal dpr { qApp->devicePixelRatio() };
 
@@ -88,7 +85,7 @@ QPixmap CreatePixmap(const Row* tag)
     font.setPointSize(font.pointSize() - 2);
     QFontMetrics fm { font };
 
-    const int text_width { fm.horizontalAdvance(tag->name) };
+    const int text_width { fm.horizontalAdvance(tag.name) };
     const int tag_width { text_width + 2 * ui_const::kTagHPadding };
     const int tag_height { fm.height() + 2 * ui_const::kTagVPadding };
 
@@ -104,15 +101,15 @@ QPixmap CreatePixmap(const Row* tag)
 
     // Draw using logical coordinates (no manual scaling needed)
     painter.setPen(Qt::NoPen);
-    painter.setBrush(tag->color);
+    painter.setBrush(tag.color);
 
     // Draw background with integer coordinates to avoid blurriness
     const QRect background_rect { 0, 0, tag_width, tag_height };
     painter.drawRoundedRect(background_rect, ui_const::kCornerRadius, ui_const::kCornerRadius);
 
     // Draw text
-    painter.setPen(GetContrastColor(tag->color));
-    painter.drawText(background_rect, Qt::AlignCenter, tag->name);
+    painter.setPen(GetContrastColor(tag.color));
+    painter.drawText(background_rect, Qt::AlignCenter, tag.name);
 
     return pixmap;
 }

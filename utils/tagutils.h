@@ -13,9 +13,9 @@ struct SearchQuery final {
     QSet<QString> tags {}; // Tag names or tag IDs (depending on your mapping)
 };
 
-SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag_hash);
+SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row>& tag_hash);
 QColor GetContrastColor(const QColor& bg_color);
-QIcon CreateIcon(const Row* tag, bool checked);
-QPixmap CreatePixmap(const Row* tag);
+QIcon CreateIcon(const Row& tag, bool checked);
+QPixmap CreatePixmap(const Row& tag);
 
 }
