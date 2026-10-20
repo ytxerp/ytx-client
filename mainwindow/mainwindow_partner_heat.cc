@@ -1,5 +1,4 @@
 #include "dashboard/partner_heat/partnerheatdialog.h"
-#include "dashboard/partner_heat/partnerheatenum.h"
 #include "dashboard/partner_heat/partnerheatmodel.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"

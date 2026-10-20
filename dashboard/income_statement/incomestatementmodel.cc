@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "global/resourcepool.h"
-#include "incomestatementenum.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
 #include "utils/templateutils.h"

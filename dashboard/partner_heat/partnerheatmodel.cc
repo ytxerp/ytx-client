@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "global/resourcepool.h"
-#include "partnerheatenum.h"
 #include "utils/templateutils.h"
 
 namespace partner_heat {

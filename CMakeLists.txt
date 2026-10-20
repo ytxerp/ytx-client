@@ -110,29 +110,24 @@ set(HEADERS
     component/using.h
     component/widgetcontex.h
     dashboard/balance_sheet/balancesheetdialog.h
-    dashboard/balance_sheet/balancesheetenum.h
     dashboard/balance_sheet/balancesheetmodel.h
     dashboard/balance_sheet/balancesheetrow.h
     dashboard/cash_flow_statement/cashflowcarriermodel.h
     dashboard/cash_flow_statement/cashflowspecialmodel.h
     dashboard/cash_flow_statement/cashflowstatementdialog.h
-    dashboard/cash_flow_statement/cashflowstatementenum.h
     dashboard/cash_flow_statement/cashflowstatementmodel.h
     dashboard/cash_flow_statement/cashflowstatementrow.h
     dashboard/cash_flow_statement/cashflowwrongmodel.h
     dashboard/income_statement/incomestatementdialog.h
-    dashboard/income_statement/incomestatementenum.h
     dashboard/income_statement/incomestatementmodel.h
     dashboard/income_statement/incomestatementrow.h
     dashboard/inventory_heat/inventoryheatdialog.h
-    dashboard/inventory_heat/inventoryheatenum.h
     dashboard/inventory_heat/inventoryheatmodel.h
     dashboard/inventory_heat/inventoryheatrow.h
     dashboard/order_overview/orderoverviewmodel.h
     dashboard/order_overview/orderoverviewrow.h
     dashboard/order_overview/orderoverviewwidget.h
     dashboard/partner_heat/partnerheatdialog.h
-    dashboard/partner_heat/partnerheatenum.h
     dashboard/partner_heat/partnerheatmodel.h
     dashboard/partner_heat/partnerheatrow.h
     delegate/boolstring.h

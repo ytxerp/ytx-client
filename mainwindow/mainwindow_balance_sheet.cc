@@ -1,5 +1,4 @@
 #include "dashboard/balance_sheet/balancesheetdialog.h"
-#include "dashboard/balance_sheet/balancesheetenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

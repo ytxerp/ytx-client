@@ -24,6 +24,17 @@
 
 namespace partner_heat {
 
+enum class RowField : int {
+    kPartnerNode = 0,
+    kPlaceholder,
+    kOrderCount,
+    kInventoryDiversity,
+    kActiveMonths,
+    kActiveDays,
+    kTotalQuantity,
+    kHeatScore,
+};
+
 struct Row final {
     QUuid partner_node {};
     qint64 order_count {};

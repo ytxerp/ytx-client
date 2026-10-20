@@ -31,6 +31,18 @@
 
 namespace balance_sheet {
 
+enum class RowField {
+    kName = 0,
+    kCode,
+    kDescription,
+    kDirectionRule,
+    kKind,
+    kOpeningBalance,
+    kClosingBalance,
+    kChangeAmount,
+    kChangeRate,
+};
+
 struct Row final {
     QString name {};
     QUuid id {};

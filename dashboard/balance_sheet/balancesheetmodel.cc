@@ -1,6 +1,5 @@
 #include "balancesheetmodel.h"
 
-#include "balancesheetenum.h"
 #include "global/resourcepool.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"

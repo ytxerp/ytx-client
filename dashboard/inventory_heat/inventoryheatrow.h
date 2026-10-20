@@ -24,6 +24,17 @@
 
 namespace inventory_heat {
 
+enum class RowField : int {
+    kInventoryNode = 0,
+    kPlaceholder,
+    kOrderCount,
+    kPartnerCount,
+    kActiveMonths,
+    kActiveDays,
+    kTotalQuantity,
+    kHeatScore,
+};
+
 struct Row final {
     QUuid inventory_node {};
     qint64 order_count {};

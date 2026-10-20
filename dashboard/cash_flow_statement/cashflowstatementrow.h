@@ -29,6 +29,14 @@
 
 namespace cash_flow {
 
+enum class RowField {
+    kName = 0,
+    kCode,
+    kDescription,
+    kDirectionRule,
+    kFinalTotal,
+};
+
 struct Row final {
     QString name {};
     QUuid id {};
@@ -63,6 +71,18 @@ struct Row final {
         if (const auto val = object.value(kRoles); val.isDouble())
             roles = static_cast<finance::Roles>(val.toInt());
     }
+};
+
+enum class WrongRowField {
+    kIssuedTime,
+    kLhsNode,
+    kLhsDebit,
+    kLhsCredit,
+    kDescription,
+    kCashKind,
+    kRhsCredit,
+    kRhsDebit,
+    kRhsNode,
 };
 
 struct WrongRow final {

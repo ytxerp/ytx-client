@@ -2,7 +2,6 @@
 
 #include <QJsonArray>
 
-#include "cashflowstatementenum.h"
 #include "component/constantbool.h"
 #include "global/resourcepool.h"
 #include "utils/nodeutils.h"

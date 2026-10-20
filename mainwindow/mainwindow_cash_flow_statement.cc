@@ -2,7 +2,6 @@
 
 #include "component/constantstring.h"
 #include "dashboard/cash_flow_statement/cashflowstatementdialog.h"
-#include "dashboard/cash_flow_statement/cashflowstatementenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

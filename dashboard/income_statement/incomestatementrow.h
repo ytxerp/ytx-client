@@ -12,6 +12,19 @@
 
 namespace income_statement {
 
+enum class RowField {
+    kName = 0,
+    kCode,
+    kDescription,
+    kDirectionRule,
+    kKind,
+    kFinalTotal,
+    kYoyFinalTotal,
+    kYoyGrowthRate,
+    kMomFinalTotal,
+    kMomGrowthRate,
+};
+
 struct Row final {
     QString name {};
     QUuid id {};

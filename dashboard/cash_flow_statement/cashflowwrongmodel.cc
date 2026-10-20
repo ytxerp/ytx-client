@@ -2,7 +2,6 @@
 
 #include <QtCore/qjsonarray.h>
 
-#include "cashflowstatementenum.h"
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 

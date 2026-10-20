@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "global/resourcepool.h"
-#include "inventoryheatenum.h"
 #include "utils/templateutils.h"
 
 namespace inventory_heat {

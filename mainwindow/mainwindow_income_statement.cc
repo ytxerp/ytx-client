@@ -1,5 +1,4 @@
 #include "dashboard/income_statement/incomestatementdialog.h"
-#include "dashboard/income_statement/incomestatementenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
