@@ -31,7 +31,6 @@ enum class WidgetRole {
     kSettlement,
     kSettlementView,
     kStatement,
-    kOrderHistory,
     kOrderOverview,
 };
 

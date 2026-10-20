@@ -170,7 +170,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 
     {
         const bool rule { tree_model->Rule(node_id) };
-        TableModelArg arg { info, node_id, rule };
+        const TableModelArg arg { info, node_id, rule };
 
         switch (section) {
         case Section::kFinance:
@@ -194,12 +194,14 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
-    WidgetContext wc { widget, node_id, WidgetRole::kNodeTabFIT };
+
+    const WidgetRole role { section == Section::kPartner ? WidgetRole::kNodeTabP : WidgetRole::kNodeTabFIT };
+    const WidgetContext wc { widget, node_id, role };
 
     {
         CString name { tree_model->Name(node_id) };
-        const int tab_index { sc_->tab_widget->addTab(widget, name) };
-        auto* tab_bar { sc_->tab_widget->tabBar() };
+        const int tab_index { sc->tab_widget->addTab(widget, name) };
+        auto* tab_bar { sc->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, node_id);
         tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
@@ -228,8 +230,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         case Section::kPartner:
             TableDelegateP(view, section_config);
             TableConnectP(table_model);
-            static_cast<EntryHubP*>(sc_->entry_hub.data())->PushEntry(node_id);
-            wc.role = WidgetRole::kNodeTabP;
+            static_cast<EntryHubP*>(sc->entry_hub.data())->PushEntry(node_id);
             break;
         case Section::kSale:
         case Section::kPurchase:

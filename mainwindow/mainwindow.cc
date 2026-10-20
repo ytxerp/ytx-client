@@ -256,7 +256,7 @@ void MainWindow::FlushCaches(SectionContext& sc)
         sc.tree_model->FlushTimers();
 
     // Iterate through all views in the view_hash
-    for (auto it = sc.widget_hash.begin(); it != sc.widget_hash.end(); ++it) {
+    for (auto it = sc.widget_hash.cbegin(); it != sc.widget_hash.cend(); ++it) {
         const auto& wc = it.value();
 
         // Skip if the widget pointer is null
@@ -264,7 +264,7 @@ void MainWindow::FlushCaches(SectionContext& sc)
             continue;
 
         // Only process specific NodeTab types
-        if (wc.role != WidgetRole::kNodeTabFIT && wc.role != WidgetRole::kNodeTabO)
+        if (wc.role != WidgetRole::kNodeTabFIT && wc.role != WidgetRole::kNodeTabP)
             continue;
 
         // Safely cast the widget to TableWidget
