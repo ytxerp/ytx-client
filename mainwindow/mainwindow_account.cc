@@ -8,7 +8,6 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 #include "workspace/workspacedialog.h"
-#include "workspace/workspaceenum.h"
 
 void MainWindow::on_actionProfile_triggered()
 {
@@ -68,7 +67,7 @@ void MainWindow::on_actionWorkspaceManager_triggered()
     WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
     auto* view { dialog->View() };
-    InitTableView(view, std::to_underlying(workspace::MemberField::kPlaceholder));
+    InitTableView(view, std::to_underlying(workspace::RowField::kPlaceholder));
     DelegateWorkspaceMember(view);
 
     dialog->show();

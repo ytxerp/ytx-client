@@ -315,10 +315,9 @@ set(HEADERS
     widget/treeview.h
     workspace/sectionpermissions.h
     workspace/workspacedialog.h
-    workspace/workspaceenum.h
-    workspace/workspacemember.h
     workspace/workspacemodel.h
     workspace/workspacerole.h
+    workspace/workspacerow.h
 )
 
 set(SOURCES

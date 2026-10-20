@@ -29,7 +29,22 @@
 
 namespace workspace {
 
-struct Member final {
+enum class RowField : int {
+    kEmail,
+    kUsername,
+    kName,
+    kPlaceholder,
+    kWorkspaceRole,
+    kFinancePermissions,
+    kTaskPermissions,
+    kInventoryPermissions,
+    kPartnerPermissions,
+    kSalePermissions,
+    kPurchasePermissions,
+    kCreatedTime,
+};
+
+struct Row final {
     QUuid id {};
     int version {};
 
@@ -50,9 +65,9 @@ struct Member final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void Member::Reset() { *this = Member {}; }
+inline void Row::Reset() { *this = Row {}; }
 
-inline void Member::ReadJson(const QJsonObject& object)
+inline void Row::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
@@ -102,7 +117,7 @@ inline void Member::ReadJson(const QJsonObject& object)
 
 struct PendingUpdate {
     QTimer* timer {};
-    Member* member {};
+    Row* row {};
     QJsonObject changes {};
 };
 

@@ -6,7 +6,6 @@
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
-#include "workspaceenum.h"
 
 namespace workspace {
 Model::Model(const QStringList& header, QObject* parent)
@@ -45,33 +44,33 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const MemberField column { index.column() };
-    auto* member { static_cast<Member*>(index.internalPointer()) };
+    const RowField column { index.column() };
+    auto* row { static_cast<Row*>(index.internalPointer()) };
 
     switch (column) {
-    case MemberField::kEmail:
-        return member->email;
-    case MemberField::kUsername:
-        return member->username;
-    case MemberField::kName:
-        return member->name;
-    case MemberField::kWorkspaceRole:
-        return static_cast<int>(member->workspace_role);
-    case MemberField::kFinancePermissions:
-        return member->finance_permissions;
-    case MemberField::kTaskPermissions:
-        return member->task_permissions;
-    case MemberField::kInventoryPermissions:
-        return member->inventory_permissions;
-    case MemberField::kPartnerPermissions:
-        return member->partner_permissions;
-    case MemberField::kSalePermissions:
-        return member->sale_permissions;
-    case MemberField::kPurchasePermissions:
-        return member->purchase_permissions;
-    case MemberField::kCreatedTime:
-        return member->created_time;
-    case MemberField::kPlaceholder:
+    case RowField::kEmail:
+        return row->email;
+    case RowField::kUsername:
+        return row->username;
+    case RowField::kName:
+        return row->name;
+    case RowField::kWorkspaceRole:
+        return static_cast<int>(row->workspace_role);
+    case RowField::kFinancePermissions:
+        return row->finance_permissions;
+    case RowField::kTaskPermissions:
+        return row->task_permissions;
+    case RowField::kInventoryPermissions:
+        return row->inventory_permissions;
+    case RowField::kPartnerPermissions:
+        return row->partner_permissions;
+    case RowField::kSalePermissions:
+        return row->sale_permissions;
+    case RowField::kPurchasePermissions:
+        return row->purchase_permissions;
+    case RowField::kCreatedTime:
+        return row->created_time;
+    case RowField::kPlaceholder:
         return QVariant();
     }
 }
@@ -89,54 +88,54 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     }
 
     // Get the member pointer using {} initialization
-    auto* member { static_cast<Member*>(index.internalPointer()) };
-    const QUuid id { member->id };
+    auto* row { static_cast<Row*>(index.internalPointer()) };
+    const QUuid id { row->id };
 
     if (id.isNull()) {
         return false;
     }
 
     auto& update { pending_updates_[id] };
-    update.member = member;
+    update.row = row;
     auto& changes { update.changes };
     const int raw { value.toInt() };
 
     // Handle updates based on the column index
     // Assuming MemberColumn is your enum for WorkspaceMember columns
-    switch (static_cast<MemberField>(index.column())) {
-    case MemberField::kWorkspaceRole:
-        member->workspace_role = static_cast<workspace::Role>(raw);
+    switch (static_cast<RowField>(index.column())) {
+    case RowField::kWorkspaceRole:
+        row->workspace_role = static_cast<workspace::Role>(raw);
         changes.insert(kWorkspaceRole, raw);
         break;
-    case MemberField::kFinancePermissions:
-        member->finance_permissions = raw;
+    case RowField::kFinancePermissions:
+        row->finance_permissions = raw;
         changes.insert(kFinancePermissions, raw);
         break;
-    case MemberField::kTaskPermissions:
-        member->task_permissions = raw;
+    case RowField::kTaskPermissions:
+        row->task_permissions = raw;
         changes.insert(kTaskPermissions, raw);
         break;
-    case MemberField::kInventoryPermissions:
-        member->inventory_permissions = raw;
+    case RowField::kInventoryPermissions:
+        row->inventory_permissions = raw;
         changes.insert(kInventoryPermissions, raw);
         break;
-    case MemberField::kPartnerPermissions:
-        member->partner_permissions = raw;
+    case RowField::kPartnerPermissions:
+        row->partner_permissions = raw;
         changes.insert(kPartnerPermissions, raw);
         break;
-    case MemberField::kSalePermissions:
-        member->sale_permissions = raw;
+    case RowField::kSalePermissions:
+        row->sale_permissions = raw;
         changes.insert(kSalePermissions, raw);
         break;
-    case MemberField::kPurchasePermissions:
-        member->purchase_permissions = raw;
+    case RowField::kPurchasePermissions:
+        row->purchase_permissions = raw;
         changes.insert(kPurchasePermissions, raw);
         break;
-    case MemberField::kEmail:
-    case MemberField::kUsername:
-    case MemberField::kName:
-    case MemberField::kPlaceholder:
-    case MemberField::kCreatedTime:
+    case RowField::kEmail:
+    case RowField::kUsername:
+    case RowField::kName:
+    case RowField::kPlaceholder:
+    case RowField::kCreatedTime:
         // These columns are read-only in this model
         return false;
     }
@@ -152,37 +151,37 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
 void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const MemberField e_column { column };
-    if (e_column == MemberField::kPlaceholder)
+    const RowField e_column { column };
+    if (e_column == RowField::kPlaceholder)
         return;
 
     // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const Member* lhs, const Member* rhs) -> bool {
+    auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case MemberField::kEmail:
-            return utils::CompareMember(lhs, rhs, &Member::email, order);
-        case MemberField::kUsername:
-            return utils::CompareMember(lhs, rhs, &Member::username, order);
-        case MemberField::kName:
-            return utils::CompareMember(lhs, rhs, &Member::name, order);
-        case MemberField::kWorkspaceRole:
+        case RowField::kEmail:
+            return utils::CompareMember(lhs, rhs, &Row::email, order);
+        case RowField::kUsername:
+            return utils::CompareMember(lhs, rhs, &Row::username, order);
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kWorkspaceRole:
             // Sorting by the underlying integer value of the enum
-            return utils::CompareMember(lhs, rhs, &Member::workspace_role, order);
-        case MemberField::kFinancePermissions:
-            return utils::CompareMember(lhs, rhs, &Member::finance_permissions, order);
-        case MemberField::kTaskPermissions:
-            return utils::CompareMember(lhs, rhs, &Member::task_permissions, order);
-        case MemberField::kInventoryPermissions:
-            return utils::CompareMember(lhs, rhs, &Member::inventory_permissions, order);
-        case MemberField::kPartnerPermissions:
-            return utils::CompareMember(lhs, rhs, &Member::partner_permissions, order);
-        case MemberField::kSalePermissions:
-            return utils::CompareMember(lhs, rhs, &Member::sale_permissions, order);
-        case MemberField::kPurchasePermissions:
-            return utils::CompareMember(lhs, rhs, &Member::purchase_permissions, order);
-        case MemberField::kCreatedTime:
-            return utils::CompareMember(lhs, rhs, &Member::created_time, order);
-        case MemberField::kPlaceholder:
+            return utils::CompareMember(lhs, rhs, &Row::workspace_role, order);
+        case RowField::kFinancePermissions:
+            return utils::CompareMember(lhs, rhs, &Row::finance_permissions, order);
+        case RowField::kTaskPermissions:
+            return utils::CompareMember(lhs, rhs, &Row::task_permissions, order);
+        case RowField::kInventoryPermissions:
+            return utils::CompareMember(lhs, rhs, &Row::inventory_permissions, order);
+        case RowField::kPartnerPermissions:
+            return utils::CompareMember(lhs, rhs, &Row::partner_permissions, order);
+        case RowField::kSalePermissions:
+            return utils::CompareMember(lhs, rhs, &Row::sale_permissions, order);
+        case RowField::kPurchasePermissions:
+            return utils::CompareMember(lhs, rhs, &Row::purchase_permissions, order);
+        case RowField::kCreatedTime:
+            return utils::CompareMember(lhs, rhs, &Row::created_time, order);
+        case RowField::kPlaceholder:
             return false;
         }
     };
@@ -208,25 +207,25 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
     Qt::ItemFlags flags { QAbstractItemModel::flags(index) };
 
     // Convert column to enum for safe processing
-    const MemberField column { index.column() };
+    const RowField column { index.column() };
 
     switch (column) {
-    case MemberField::kWorkspaceRole:
-    case MemberField::kFinancePermissions:
-    case MemberField::kTaskPermissions:
-    case MemberField::kInventoryPermissions:
-    case MemberField::kPartnerPermissions:
-    case MemberField::kSalePermissions:
-    case MemberField::kPurchasePermissions:
+    case RowField::kWorkspaceRole:
+    case RowField::kFinancePermissions:
+    case RowField::kTaskPermissions:
+    case RowField::kInventoryPermissions:
+    case RowField::kPartnerPermissions:
+    case RowField::kSalePermissions:
+    case RowField::kPurchasePermissions:
         // Enable editing for specific roles
         flags |= Qt::ItemIsEditable;
         break;
 
-    case MemberField::kEmail:
-    case MemberField::kUsername:
-    case MemberField::kName:
-    case MemberField::kCreatedTime:
-    case MemberField::kPlaceholder:
+    case RowField::kEmail:
+    case RowField::kUsername:
+    case RowField::kName:
+    case RowField::kCreatedTime:
+    case RowField::kPlaceholder:
         // Disable editing for all other columns
         flags &= ~Qt::ItemIsEditable;
         break;
@@ -263,7 +262,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberDelete, message);
 
     // Recycle the member back to the ResourcePool
-    ResourcePool<Member>::Instance().Recycle(member);
+    ResourcePool<Row>::Instance().Recycle(member);
 
     return true;
 }
@@ -275,23 +274,23 @@ void Model::Rebuild(const QJsonArray& array)
     }
 
     // Parse outside the reset block
-    QList<Member*> new_list {};
+    QList<Row*> new_list {};
     new_list.reserve(array.size());
 
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
 
-        auto* member { ResourcePool<Member>::Instance().Allocate() };
+        auto* member { ResourcePool<Row>::Instance().Allocate() };
         member->ReadJson(value.toObject());
         new_list.emplaceBack(member);
     }
 
-    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Member::workspace_role, Qt::DescendingOrder); });
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::workspace_role, Qt::DescendingOrder); });
 
     // Keep reset block as short as possible
     beginResetModel();
 
-    ResourcePool<Member>::Instance().Recycle(list_);
+    ResourcePool<Row>::Instance().Recycle(list_);
     list_ = std::move(new_list);
 
     endResetModel();
@@ -315,13 +314,13 @@ void Model::FlushTimer(const QUuid& id)
 {
     auto update { pending_updates_.take(id) };
 
-    if (update.member && !update.changes.isEmpty()) {
-        const int version { update.member->version };
+    if (update.row && !update.changes.isEmpty()) {
+        const int version { update.row->version };
 
         const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update.changes, version) };
         WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
 
-        update.member->version = version + 1;
+        update.row->version = version + 1;
     }
 
     if (update.timer) {

@@ -3,7 +3,7 @@
 #include <QAbstractItemModel>
 #include <QTimer>
 
-#include "workspacemember.h"
+#include "workspacerow.h"
 
 namespace workspace {
 
@@ -53,8 +53,8 @@ private:
     void FlushTimers();
 
 private:
-    QList<Member*> list_ {};
-    const QStringList& header_ {};
+    QList<Row*> list_ {};
+    const QStringList header_ {};
 
     QHash<QUuid, PendingUpdate> pending_updates_ {};
 };
