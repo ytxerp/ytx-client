@@ -49,7 +49,7 @@ private:
     QList<WrongRow*> AddRowsList(const CJsonArray& node_array);
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     QList<WrongRow*> list_ {};
 };
 }

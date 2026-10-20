@@ -61,7 +61,7 @@ private:
     Row* FindCarrierGroup(finance::Roles roles) const;
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     Row* root_ {};
     Row* counterpart_ {};
 

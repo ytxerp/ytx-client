@@ -46,7 +46,7 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     QList<PrimaryRow*> list_ {};
 };
 

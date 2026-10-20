@@ -64,7 +64,7 @@ private:
     }
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     const Section section_ {};
     QList<PrimaryRow*> list_ {};
 };

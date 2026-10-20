@@ -49,7 +49,7 @@ public:
     bool IsEmpty() const { return list_.isEmpty(); }
 
 private:
-    const QStringList& header_ {};
+    const QStringList header_ {};
     QList<Entry*> list_ {};
 };
 }

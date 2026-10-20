@@ -56,7 +56,7 @@ public:
     QList<TertiaryRow> EntryList() const;
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     QList<TertiaryRow*> list_ {};
 
     const QUuid partner_id_ {};

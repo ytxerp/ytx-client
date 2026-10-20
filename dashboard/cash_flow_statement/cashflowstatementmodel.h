@@ -61,7 +61,7 @@ private:
     void UpdateAncestorTotal(Row* node, double final_delta) const;
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     Row* root_ {};
 
     QList<Row*> first_level_nodes_ {};

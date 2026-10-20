@@ -55,7 +55,7 @@ private:
     Row* CreateBranchNode(const QString& name, bool direction_rule) const;
 
 private:
-    QStringList header_;
+    const QStringList header_ {};
     Row* root_ {};
     Row* net_profit_ {};
     QHash<QUuid, Row*> node_hash_ {};

@@ -51,7 +51,7 @@ private:
     Row* GetNodeByIndex(const QModelIndex& index) const;
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     Row* root_ {};
     QHash<QUuid, Row*> node_hash_ {};
 };

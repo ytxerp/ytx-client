@@ -54,7 +54,7 @@ public:
     bool HasPendingUpdate() const { return !pending_selected_.isEmpty(); }
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
 
     SettlementStatus status_ {};
 

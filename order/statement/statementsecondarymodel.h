@@ -54,7 +54,7 @@ public:
     QList<SecondaryRow> EntryList() const;
 
 private:
-    const QStringList& header_;
+    const QStringList header_ {};
     QList<SecondaryRow*> list_ {};
 };
 }
