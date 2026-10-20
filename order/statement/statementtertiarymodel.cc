@@ -6,7 +6,6 @@
 #include "enum/statusenum.h"
 #include "global/partner_inventory_registry.h"
 #include "global/resourcepool.h"
-#include "statementenum.h"
 #include "utils/templateutils.h"
 
 namespace statement {

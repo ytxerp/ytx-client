@@ -4,7 +4,6 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
-#include "statementenum.h"
 #include "ui_statementprimarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"

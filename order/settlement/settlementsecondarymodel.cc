@@ -5,7 +5,6 @@
 
 #include "component/constant.h"
 #include "global/resourcepool.h"
-#include "settlementenum.h"
 #include "utils/templateutils.h"
 
 namespace settlement {

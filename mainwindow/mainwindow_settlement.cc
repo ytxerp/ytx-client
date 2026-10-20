@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "order/settlement/settlementenum.h"
 #include "order/settlement/settlementprimarymodel.h"
 #include "order/settlement/settlementprimarywidget.h"
 #include "order/settlement/settlementsecondarymodel.h"

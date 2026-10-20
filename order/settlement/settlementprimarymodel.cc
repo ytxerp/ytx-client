@@ -4,7 +4,6 @@
 
 #include "component/constantwebsocket.h"
 #include "global/resourcepool.h"
-#include "settlementenum.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

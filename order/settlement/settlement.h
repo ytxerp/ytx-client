@@ -27,6 +27,14 @@
 
 namespace settlement {
 
+enum class PrimaryField {
+    kPartner,
+    kIssuedTime,
+    kDescription,
+    kStatus,
+    kAmount,
+};
+
 struct PrimaryRow final {
     QUuid id {};
     QUuid partner_id {};
@@ -42,6 +50,14 @@ struct PrimaryRow final {
     void Reset();
     void ReadJson(const QJsonObject& object);
     QJsonObject WriteJson() const;
+};
+
+enum class SecondaryField {
+    kIssuedTime,
+    kAmount,
+    kIsSettled,
+    kDescription,
+    kEmployee,
 };
 
 struct SecondaryRow final {

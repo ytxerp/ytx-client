@@ -33,7 +33,6 @@
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/issuedtimetotalr.h"
 #include "delegate/readonly/nodenamer.h"
-#include "delegate/readonly/nodenametotalr.h"
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/percentagedelegater.h"
 #include "delegate/readonly/statusr.h"
@@ -45,8 +44,6 @@
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
 #include "mainwindow.h"
-#include "order/settlement/settlementenum.h"
-#include "order/statement/statementenum.h"
 #include "tag/tagenum.h"
 #include "workspace/workspacerow.h"
 

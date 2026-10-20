@@ -27,6 +27,15 @@
 
 namespace statement {
 
+// P:Previous, C:Current, Statement
+enum class PrimaryField {
+    kPartnerName = 0,
+    kCount,
+    kMeasure,
+    kAmount,
+    kPlaceholder,
+};
+
 struct PrimaryRow final {
     QUuid partner_id {};
     QString partner_name {};
@@ -53,6 +62,18 @@ inline void PrimaryRow::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kAmount); val.isString())
         amount = val.toString().toDouble();
 }
+
+enum class SecondaryField {
+    // Keep the order in sync with the table header and SecondaryRow::SummaryValues().
+    kIssuedTime = 0,
+    kCode,
+    kCount,
+    kMeasure,
+    kAmount,
+    kDescription,
+    kStatus,
+    kEmployee,
+};
 
 struct SecondaryRow final {
     QDateTime issued_time {};
@@ -112,6 +133,20 @@ inline QList<QVariant> SecondaryRow::SummaryValues() const
         {}, // kEmployee
     };
 }
+
+enum class TertiaryField {
+    // Keep the order in sync with the table header and TertiaryRow::SummaryValues().
+    kIssuedTime = 0,
+    kCode,
+    kInternalSku,
+    kCount,
+    kMeasure,
+    kUnitPrice,
+    kAmount,
+    kDescription,
+    kStatus,
+    kExternalSku,
+};
 
 struct TertiaryRow final {
     QDateTime issued_time {};

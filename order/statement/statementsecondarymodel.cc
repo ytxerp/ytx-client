@@ -4,7 +4,6 @@
 #include <QJsonObject>
 
 #include "global/resourcepool.h"
-#include "statementenum.h"
 #include "utils/templateutils.h"
 
 namespace statement {

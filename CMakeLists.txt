@@ -224,7 +224,6 @@ set(HEADERS
     global/userprofile.h
     mainwindow/mainwindow.h
     order/settlement/settlement.h
-    order/settlement/settlementenum.h
     order/settlement/settlementprimarymodel.h
     order/settlement/settlementprimarywidget.h
     order/settlement/settlementsecondarymodel.h
@@ -233,7 +232,6 @@ set(HEADERS
     order/settlement_view/settlement_view_model.h
     order/settlement_view/settlementviewwidget.h
     order/statement/statement.h
-    order/statement/statementenum.h
     order/statement/statementprimarymodel.h
     order/statement/statementprimarywidget.h
     order/statement/statementsecondarymodel.h

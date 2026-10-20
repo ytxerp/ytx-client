@@ -2,7 +2,6 @@
 
 #include "component/constantint.h"
 #include "mainwindow.h"
-#include "order/statement/statementenum.h"
 #include "order/statement/statementprimarywidget.h"
 #include "order/statement/statementsecondarywidget.h"
 #include "order/statement/statementtertiarywidget.h"

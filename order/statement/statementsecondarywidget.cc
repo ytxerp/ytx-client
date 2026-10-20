@@ -9,7 +9,6 @@
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "global/exporthub.h"
-#include "statementenum.h"
 #include "ui_statementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "utils/nodeutils.h"
