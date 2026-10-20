@@ -194,9 +194,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
-
     const WidgetRole role { section == Section::kPartner ? WidgetRole::kNodeTabP : WidgetRole::kNodeTabFIT };
-    const WidgetContext wc { widget, node_id, role };
 
     {
         CString name { tree_model->Name(node_id) };
@@ -238,7 +236,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         }
     }
 
-    sc->widget_hash.insert(node_id, wc);
+    RegisterWidget(sc, widget, node_id, role);
 }
 
 void MainWindow::MarkEntries(MarkOperation operation)

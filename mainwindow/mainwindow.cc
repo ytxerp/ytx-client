@@ -231,16 +231,6 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 
 void MainWindow::RFlushCaches()
 {
-    auto* widget { sc_->tab_widget->currentWidget() };
-
-    if (qobject_cast<TreeWidget*>(widget)) {
-        sc_->tree_model->FlushTimers();
-    }
-
-    if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
-        leaf_widget->Model()->FlushTimers();
-    }
-
     FlushCaches(sc_f_);
     FlushCaches(sc_i_);
     FlushCaches(sc_p_);
@@ -276,15 +266,15 @@ void MainWindow::FlushCaches(SectionContext& sc)
     }
 }
 
-void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRole role)
+void MainWindow::RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role)
 {
+    Q_ASSERT(sc);
     Q_ASSERT(widget);
 
-    WidgetContext wc { widget, widget_id, role };
+    const WidgetContext wc { widget, widget_id, role };
 
-    sc_->widget_hash.insert(widget_id, wc);
-
-    sc_->tab_widget->setCurrentWidget(widget);
+    sc->widget_hash.insert(widget_id, wc);
+    sc->tab_widget->setCurrentWidget(widget);
 }
 
 void MainWindow::WriteConfig()

@@ -31,7 +31,7 @@ void MainWindow::on_actionSettlement_triggered()
         DelegateSettlementPrimary(view, sc_->section_config);
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kSettlement);
 }
 
 void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model)
@@ -63,7 +63,7 @@ void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary
         DelegateSettlementSecondary(view, sc_->section_config);
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kSettlement);
 }
 
 void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)

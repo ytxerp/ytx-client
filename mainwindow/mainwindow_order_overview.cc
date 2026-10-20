@@ -36,7 +36,7 @@ void MainWindow::on_actionOrderOverview_triggered()
         DelegateOrderFilterView(filter_view, sc_->info);
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kOrderOverview);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kOrderOverview);
 }
 
 void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array)

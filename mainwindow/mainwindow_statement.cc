@@ -39,7 +39,7 @@ void MainWindow::on_actionStatement_triggered()
         DelegateStatementFilterView(filter_view);
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kStatement);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kStatement);
 }
 
 void MainWindow::RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -110,7 +110,7 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::D
 
     connect(widget, &StatementSecondaryWidget::SShowTertiaryStatement, this, &MainWindow::RShowTertiaryStatement);
 
-    RegisterWidget(widget, widget_id, WidgetRole::kStatement);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kStatement);
 }
 
 void MainWindow::InitSummaryView(QTableView* summary_view, QTableView* data_view) const
@@ -179,7 +179,7 @@ void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::Da
     DelegateStatementTertiary(view, sc_->section_config);
     DelegateStatementTertiarySummary(summary_view, sc_->section_config);
 
-    RegisterWidget(widget, widget_id, WidgetRole::kStatement);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kStatement);
 }
 
 void MainWindow::RStatementMarkEntries(MarkOperation operation)

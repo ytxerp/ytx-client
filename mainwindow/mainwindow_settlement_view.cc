@@ -23,7 +23,7 @@ void MainWindow::on_actionSettlementView_triggered()
         InitSummaryView(summary_view, data_view);
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kSettlementView);
+    RegisterWidget(sc_, widget, widget_id, WidgetRole::kSettlementView);
 }
 
 void MainWindow::RSettlementView(Section section, const QUuid& widget_id, const QJsonArray& array)

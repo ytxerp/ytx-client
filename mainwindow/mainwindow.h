@@ -313,7 +313,7 @@ private:
 
     void FocusTabWidget(const QUuid& node_id) const;
 
-    void RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRole role);
+    void RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role);
     void WriteConfig();
 
     void MarkEntries(MarkOperation operation);
