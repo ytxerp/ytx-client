@@ -1,5 +1,5 @@
 #include "audit/auditdialog.h"
-#include "audit/auditenum.h"
+#include "audit/auditrow.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

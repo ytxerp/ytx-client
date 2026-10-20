@@ -87,7 +87,6 @@ set(BRC "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.brc")
 
 set(HEADERS
     audit/auditdialog.h
-    audit/auditenum.h
     audit/auditinfo.h
     audit/auditmodel.h
     audit/auditrow.h

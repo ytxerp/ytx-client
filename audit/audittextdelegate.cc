@@ -2,7 +2,7 @@
 
 #include <QEvent>
 
-#include "auditenum.h"
+#include "audit/auditrow.h"
 #include "audittextdialog.h"
 
 AuditTextDelegate::AuditTextDelegate(QObject* parent)
