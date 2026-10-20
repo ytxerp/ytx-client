@@ -124,7 +124,7 @@ void LeafDeleteDialog::ReplaceNode()
             return;
 
         const auto new_node_id { ui->comboBox->currentData().toUuid() };
-        const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, node_->version) };
+        const auto message { JsonGen::LeafReplace(Section::kInventory, node_id_, new_node_id, node_->version) };
 
         WebSocket::Instance()->SendMessage(WsKey::kLeafReplace, message);
     });
