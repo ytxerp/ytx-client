@@ -4,7 +4,6 @@
 
 #include "component/constant.h"
 #include "component/constantstring.h"
-#include "component/constantwebsocket.h"
 
 namespace JsonGen {
 

@@ -185,10 +185,8 @@ set(HEADERS
     dialog/editnodename.h
     dialog/editnodenameo.h
     dialog/insertnode/insertnodebranch.h
-    dialog/insertnode/insertnodefinance.h
-    dialog/insertnode/insertnodei.h
+    dialog/insertnode/insertnodefit.h
     dialog/insertnode/insertnodep.h
-    dialog/insertnode/insertnodetask.h
     dialog/preferences.h
     dialog/userprofiledialog.h
     entryhub/entryhub.h
@@ -394,10 +392,8 @@ set(SOURCES
     dialog/editnodename.cc
     dialog/editnodenameo.cc
     dialog/insertnode/insertnodebranch.cc
-    dialog/insertnode/insertnodefinance.cc
-    dialog/insertnode/insertnodei.cc
+    dialog/insertnode/insertnodefit.cc
     dialog/insertnode/insertnodep.cc
-    dialog/insertnode/insertnodetask.cc
     dialog/preferences.cc
     dialog/userprofiledialog.cc
     entryhub/entryhub.cc
@@ -539,10 +535,8 @@ set(UIS
     dialog/editnodename.ui
     dialog/editnodenameo.ui
     dialog/insertnode/insertnodebranch.ui
-    dialog/insertnode/insertnodefinance.ui
-    dialog/insertnode/insertnodei.ui
+    dialog/insertnode/insertnodefit.ui
     dialog/insertnode/insertnodep.ui
-    dialog/insertnode/insertnodetask.ui
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui

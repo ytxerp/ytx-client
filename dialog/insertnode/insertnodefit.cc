@@ -1,14 +1,14 @@
-#include "insertnodefinance.h"
+#include "insertnodefit.h"
 
 #include "component/constantbool.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
-#include "ui_insertnodefinance.h"
+#include "ui_insertnodefit.h"
 
-InsertNodeFinance::InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent)
+InsertNodeFIT::InsertNodeFIT(CNodeInsertArg& arg, QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::InsertNodeFinance)
-    , node_ { static_cast<NodeF*>(arg.node) }
+    , ui(new Ui::InsertNodeFIT)
+    , node_ { arg.node }
     , parent_path_ { arg.parent_path }
     , name_set_ { arg.name_set }
 {
@@ -22,9 +22,9 @@ InsertNodeFinance::InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent)
     IniConnect();
 }
 
-InsertNodeFinance::~InsertNodeFinance() { delete ui; }
+InsertNodeFIT::~InsertNodeFIT() { delete ui; }
 
-void InsertNodeFinance::IniDialog(UnitModel* unit_model)
+void InsertNodeFIT::IniDialog(UnitModel* unit_model)
 {
     ui->lineName->setFocus();
     ui->lineName->setValidator(&LineEdit::kInputValidator);
@@ -40,59 +40,59 @@ void InsertNodeFinance::IniDialog(UnitModel* unit_model)
     ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
 }
 
-void InsertNodeFinance::IniData(Node* node)
+void InsertNodeFIT::IniData(Node* node)
 {
     int unit_index { ui->comboUnit->findData(std::to_underlying(node->unit)) };
     ui->comboUnit->setCurrentIndex(unit_index);
 
     IniDirectionRule(node->direction_rule);
-    ui->rBtnLeaf->setChecked(true);
 
+    ui->rBtnLeaf->setChecked(true);
     ui->pBtnOk->setEnabled(false);
 }
 
-void InsertNodeFinance::IniConnect()
+void InsertNodeFIT::IniConnect()
 {
-    connect(ui->lineName, &QLineEdit::textEdited, this, &InsertNodeFinance::RNameEdited);
-    connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeFinance::RDirectionRuleGroupClicked);
-    connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeFinance::RKindGroupClicked);
+    connect(ui->lineName, &QLineEdit::textEdited, this, &InsertNodeFIT::RNameEdited);
+    connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeFIT::RDirectionRuleGroupClicked);
+    connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeFIT::RKindGroupClicked);
 }
 
-void InsertNodeFinance::IniKindGroup()
+void InsertNodeFIT::IniKindGroup()
 {
     kind_group_ = new QButtonGroup(this);
     kind_group_->addButton(ui->rBtnBranch, std::to_underlying(NodeKind::kBranch));
     kind_group_->addButton(ui->rBtnLeaf, std::to_underlying(NodeKind::kLeaf));
 }
 
-void InsertNodeFinance::IniRuleGroup()
+void InsertNodeFIT::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(direction_rule::kDDCI));
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(direction_rule::kDICD));
 }
 
-void InsertNodeFinance::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
+void InsertNodeFIT::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
 
-void InsertNodeFinance::RNameEdited(const QString& arg1)
+void InsertNodeFIT::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
     ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
-void InsertNodeFinance::on_lineName_editingFinished() { node_->name = ui->lineName->text(); }
+void InsertNodeFIT::on_lineName_editingFinished() { node_->name = ui->lineName->text(); }
 
-void InsertNodeFinance::on_lineCode_editingFinished() { node_->code = ui->lineCode->text(); }
+void InsertNodeFIT::on_lineCode_editingFinished() { node_->code = ui->lineCode->text(); }
 
-void InsertNodeFinance::on_lineDescription_editingFinished() { node_->description = ui->lineDescription->text(); }
+void InsertNodeFIT::on_lineDescription_editingFinished() { node_->description = ui->lineDescription->text(); }
 
-void InsertNodeFinance::on_comboUnit_currentIndexChanged(int index)
+void InsertNodeFIT::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
     node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
 
-void InsertNodeFinance::RDirectionRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
+void InsertNodeFIT::RDirectionRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
-void InsertNodeFinance::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }
+void InsertNodeFIT::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }

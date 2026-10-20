@@ -26,40 +26,38 @@
 #include "component/using.h"
 
 namespace Ui {
-class InsertNodeI;
+class InsertNodeFIT;
 }
 
-class InsertNodeI final : public QDialog {
+class InsertNodeFIT final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent = nullptr);
-    ~InsertNodeI() override;
+    explicit InsertNodeFIT(CNodeInsertArg& arg, QWidget* parent = nullptr);
+    ~InsertNodeFIT() override;
 
 private slots:
     void RNameEdited(const QString& arg1);
-    void RRuleGroupClicked(int id);
+    void RDirectionRuleGroupClicked(int id);
     void RKindGroupClicked(int id);
 
-    void on_lineEditName_editingFinished();
-    void on_lineEditCode_editingFinished();
-    void on_lineEditDescription_editingFinished();
-    void on_dSpinBoxUnitPrice_editingFinished();
-    void on_dSpinBoxCommission_editingFinished();
+    void on_lineName_editingFinished();
+    void on_lineCode_editingFinished();
+    void on_lineDescription_editingFinished();
 
     void on_comboUnit_currentIndexChanged(int index);
 
 private:
-    void IniDialog(UnitModel* unit_model, int amount_decimal);
-    void IniConnect();
+    void IniDialog(UnitModel* unit_model);
     void IniData(Node* node);
+    void IniConnect();
     void IniKindGroup();
     void IniRuleGroup();
     void IniDirectionRule(bool rule);
 
 private:
-    Ui::InsertNodeI* ui;
-    NodeI* node_ {};
+    Ui::InsertNodeFIT* ui;
+    Node* node_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* kind_group_ {};
 

@@ -1,10 +1,8 @@
 #include "component/arg/nodeinsertarg.h"
 #include "component/constantwebsocket.h"
 #include "dialog/editnodename.h"
-#include "dialog/insertnode/insertnodefinance.h"
-#include "dialog/insertnode/insertnodei.h"
+#include "dialog/insertnode/insertnodefit.h"
 #include "dialog/insertnode/insertnodep.h"
-#include "dialog/insertnode/insertnodetask.h"
 #include "global/nodepool.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -39,17 +37,13 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
 
     switch (start_) {
     case Section::kFinance:
-        dialog = new InsertNodeFinance(arg, nullptr);
-        break;
     case Section::kTask:
-        dialog = new InsertNodeTask(arg, nullptr);
+    case Section::kInventory:
+        dialog = new InsertNodeFIT(arg, nullptr);
         break;
     case Section::kPartner:
         dialog = new InsertNodeP(arg, nullptr);
         key = WsKey::kPartnerNodeInsert;
-        break;
-    case Section::kInventory:
-        dialog = new InsertNodeI(arg, sc_->section_config.rate_decimal, nullptr);
         break;
     case Section::kSale:
     case Section::kPurchase:
