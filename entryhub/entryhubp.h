@@ -26,7 +26,7 @@ class EntryHubP final : public EntryHub {
     Q_OBJECT
 
 public:
-    explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHubP(const Section section, QObject* parent = nullptr);
 
 public:
     void InsertEntry(const QJsonObject& data) override;

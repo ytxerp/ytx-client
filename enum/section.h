@@ -39,8 +39,8 @@
  *
  * Abbreviations:
  *  - Finance (F)
- *  - Inventory (I)
  *  - Task (T)
+ *  - Inventory (I)
  *  - Partner (P)
  *  - Order (O)
  *

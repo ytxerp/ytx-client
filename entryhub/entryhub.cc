@@ -7,10 +7,9 @@
 #include "global/entrypool.h"
 #include "utils/entryutils.h"
 
-EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
+EntryHub::EntryHub(const Section section, QObject* parent)
     : QObject(parent)
-    , section_ { info.section }
-    , info_ { info }
+    , section_ { section }
 {
 }
 

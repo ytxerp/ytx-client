@@ -239,7 +239,7 @@ void MainWindow::InitContextFinance()
     info.cash_kind_model = new UnitModel(this);
     info.cash_kind_model->Rebuild(info.cash_kind_map);
 
-    entry_hub = new EntryHubF(info, this);
+    entry_hub = new EntryHubF(Section::kFinance, this);
     tree_model = new TreeModelF(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kFinance, tree_model);
@@ -280,7 +280,7 @@ void MainWindow::InitContextInventory()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    entry_hub = new EntryHubI(info, this);
+    entry_hub = new EntryHubI(Section::kInventory, this);
     tree_model = new TreeModelI(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
@@ -324,7 +324,7 @@ void MainWindow::InitContextTask()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    entry_hub = new EntryHubT(info, this);
+    entry_hub = new EntryHubT(Section::kTask, this);
     tree_model = new TreeModelT(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
@@ -363,7 +363,7 @@ void MainWindow::InitContextPartner()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    entry_hub = new EntryHubP(info, this);
+    entry_hub = new EntryHubP(Section::kPartner, this);
     tree_model = new TreeModelP(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
@@ -407,11 +407,8 @@ void MainWindow::InitContextSale()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
-
-    entry_hub = entry_hub_o;
-    tree_model = tree_model_o;
+    entry_hub = new EntryHubO(Section::kSale, this);
+    tree_model = new TreeModelO(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kSale, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kSale, entry_hub);
@@ -449,11 +446,8 @@ void MainWindow::InitContextPurchase()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
-
-    entry_hub = entry_hub_o;
-    tree_model = tree_model_o;
+    entry_hub = new EntryHubO(Section::kPurchase, this);
+    tree_model = new TreeModelO(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPurchase, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPurchase, entry_hub);

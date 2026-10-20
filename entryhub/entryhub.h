@@ -22,9 +22,9 @@
 #include <QJsonObject>
 #include <QObject>
 
-#include "component/sectioninfo.h"
 #include "enum/bindingmode.h"
 #include "enum/entryenum.h"
+#include "enum/section.h"
 #include "table/entry.h"
 
 class EntryHub : public QObject {
@@ -34,7 +34,7 @@ public:
     ~EntryHub() override;
 
 protected:
-    explicit EntryHub(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHub(const Section section, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation
@@ -87,6 +87,4 @@ protected:
 protected:
     QHash<QUuid, Entry*> entry_cache_ {};
     const Section section_ {};
-
-    CSectionInfo& info_;
 };
