@@ -279,7 +279,7 @@ private:
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const;
 
     // Section
-    SectionContext* GetSectionContex(Section section);
+    SectionContext* GetSectionContext(Section section);
     void CreateSection(const SectionContext* sc, CString& name) const;
 
     // Node

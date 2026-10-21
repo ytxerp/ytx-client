@@ -87,7 +87,7 @@ void MainWindow::on_actionNewBranch_triggered()
 
 void MainWindow::RReleaseOrder(Section section, const QUuid& node_id, int version)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(node_id).widget };
     if (widget) {
@@ -102,7 +102,7 @@ void MainWindow::RReleaseOrder(Section section, const QUuid& node_id, int versio
 
 void MainWindow::RRecallOrder(Section section, const QUuid& node_id, int version)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(node_id).widget };
     if (widget) {
@@ -117,7 +117,7 @@ void MainWindow::RRecallOrder(Section section, const QUuid& node_id, int version
 
 void MainWindow::RSaveOrder(Section section, const QUuid& node_id, int version)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(node_id).widget };
     if (widget) {
@@ -144,7 +144,7 @@ void MainWindow::RPermissionDeny()
 
 void MainWindow::ROrderPermissionDeny(Section section, const QUuid& widget_id)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -160,7 +160,7 @@ void MainWindow::ROrderPermissionDeny(Section section, const QUuid& widget_id)
 
 void MainWindow::RSelectNode(Section section, const QUuid& node_id)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     auto tree_model { sc->tree_model };
 
     const auto index { tree_model->GetIndex(node_id) };

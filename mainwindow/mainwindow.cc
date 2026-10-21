@@ -223,7 +223,7 @@ void MainWindow::IniSectionGroup()
 
 void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     utils::CloseWidget(sc->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
@@ -289,7 +289,7 @@ void MainWindow::WriteConfig()
     }
 }
 
-SectionContext* MainWindow::GetSectionContex(Section section)
+SectionContext* MainWindow::GetSectionContext(Section section)
 {
     switch (section) {
     case Section::kFinance:

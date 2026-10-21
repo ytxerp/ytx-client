@@ -67,7 +67,7 @@ void MainWindow::RLocateNode(Section section, const QUuid& node_id)
     if (node_id.isNull())
         return;
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto index { sc->tree_model->GetIndex(node_id) };
     if (!index.isValid())

@@ -43,7 +43,7 @@ void MainWindow::on_actionStatement_triggered()
 
 void MainWindow::RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -57,7 +57,7 @@ void MainWindow::RStatementPrimary(Section section, const QUuid& widget_id, cons
 
 void MainWindow::RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -71,7 +71,7 @@ void MainWindow::RStatemetSecondary(Section section, const QUuid& widget_id, con
 
 void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)

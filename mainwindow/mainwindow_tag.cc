@@ -39,7 +39,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     Q_ASSERT(sc);
 
     if (!obj.value(kTagArray).isArray()) {
@@ -72,7 +72,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     Q_ASSERT(sc);
 
     if (!obj.value(kTag).isObject()) {
@@ -104,7 +104,7 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     Q_ASSERT(sc);
 
     const QUuid id { obj.value(kId).toString() };
@@ -139,7 +139,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     Q_ASSERT(sc);
 
     const QUuid id { obj.value(kId).toString() };

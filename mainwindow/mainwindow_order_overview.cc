@@ -41,7 +41,7 @@ void MainWindow::on_actionOrderOverview_triggered()
 
 void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)

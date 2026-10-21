@@ -111,7 +111,7 @@ void MainWindow::RCreateSettlementSecondaryWidget(settlement::PrimaryModel* mode
 
 void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -128,7 +128,7 @@ void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, c
 
 void MainWindow::RSettlementPermissionDeny(Section section, const QUuid& widget_id)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -150,7 +150,7 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
     const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
     const int version { settlement_obj.value(kVersion).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -171,7 +171,7 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -193,7 +193,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)
@@ -209,7 +209,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
 
 void MainWindow::RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
     if (!widget)

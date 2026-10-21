@@ -19,7 +19,7 @@ void MainWindow::RApplySharedConfig(const QJsonArray& arr)
         const int default_unit { obj.value(kDefaultUnit).toInt() };
         const QString document_dir { obj.value(kDocumentDir).toString() };
 
-        auto* sc = GetSectionContex(section);
+        auto* sc = GetSectionContext(section);
         if (!sc) {
             continue;
         }
@@ -31,13 +31,13 @@ void MainWindow::RApplySharedConfig(const QJsonArray& arr)
 
 void MainWindow::RUpdateDocumentDir(Section section, const QString& document_dir)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     sc->shared_config.document_dir = document_dir;
 }
 
 void MainWindow::RUpdateDefaultUnit(Section section, int unit)
 {
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContext(section) };
     sc->shared_config.default_unit = unit;
 
     if (section == Section::kFinance)
