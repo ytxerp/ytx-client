@@ -244,8 +244,8 @@ void MainWindow::UpdateLeafNodeName(const QUuid& node_id, const QString& name)
     const QSet<QUuid> nodes { node_id };
 
     if (start_ == Section::kPartner) {
-        UpdatePartnerReference(sc_sale_, nodes, false);
-        UpdatePartnerReference(sc_purchase_, nodes, false);
+        UpdatePartnerReference(&sc_sale_, nodes, false);
+        UpdatePartnerReference(&sc_purchase_, nodes, false);
     }
 
     UpdateOneTab(node_id, name);
@@ -277,8 +277,8 @@ void MainWindow::UpdateBranchNodeName(const QUuid& node_id)
         const QSet<QUuid> nodes { LeafChildrenId(node) };
 
         if (start_ == Section::kPartner) {
-            UpdatePartnerReference(sc_sale_, nodes, true);
-            UpdatePartnerReference(sc_purchase_, nodes, true);
+            UpdatePartnerReference(&sc_sale_, nodes, true);
+            UpdatePartnerReference(&sc_purchase_, nodes, true);
         }
 
         UpdateMultiTabs(nodes);
@@ -301,11 +301,11 @@ void MainWindow::UpdateMultiTabs(const QSet<QUuid>& nodes)
     }
 }
 
-void MainWindow::UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, const bool branch) const
+void MainWindow::UpdatePartnerReference(const SectionContext* sc, const QSet<QUuid>& partner_nodes, const bool branch) const
 {
-    auto widget { sc.tab_widget };
+    auto widget { sc->tab_widget };
     auto partner_model { sc_p_.tree_model };
-    auto* order_model { static_cast<TreeModelO*>(sc.tree_model.data()) };
+    auto* order_model { static_cast<TreeModelO*>(sc->tree_model.data()) };
 
     if (!widget || !partner_model || !order_model) {
         return;

@@ -63,17 +63,17 @@ void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name
     ui->actionExpireDate->setText(expire_date);
 }
 
-void MainWindow::CreateSection(SectionContext& sc, CString& name)
+void MainWindow::CreateSection(const SectionContext* sc, CString& name) const
 {
-    auto tab_widget { sc.tab_widget };
-    auto tree_widget { sc.tree_widget };
+    Q_ASSERT(sc);
 
-    auto view { sc.tree_view };
-    auto tree_model { sc.tree_model };
-    auto entry_hub { sc.entry_hub };
+    auto* tab_widget { sc->tab_widget.data() };
+    auto* tree_widget { sc->tree_widget.data() };
+    auto* view { sc->tree_view.data() };
+    auto* tree_model { sc->tree_model.data() };
+    auto* entry_hub { sc->entry_hub.data() };
 
-    const auto& info { sc.info };
-    const auto& section { info.section };
+    const Section section { sc->info.section };
 
     SetTreeView(view, section);
 
@@ -83,7 +83,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     tab_bar->setTabData(index, QUuid());
     tab_bar->setTabButton(index, QTabBar::RightSide, nullptr);
 
-    switch (info.section) {
+    switch (section) {
     case Section::kFinance:
         TreeConnectF(view, tree_model, entry_hub);
         break;
@@ -122,12 +122,12 @@ void MainWindow::InitilizeContext()
     }
 
     {
-        CreateSection(sc_f_, tr("Finance"));
-        CreateSection(sc_p_, tr("Partner"));
-        CreateSection(sc_i_, tr("Inventory"));
-        CreateSection(sc_t_, tr("Task"));
-        CreateSection(sc_sale_, tr("Sale"));
-        CreateSection(sc_purchase_, tr("Purchase"));
+        CreateSection(&sc_f_, tr("Finance"));
+        CreateSection(&sc_p_, tr("Partner"));
+        CreateSection(&sc_i_, tr("Inventory"));
+        CreateSection(&sc_t_, tr("Task"));
+        CreateSection(&sc_sale_, tr("Sale"));
+        CreateSection(&sc_purchase_, tr("Purchase"));
     }
 
     {

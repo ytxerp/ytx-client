@@ -10,13 +10,13 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
+void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_index)
 {
     Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "InsertNodeFIPT must not be used in Sale or Purchase section");
 
-    auto tree_model { sc_->tree_model };
-    auto unit_model { sc_->info.unit_model };
-    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
+    auto tree_model { sc->tree_model };
+    auto unit_model { sc->info.unit_model };
+    auto* parent_node { sc->tree_model->GetNodeByIndex(parent_index) };
 
     auto parent_path { tree_model->Path(parent_node->id) };
     if (!parent_path.isEmpty())
@@ -26,7 +26,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
 
     node->id = QUuid::createUuidV7();
     node->direction_rule = parent_node->direction_rule;
-    node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
+    node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc->shared_config.default_unit);
     node->parent = parent_node;
 
     QDialog* dialog {};
@@ -50,7 +50,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         return;
     }
 
-    utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc->widget_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [this, node, parent_node, key]() {
@@ -74,7 +74,7 @@ void MainWindow::RLocateNode(Section section, const QUuid& node_id)
         return;
 
     auto widget { sc->tree_widget };
-    sc_->tab_widget->setCurrentWidget(widget);
+    sc->tab_widget->setCurrentWidget(widget);
     widget->activateWindow();
 
     widget->View()->setCurrentIndex(index);

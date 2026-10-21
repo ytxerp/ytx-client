@@ -216,8 +216,6 @@ private:
 
     void ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id = {});
 
-    void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
-    void CreateLeafO(SectionContext* sc, const QUuid& node_id);
     void CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
@@ -262,8 +260,6 @@ private:
     void InitFilterView(QTableView* filter_view, QTableView* data_view) const;
     void InitSummaryView(QTableView* summary_view, QTableView* data_view) const;
 
-    void CreateSection(SectionContext& sc, CString& name);
-
     void EditNameFIPT();
     void EditNameO();
 
@@ -282,15 +278,33 @@ private:
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const;
 
-    void InsertNodeFunction(const QModelIndex& parent_index);
-    void InsertNodeFIPT(const QModelIndex& parent_index); // Finance Inventory Partner Task
-    void InsertNodeO(const QModelIndex& parent_index); // Purchase Sales
+    // Section
+    SectionContext* GetSectionContex(Section section);
+    void CreateSection(const SectionContext* sc, CString& name) const;
+
+    // Node
+    void InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index);
+    void InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_index);
+    void InsertNodeO(SectionContext* sc, const QModelIndex& parent_index);
+
+    // Table
+    void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
+    void CreateLeafO(SectionContext* sc, const QUuid& node_id);
+
+    // Widget
+    void RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role);
+    void FlushCaches(const SectionContext* sc) const;
+
+    // Tag
+    QIcon GetTagIcon(SectionContext* sc, const tag::Row& tag, bool checked);
+    void UpdateTagIcon(SectionContext* sc, const tag::Row& tag);
+
+    // Partner
+    void UpdatePartnerReference(const SectionContext* sc, const QSet<QUuid>& partner_nodes, bool branch) const;
 
     void DeleteNode();
     void DeleteEntry(TableWidget* widget);
     void DeleteBranch(Node* node);
-
-    void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;
 
     void LoadAndInstallTranslator(CString& language);
     void ResizeColumn(QHeaderView* header, int stretch_column) const;
@@ -312,20 +326,16 @@ private:
 
     void FocusTabWidget(const QUuid& node_id) const;
 
-    void RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role);
     void WriteConfig();
 
     void MarkEntries(MarkOperation operation);
     void LockEntries(bool locked);
 
-    SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
     void InitStatusLabel();
     void InitHeader();
     void InitHeader(SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase);
     void InitAuditInfo();
-
-    void FlushCaches(SectionContext& sc);
 
     QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
@@ -335,9 +345,6 @@ private:
 
     void UpdateBranchNodeName(const QUuid& node_id);
     void UpdateMultiTabs(const QSet<QUuid>& nodes);
-
-    QIcon GetTagIcon(SectionContext* sc, const tag::Row& tag, bool checked);
-    void UpdateTagIcon(SectionContext* sc, const tag::Row& tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }

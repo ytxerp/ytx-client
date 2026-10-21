@@ -19,14 +19,15 @@
 
 #pragma once
 
+#include <QSortFilterProxyModel>
+
 #include "component/config.h"
 #include "table/model/tablemodel.h"
-#include "tree/model/treemodel.h"
 
 struct OrderWidgetArg {
     TableModel* table_model {};
-    TreeModel* tree_model_partner {};
-    CAppConfig& app_config {};
+    QSortFilterProxyModel* pmodel {};
+    QSortFilterProxyModel* emodel {};
     CSectionConfig& section_config {};
     Section section {};
 };

@@ -132,18 +132,18 @@ void MainWindow::FocusTabWidget(const QUuid& node_id) const
     widget->View()->clearSelection();
 }
 
-void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
+void MainWindow::InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index)
 {
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        InsertNodeO(parent_index);
+        InsertNodeO(sc, parent_index);
         return;
     case Section::kFinance:
     case Section::kTask:
     case Section::kPartner:
     case Section::kInventory:
-        InsertNodeFIPT(parent_index);
+        InsertNodeFIPT(sc, parent_index);
         return;
     }
 
@@ -231,22 +231,24 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 
 void MainWindow::RFlushCaches()
 {
-    FlushCaches(sc_f_);
-    FlushCaches(sc_i_);
-    FlushCaches(sc_p_);
-    FlushCaches(sc_t_);
+    FlushCaches(&sc_f_);
+    FlushCaches(&sc_i_);
+    FlushCaches(&sc_p_);
+    FlushCaches(&sc_t_);
 
     QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
 }
 
-void MainWindow::FlushCaches(SectionContext& sc)
+void MainWindow::FlushCaches(const SectionContext* sc) const
 {
+    Q_ASSERT(sc);
+
     // First, flush the caches of the tree model
-    if (sc.tree_model)
-        sc.tree_model->FlushTimers();
+    if (sc->tree_model)
+        sc->tree_model->FlushTimers();
 
     // Iterate through all views in the view_hash
-    for (auto it = sc.widget_hash.cbegin(); it != sc.widget_hash.cend(); ++it) {
+    for (auto it = sc->widget_hash.cbegin(); it != sc->widget_hash.cend(); ++it) {
         const auto& wc = it.value();
 
         // Skip if the widget pointer is null
@@ -470,7 +472,7 @@ void MainWindow::on_actionInsertNode_triggered()
     auto current_index { sc_->tree_view->currentIndex() };
     auto parent_index { current_index.parent() };
 
-    InsertNodeFunction(parent_index);
+    InsertNodeFunction(sc_, parent_index);
 }
 
 void MainWindow::on_actionAppendNode_triggered()
@@ -494,7 +496,7 @@ void MainWindow::on_actionAppendNode_triggered()
         return;
     }
 
-    InsertNodeFunction(index);
+    InsertNodeFunction(sc_, index);
 }
 
 void MainWindow::on_actionRename_triggered()

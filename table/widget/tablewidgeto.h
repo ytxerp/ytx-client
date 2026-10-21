@@ -68,7 +68,7 @@ public slots:
     void RSyncDeltaO(const QUuid& node_id, double initial_delta, double count_delta, double measure_delta);
 
 public:
-    TableModel* Model() const override { return table_model_order_; }
+    TableModel* Model() const override { return table_model_; }
     QTableView* View() const override;
 
     void ReleaseSucceeded(int version);
@@ -100,7 +100,7 @@ private slots:
     void on_pushButtonDelete_clicked();
 
 private:
-    void InitWidget();
+    void InitWidget(QSortFilterProxyModel* pmodel, QSortFilterProxyModel* emodel);
     void InitConnect();
     void InitData(const NodeO* node);
     void LockWidgets(OrderStatus value);
@@ -120,11 +120,10 @@ private:
 
 private:
     Ui::TableWidgetO* ui;
-    NodeO* tmp_node_ {};
+    NodeO* node_ {};
 
-    TableModelO* table_model_order_ {};
-    TreeModel* tree_model_partner_ {};
-    CSectionConfig& config_ {};
+    TableModelO* table_model_ {};
+    CSectionConfig& section_config_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
