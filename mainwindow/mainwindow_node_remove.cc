@@ -51,14 +51,14 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const QUuid node_id { obj.value(kNodeId).toString() };
 
-    auto* section_contex { GetSectionContext(section) };
-    auto model { section_contex->tree_model };
+    auto* sc { GetSectionContext(section) };
+    auto model { sc->tree_model };
     auto* node { model->GetNode(node_id) };
 
     if (!node || !node->IsValid())
         return;
 
-    auto* dialog { new LeafDeleteDialog(section_contex->info, obj, model, node, nullptr) };
+    auto* dialog { new LeafDeleteDialog(sc->info, obj, model, node, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
@@ -69,8 +69,8 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
 
 void MainWindow::RLeafDeleteLockedDeny(Section section, const QUuid& node_id)
 {
-    auto* section_contex { GetSectionContext(section) };
-    auto model { section_contex->tree_model };
+    auto* sc { GetSectionContext(section) };
+    auto model { sc->tree_model };
     auto* node { model->GetNode(node_id) };
 
     node->sync_state = SyncState::kSynced;

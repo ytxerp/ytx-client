@@ -19,10 +19,7 @@ void MainWindow::RApplySharedConfig(const QJsonArray& arr)
         const int default_unit { obj.value(kDefaultUnit).toInt() };
         const QString document_dir { obj.value(kDocumentDir).toString() };
 
-        auto* sc = GetSectionContext(section);
-        if (!sc) {
-            continue;
-        }
+        auto* sc { GetSectionContext(section) };
 
         sc->shared_config.default_unit = default_unit;
         sc->shared_config.document_dir = document_dir;

@@ -38,16 +38,12 @@ void MainWindow::on_actionTags_triggered()
 void MainWindow::RApplyTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-
     auto* sc { GetSectionContext(section) };
-    Q_ASSERT(sc);
 
-    if (!obj.value(kTagArray).isArray()) {
-        qWarning() << "RApplyTag: 'tags' is not an array";
-        return;
-    }
+    const QJsonValue tags { obj.value(kTagArray) };
+    Q_ASSERT(tags.isArray());
 
-    const QJsonArray tag_array { obj.value(kTagArray).toArray() };
+    const QJsonArray tag_array { tags.toArray() };
 
     for (const QJsonValue& value : tag_array) {
         Q_ASSERT(value.isObject());
@@ -55,10 +51,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
         const QJsonObject tag_obj { value.toObject() };
         const QUuid id { tag_obj.value(kId).toString() };
 
-        if (id.isNull()) {
-            qWarning() << "RApplyTag: tag id is null, skip entry";
-            continue;
-        }
+        Q_ASSERT(!id.isNull());
 
         tag::Row tag {};
         tag.ReadJson(tag_obj);
@@ -71,27 +64,16 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
 void MainWindow::RInsertTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-
     auto* sc { GetSectionContext(section) };
-    Q_ASSERT(sc);
 
-    if (!obj.value(kTag).isObject()) {
-        qWarning() << "RInsertTag: 'tag' is not an object";
-        return;
-    }
+    const QJsonValue value { obj.value(kTag) };
+    Q_ASSERT(value.isObject());
 
-    const QJsonObject tag_obj { obj.value(kTag).toObject() };
+    const QJsonObject tag_obj { value.toObject() };
     const QUuid id { tag_obj.value(kId).toString() };
 
-    if (id.isNull()) {
-        qWarning() << "RInsertRemoteTag: tag id is null";
-        return;
-    }
-
-    if (sc->tag_hash.contains(id)) {
-        qWarning() << "RInsertRemoteTag: duplicate tag id:" << id;
-        return;
-    }
+    Q_ASSERT(!id.isNull());
+    Q_ASSERT(!sc->tag_hash.contains(id));
 
     tag::Row tag {};
 
@@ -103,32 +85,22 @@ void MainWindow::RInsertTag(const QJsonObject& obj)
 void MainWindow::RUpdateTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-
     auto* sc { GetSectionContext(section) };
-    Q_ASSERT(sc);
 
     const QUuid id { obj.value(kId).toString() };
-    if (id.isNull()) {
-        qWarning() << "RUpdateTag: tag id is null";
+    Q_ASSERT(!id.isNull());
+
+    auto it { sc->tag_hash.find(id) };
+    if (it == sc->tag_hash.end())
         return;
-    }
 
-    auto it = sc->tag_hash.find(id);
-    if (it == sc->tag_hash.end()) {
-        qWarning() << "RUpdateTag: tag not found, id =" << id;
-        return;
-    }
+    const QJsonValue value { obj.value(kUpdate) };
+    Q_ASSERT(value.isObject());
 
-    if (!obj.value(kUpdate).isObject()) {
-        qWarning() << "RUpdateTag: 'update' is not an object";
-        return;
-    }
-
-    auto& tag { it.value() };
-
-    const QJsonObject update_obj { obj.value(kUpdate).toObject() };
+    const QJsonObject update_obj { value.toObject() };
     const int version { obj.value(kVersion).toInt() };
 
+    auto& tag { it.value() };
     tag.ReadJson(update_obj);
     tag.version = version;
 
@@ -138,15 +110,10 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
 void MainWindow::RDeleteTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-
     auto* sc { GetSectionContext(section) };
-    Q_ASSERT(sc);
 
     const QUuid id { obj.value(kId).toString() };
-    if (id.isNull()) {
-        qWarning() << "RDeleteTag: tag id is null";
-        return;
-    }
+    Q_ASSERT(!id.isNull());
 
     sc->tag_icon_hash.remove(id);
     sc->tag_hash.remove(id);
@@ -175,8 +142,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
         std::ranges::sort(list, [](const auto& lhs, const auto& rhs) { return utils::CompareString(lhs.name, rhs.name, Qt::AscendingOrder); });
 
         for (const auto& tag : std::as_const(list)) {
-            if (tag.id.isNull())
-                continue;
+            Q_ASSERT(!tag.id.isNull());
 
             auto* tag_action { tag_menu->addAction(tag.name) };
 
@@ -275,8 +241,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
         std::ranges::sort(list, [](const auto& lhs, const auto& rhs) { return utils::CompareString(lhs.name, rhs.name, Qt::AscendingOrder); });
 
         for (const auto& tag : std::as_const(list)) {
-            if (tag.id.isNull())
-                continue;
+            Q_ASSERT(!tag.id.isNull());
 
             auto* tag_action { tag_menu->addAction(tag.name) };
 
@@ -314,8 +279,7 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row& tag)
     Q_ASSERT(sc);
 
     const QUuid& tag_id { tag.id };
-    if (tag_id.isNull())
-        return;
+    Q_ASSERT(!tag_id.isNull());
 
     tag::Icon icon {};
     icon.pixmap = tag::CreatePixmap(tag);
@@ -330,9 +294,7 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row& tag, bool check
     Q_ASSERT(sc);
 
     const QUuid& tag_id { tag.id };
-    if (tag_id.isNull()) {
-        return QIcon();
-    }
+    Q_ASSERT(!tag_id.isNull());
 
     auto it = sc->tag_icon_hash.find(tag_id);
     if (it == sc->tag_icon_hash.end()) {
