@@ -8,6 +8,11 @@ TableSummaryModel::TableSummaryModel(const QStringList& header, QObject* parent)
 
 void TableSummaryModel::RSummaryChanged(const QList<QVariant>& values)
 {
+    if (values.size() != header_.size()) {
+        qWarning() << Q_FUNC_INFO << "Expected:" << header_.size() << "Actual:" << values.size();
+        return;
+    }
+
     if (values_ == values)
         return;
 
