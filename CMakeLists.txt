@@ -138,7 +138,6 @@ set(HEADERS
     delegate/filterlineeditdelegate.h
     delegate/filterunit.h
     delegate/financeroledelegate.h
-    delegate/int.h
     delegate/intstring.h
     delegate/issuedtime.h
     delegate/line.h
@@ -156,7 +155,6 @@ set(HEADERS
     delegate/readonly/intstringnonezeror.h
     delegate/readonly/intstringr.h
     delegate/readonly/issuedtimer.h
-    delegate/readonly/issuedtimetotalr.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
     delegate/readonly/percentagedelegater.h
@@ -341,7 +339,6 @@ set(SOURCES
     delegate/filterlineeditdelegate.cc
     delegate/filterunit.cc
     delegate/financeroledelegate.cc
-    delegate/int.cc
     delegate/intstring.cc
     delegate/issuedtime.cc
     delegate/line.cc
@@ -359,7 +356,6 @@ set(SOURCES
     delegate/readonly/intstringnonezeror.cc
     delegate/readonly/intstringr.cc
     delegate/readonly/issuedtimer.cc
-    delegate/readonly/issuedtimetotalr.cc
     delegate/readonly/nodenamer.cc
     delegate/readonly/nodepathr.cc
     delegate/readonly/percentagedelegater.cc
