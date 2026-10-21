@@ -208,7 +208,6 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     };
 
     auto* widget { new TableWidgetO(order_arg, node, this) };
-    WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
@@ -224,7 +223,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
-    sc->widget_hash.insert(node_id, wc);
+    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabO);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
