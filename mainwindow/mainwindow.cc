@@ -225,7 +225,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    utils::CloseWidget(node_id, sc->widget_hash);
+    utils::CloseWidget(sc->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 

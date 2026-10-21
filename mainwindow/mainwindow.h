@@ -107,8 +107,7 @@ private slots:
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
-    void tabWidget_tabCloseRequestedFIT(int index);
-    void tabWidget_tabCloseRequestedP(int index);
+    void tabWidget_tabCloseRequestedFIPT(int index);
     void tabWidget_tabCloseRequestedO(int index);
 
     void RLocateNode(Section section, const QUuid& node_id);

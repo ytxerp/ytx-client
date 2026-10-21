@@ -43,7 +43,7 @@ void ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, con
 QByteArray ZstdCompress(const QByteArray& data);
 QByteArray ZstdDecompress(const QByteArray& data);
 
-inline void CloseWidget(const QUuid& node_id, QHash<QUuid, WidgetContext>& widget_hash)
+inline void CloseWidget(QHash<QUuid, WidgetContext>& widget_hash, const QUuid& node_id)
 {
     // Take removes the widget from hash and returns it
     if (auto widget { widget_hash.take(node_id).widget }) {

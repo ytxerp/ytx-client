@@ -25,7 +25,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(ui->tabWidgetF, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetF, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
-    connect(ui->tabWidgetF, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
+    connect(ui->tabWidgetF, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIPT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -51,7 +51,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(ui->tabWidgetI, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetI, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
-    connect(ui->tabWidgetI, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
+    connect(ui->tabWidgetI, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIPT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -77,7 +77,7 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(ui->tabWidgetT, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetT, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
-    connect(ui->tabWidgetT, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
+    connect(ui->tabWidgetT, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIPT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -97,7 +97,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(ui->tabWidgetP, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetP, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
-    connect(ui->tabWidgetP, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedP, Qt::UniqueConnection);
+    connect(ui->tabWidgetP, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIPT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const

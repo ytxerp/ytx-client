@@ -220,6 +220,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
     sc_->widget_hash.insert(node_id, wc);
+    TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)

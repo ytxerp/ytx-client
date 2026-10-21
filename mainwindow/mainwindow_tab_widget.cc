@@ -142,29 +142,14 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
         RLocateNode(start_, id);
 }
 
-void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
+void MainWindow::tabWidget_tabCloseRequestedFIPT(int index)
 {
     qInfo() << Q_FUNC_INFO;
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
-    const auto& wc { sc_->widget_hash.value(node_id) };
-    Q_ASSERT(wc.widget);
-
-    utils::CloseWidget(node_id, sc_->widget_hash);
+    utils::CloseWidget(sc_->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
-}
-
-void MainWindow::tabWidget_tabCloseRequestedP(int index)
-{
-    qInfo() << Q_FUNC_INFO;
-
-    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
-
-    const auto& wc { sc_->widget_hash.value(node_id) };
-    Q_ASSERT(wc.widget);
-
-    utils::CloseWidget(node_id, sc_->widget_hash);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedO(int index)
@@ -173,11 +158,13 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
-    const auto& wc { sc_->widget_hash.value(node_id) };
-    Q_ASSERT(wc.widget);
+    auto* widget { qobject_cast<TableWidgetO*>(sc_->widget_hash.value(node_id).widget.data()) };
+    if (!widget) {
+        qWarning() << Q_FUNC_INFO << "Invalid widget:" << node_id;
+        return;
+    }
 
-    auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
-    if (widget && widget->HasPendingUpdate()) {
+    if (widget->HasPendingUpdate()) {
         auto* dlg = utils::CreateMessage(QMessageBox::Warning, tr("Unsaved Changes"),
             tr("This page contains unsaved changes.\n\nDo you want to save them before closing?"), true,
             QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
@@ -193,7 +180,8 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
             widget->SaveOrder();
     }
 
-    utils::CloseWidget(node_id, sc_->widget_hash);
+    utils::CloseWidget(sc_->widget_hash, node_id);
+    TableSStation::Instance()->DeregisterModel(node_id);
 }
 
 void MainWindow::on_actionJumpEntry_triggered()
