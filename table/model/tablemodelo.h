@@ -78,7 +78,7 @@ class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    explicit TableModelO(CTableModelArg& arg, QObject* parent = nullptr);
+    explicit TableModelO(CTableModelArg& arg, const NodeO* node, QObject* parent = nullptr);
     ~TableModelO() override;
 
 signals:
@@ -108,7 +108,6 @@ public:
     void SyncSucceeded();
     bool HasZeroUnitPrice() const;
     bool HasPendingUpdate() const;
-    void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
     bool UpdateInternalSku(Entry* entry, const QUuid& value, int row) override;
@@ -123,6 +122,5 @@ private:
     const NodeO* d_node_ {};
 
     QList<Entry*> entry_list_ {};
-
     QSet<QUuid> pending_delete_ {};
 };

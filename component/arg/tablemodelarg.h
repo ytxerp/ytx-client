@@ -19,14 +19,16 @@
 
 #pragma once
 
+#include <QStringList>
 #include <QUuid>
 
-#include "component/sectioninfo.h"
+#include "enum/section.h"
 
 struct TableModelArg {
-    CSectionInfo& info {};
+    QStringList header {};
     QUuid node_id {};
     bool direction_rule {};
+    Section section {};
 };
 
 using CTableModelArg = const TableModelArg;

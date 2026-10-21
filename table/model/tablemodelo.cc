@@ -7,8 +7,9 @@
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 
-TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
+TableModelO::TableModelO(CTableModelArg& arg, const NodeO* node, QObject* parent)
     : TableModel { arg, parent }
+    , d_node_ { node }
 {
 }
 

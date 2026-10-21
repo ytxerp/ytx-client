@@ -189,12 +189,10 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };
-    auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    TableModelArg table_model_arg { sc_->info, node_id, true };
-    auto* table_model { new TableModelO(table_model_arg, this) };
-    table_model->SetNode(node);
+    TableModelArg table_model_arg { sc_->info.entry_header, node_id, node->direction_rule, start_ };
+    auto* table_model { new TableModelO(table_model_arg, node, this) };
 
     OrderWidgetArg order_arg {
         table_model,
@@ -203,6 +201,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
         section_config,
         start_,
     };
+
     auto* widget { new TableWidgetO(order_arg, node, this) };
     WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
@@ -244,12 +243,10 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };
-    auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    TableModelArg table_model_arg { sc->info, node_id, tmp_node->direction_rule };
-    auto* table_model = new TableModelO(table_model_arg, nullptr);
-    table_model->SetNode(tmp_node);
+    TableModelArg table_model_arg { sc->info.entry_header, node_id, tmp_node->direction_rule, start_ };
+    auto* table_model = new TableModelO(table_model_arg, tmp_node, this);
 
     OrderWidgetArg order_arg {
         table_model,

@@ -68,7 +68,7 @@ public slots:
 public:
     // implemented functions
     int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return shadow_list_.size(); }
-    int columnCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return info_.entry_header.size(); }
+    int columnCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return header_.size(); }
     QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -114,10 +114,10 @@ protected:
     void CancelPendingUpdate(const QUuid& entry_id);
 
 protected:
-    CSectionInfo& info_;
-    bool direction_rule_ {};
+    const QStringList header_ {};
     const QUuid node_id_ {};
     const Section section_ {};
+    bool direction_rule_ {};
 
     QList<EntryShadow*> shadow_list_ {};
     QHash<QUuid, PendingEntryUpdate> pending_updates_ {};

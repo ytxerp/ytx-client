@@ -9,10 +9,10 @@
 
 TableModel::TableModel(CTableModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)
-    , info_ { arg.info }
-    , direction_rule_ { arg.direction_rule }
+    , header_ { arg.header }
     , node_id_ { arg.node_id }
-    , section_ { arg.info.section }
+    , section_ { arg.section }
+    , direction_rule_ { arg.direction_rule }
 {
 }
 
@@ -397,7 +397,7 @@ bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.entry_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
