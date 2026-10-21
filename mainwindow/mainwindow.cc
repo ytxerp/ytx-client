@@ -576,35 +576,19 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::RSectionGroup(int id)
 {
-    qInfo() << Q_FUNC_INFO << kSectionString.value(Section(id));
-
     const Section section { id };
-    start_ = section;
+
+    qInfo() << Q_FUNC_INFO << kSectionString.value(section);
+
+    SectionContext* next_sc { GetSectionContext(section) };
+
+    if (sc_ == next_sc)
+        return;
 
     utils::SwitchDialog(sc_, false);
 
-    switch (section) {
-    case Section::kFinance:
-        sc_ = &sc_f_;
-        break;
-    case Section::kInventory:
-        sc_ = &sc_i_;
-        break;
-    case Section::kTask:
-        sc_ = &sc_t_;
-        break;
-    case Section::kPartner:
-        sc_ = &sc_p_;
-        break;
-    case Section::kSale:
-        sc_ = &sc_sale_;
-        break;
-    case Section::kPurchase:
-        sc_ = &sc_purchase_;
-        break;
-    default:
-        break;
-    }
+    sc_ = next_sc;
+    start_ = section;
 
     ui->stackedWidget->setCurrentIndex(id);
     tabWidget_currentChanged();
