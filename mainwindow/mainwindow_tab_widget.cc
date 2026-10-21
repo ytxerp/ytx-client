@@ -1,4 +1,5 @@
 #include "component/constantwebsocket.h"
+#include "entryhub/entryhubp.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelo.h"
@@ -42,40 +43,36 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     ShowLeafWidget(node->id);
 }
 
-// ShowLeafWidget - Show leaf widget (create and scroll as needed)
-// -------------------------------
+// ShowLeafWidget - Open a leaf widget and optionally select an entry
+// ---------------------------------------------------------------
 // Triggers:
-//  • Node double-click: entry_id empty → no scroll
-//  • Entry jump: entry_id valid → scroll to entry
+//  • Node double-click: entry_id empty → no entry selection
+//  • Entry jump: entry_id valid → select the specified entry
 //
 // Flow:
-//  1. If leaf exists → switch and scroll (if applicable)
-//  2. If not exists → send request → create leaf → switch
+//  1. If widget exists → focus tab and select entry
+//  2. Otherwise → create widget and request entry data
 //
-// Note: Scrolling only occurs when entry_id is non-empty
+// Note: Entry selection is only needed when entry_id is valid.
 void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
-    {
-        if (sc_->widget_hash.contains(node_id)) {
-            FocusTabWidget(node_id);
-            RSelectEntry(node_id, entry_id);
-            return;
-        }
+    if (sc_->widget_hash.contains(node_id)) {
+        FocusTabWidget(node_id);
+        RSelectEntry(node_id, entry_id);
+        return;
     }
 
-    {
-        if (start_ != Section::kPartner) {
-            const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
-            WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
-        }
+    if (IsOrderSection(start_)) {
+        CreateLeafO(sc_, node_id);
+    } else {
+        CreateLeafFIPT(sc_, node_id);
+    }
 
-        if (IsOrderSection(start_)) {
-            CreateLeafO(sc_, node_id);
-        } else {
-            CreateLeafFIPT(sc_, node_id);
-        }
-
-        FocusTabWidget(node_id);
+    if (start_ == Section::kPartner) {
+        static_cast<EntryHubP*>(sc_p_.entry_hub.data())->PushEntry(node_id);
+    } else {
+        const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
+        WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
     }
 }
 

@@ -1,5 +1,4 @@
 #include "component/constantwebsocket.h"
-#include "entryhub/entryhubp.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -158,11 +157,14 @@ void MainWindow::REntryLocked()
 
 void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 {
+    Q_ASSERT(sc);
+
     auto tree_model { sc->tree_model };
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
 
     const Section section { info.section };
+    Q_ASSERT(!IsOrderSection(section));
 
     // The model is parented to the LeafWidgetFIPT inside its constructor.
     // When the LeafWidget is destroyed, it will automatically delete the model.
@@ -187,11 +189,9 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
             break;
         case Section::kSale:
         case Section::kPurchase:
-            return;
+            Q_UNREACHABLE();
         }
     }
-
-    TableSStation::Instance()->RegisterModel(node_id, table_model);
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
     const WidgetRole role { section == Section::kPartner ? WidgetRole::kNodeTabP : WidgetRole::kNodeTabFIT };
@@ -228,15 +228,15 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         case Section::kPartner:
             TableDelegateP(view, section_config);
             TableConnectP(table_model);
-            static_cast<EntryHubP*>(sc->entry_hub.data())->PushEntry(node_id);
             break;
         case Section::kSale:
         case Section::kPurchase:
-            return;
+            Q_UNREACHABLE();
         }
     }
 
     RegisterWidget(sc, widget, node_id, role);
+    TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
 void MainWindow::MarkEntries(MarkOperation operation)

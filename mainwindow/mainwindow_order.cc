@@ -230,12 +230,16 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
 
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
+    Q_ASSERT(sc);
+
     // Extract frequently used shortcuts
     const auto& section_config { sc->section_config };
     const auto& info { sc->info };
-    const Section section { info.section };
 
-    auto tab_widget { sc->tab_widget };
+    const Section section { info.section };
+    Q_ASSERT(IsOrderSection(section));
+
+    auto* tab_widget { sc->tab_widget.data() };
     auto* tab_bar { tab_widget->tabBar() };
 
     // Validate node
