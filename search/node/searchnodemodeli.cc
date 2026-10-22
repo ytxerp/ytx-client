@@ -2,8 +2,8 @@
 
 namespace search {
 
-NodeModelI::NodeModelI(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
-    : NodeModel { info, tree_model, tag_hash, parent }
+NodeModelI::NodeModelI(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+    : NodeModel { section, header, tree_model, tag_hash, parent }
 {
 }
 

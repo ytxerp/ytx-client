@@ -1,8 +1,8 @@
 #include "searchentrymodeli.h"
 
 namespace search {
-EntryModelI::EntryModelI(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
-    : EntryModel { info, tag_hash, parent }
+EntryModelI::EntryModelI(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+    : EntryModel { section, header, tag_hash, parent }
 {
 }
 }

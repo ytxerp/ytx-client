@@ -3,8 +3,8 @@
 #include "enum/entryenum.h"
 
 namespace search {
-EntryModelF::EntryModelF(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
-    : EntryModel { info, tag_hash, parent }
+EntryModelF::EntryModelF(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+    : EntryModel { section, header, tag_hash, parent }
 {
 }
 

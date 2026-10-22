@@ -21,7 +21,6 @@
 
 #include <QAbstractItemModel>
 
-#include "component/sectioninfo.h"
 #include "component/using.h"
 #include "tag/tagrow.h"
 #include "tree/model/treemodel.h"
@@ -39,7 +38,7 @@ public slots:
     virtual void ROrderSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
-    NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
+    NodeModel(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -53,10 +52,11 @@ public:
     virtual void Search(CString& text);
 
 protected:
-    CSectionInfo& info_;
-    CTreeModel* tree_model_ {};
-    QList<Node*> list_ {};
     const Section section_ {};
+    const QStringList header_ {};
+    CTreeModel* tree_model_ {};
     const QHash<QUuid, tag::Row>& tag_hash_ {};
+
+    QList<Node*> list_ {};
 };
 }

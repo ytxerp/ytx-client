@@ -102,5 +102,7 @@ protected:
 
     CSectionConfig& config_;
     CSectionInfo& info_;
+
     const QHash<QUuid, tag::Icon>& tag_icon_hash_ {};
+    const Section section_ {};
 };

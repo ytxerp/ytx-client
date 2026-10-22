@@ -27,7 +27,7 @@ namespace search {
 class EntryModelP final : public EntryModel {
     Q_OBJECT
 public:
-    EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
+    EntryModelP(Section section, const QStringList& header, EntryHub* entry_hub, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

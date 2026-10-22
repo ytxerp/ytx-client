@@ -6,9 +6,10 @@
 #include "websocket/websocket.h"
 
 namespace search {
-EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+EntryModel::EntryModel(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , section_ { section }
+    , header_ { header }
     , tag_hash_ { tag_hash }
 {
 }
@@ -43,13 +44,13 @@ int EntryModel::rowCount(const QModelIndex& parent) const
 int EntryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.full_entry_header.size();
+    return header_.size();
 }
 
 QVariant EntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.full_entry_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
@@ -67,13 +68,13 @@ void EntryModel::Search(const QString& text)
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kEntryTagSearch, JsonGen::EntryTagSearch(info_.section, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryTagSearch, JsonGen::EntryTagSearch(section_, query.tags));
         return;
     }
 
     // 4.Send description text search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(section_, query.text));
         return;
     }
 

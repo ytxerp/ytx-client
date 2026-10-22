@@ -46,7 +46,6 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDocument), document_);
 
     auto* item_name { new SearchPathTableR(inventory_, view) };
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), item_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), item_name);
 }
 
@@ -70,7 +69,7 @@ void SearchDialogO::RNodeDoubleClicked(const QModelIndex& index)
     auto node_id { node->id };
 
     if (tree_model_->Contains(node_id))
-        emit SNodeLocation(info_.section, node_id);
+        emit SNodeLocation(section_, node_id);
     else
         tree_model_->AckNode(node_id);
 }

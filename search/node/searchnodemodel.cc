@@ -6,11 +6,11 @@
 
 namespace search {
 
-NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+NodeModel::NodeModel(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , section_ { section }
+    , header_ { header }
     , tree_model_ { tree_model }
-    , section_ { info.section }
     , tag_hash_ { tag_hash }
 {
 }
@@ -38,13 +38,13 @@ int NodeModel::rowCount(const QModelIndex& parent) const
 int NodeModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.node_header.size();
+    return header_.size();
 }
 
 QVariant NodeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.node_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }

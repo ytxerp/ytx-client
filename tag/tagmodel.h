@@ -63,7 +63,7 @@ private:
 
 private:
     const Section section_ {};
-    const QStringList& header_;
+    const QStringList header_ {};
 
     QList<Row*> list_ {};
     QSet<QString> names_ {};

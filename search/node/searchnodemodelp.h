@@ -27,7 +27,7 @@ class NodeModelP final : public NodeModel {
     Q_OBJECT
 
 public:
-    NodeModelP(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
+    NodeModelP(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -32,7 +32,6 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
 
     auto* rhs_node_name { new SearchPathTableR(inventory_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), rhs_node_name);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), check_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time_);

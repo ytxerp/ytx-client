@@ -20,6 +20,7 @@ SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, s
     , config_ { sc->section_config }
     , info_ { sc->info }
     , tag_icon_hash_ { sc->tag_icon_hash }
+    , section_ { sc->info.section }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -53,7 +54,7 @@ void SearchDialog::IniDialog()
     ui->stackedWidget->setCurrentIndex(0);
     ui->pBtnClose->setAutoDefault(false);
 
-    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
+    if (section_ == Section::kSale || section_ == Section::kPurchase) {
         ui->lineEditNode->setPlaceholderText(tr("Partner Name or [Tag]"));
     }
 
@@ -117,7 +118,7 @@ void SearchDialog::InitDelegate()
 
 void SearchDialog::HideTableColumn(QTableView* view)
 {
-    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
+    if (section_ == Section::kSale || section_ == Section::kPurchase) {
         view->setColumnHidden(std::to_underlying(EntryEnumO::kExternalSku), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnumO::kLhsNode), kIsHidden);
     }
@@ -137,12 +138,12 @@ void SearchDialog::IniView(QTableView* view)
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 {
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(node::DescriptionColumn(info_.section), QHeaderView::Stretch);
+    header->setSectionResizeMode(node::DescriptionColumn(section_), QHeaderView::Stretch);
 }
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)
 {
-    const int description_column { entry::SearchDescriptionColumn(info_.section) };
+    const int description_column { entry::SearchDescriptionColumn(section_) };
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
     header->setSectionResizeMode(description_column, QHeaderView::Stretch);
 }
@@ -167,7 +168,7 @@ void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
     if (node_id.isNull())
         return;
 
-    emit SNodeLocation(info_.section, node_id);
+    emit SNodeLocation(section_, node_id);
 }
 
 void SearchDialog::REntryDoubleClicked(const QModelIndex& index)

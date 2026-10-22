@@ -29,31 +29,34 @@ void MainWindow::on_actionSearch_triggered()
     search::EntryModel* entry {};
     SearchDialog* dialog {};
 
-    switch (start_) {
+    const auto& info { sc_->info };
+    const Section section { info.section };
+
+    switch (section) {
     case Section::kFinance:
-        node = new search::NodeModelF(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new search::EntryModelF(sc_->info, sc_->tag_hash, this);
+        node = new search::NodeModelF(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelF(section, info.full_entry_header, sc_->tag_hash, this);
         dialog = new SearchDialogF(sc_, node, entry, nullptr);
         break;
     case Section::kInventory:
-        node = new search::NodeModelI(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new search::EntryModelI(sc_->info, sc_->tag_hash, this);
+        node = new search::NodeModelI(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelI(section, info.full_entry_header, sc_->tag_hash, this);
         dialog = new SearchDialogI(sc_, node, entry, nullptr);
         break;
     case Section::kTask:
-        node = new search::NodeModelT(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new search::EntryModelT(sc_->info, sc_->tag_hash, this);
+        node = new search::NodeModelT(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelT(section, info.full_entry_header, sc_->tag_hash, this);
         dialog = new SearchDialogT(sc_, node, entry, nullptr);
         break;
     case Section::kPartner:
-        node = new search::NodeModelP(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new search::EntryModelP(sc_->entry_hub, sc_->info, sc_->tag_hash, this);
+        node = new search::NodeModelP(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelP(section, info.full_entry_header, sc_->entry_hub, sc_->tag_hash, this);
         dialog = new SearchDialogP(sc_, node, entry, sc_i_.tree_model, nullptr);
         break;
     case Section::kSale:
     case Section::kPurchase:
-        node = new search::NodeModelO(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new search::EntryModelO(sc_->info, sc_->tag_hash, this);
+        node = new search::NodeModelO(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelO(section, info.full_entry_header, sc_->tag_hash, this);
         dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, nullptr);
         connect(WebSocket::Instance(), &WebSocket::SOrderSearch, node, &search::NodeModel::ROrderSearch);
         break;

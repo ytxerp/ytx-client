@@ -243,8 +243,10 @@ protected:
     ItemModel* leaf_model_ {};
 
     const Section section_ {};
+    const QStringList header_ {};
+
+    // Reference to the separator in app_config
     const QString& separator_;
-    const QStringList& header_;
 
     QHash<QUuid, PendingNodeUpdate> pending_updates_ {};
     QHash<NodeUnit, IncludeSetFilterModel*> unit_filter_models_ {};

@@ -21,7 +21,7 @@
 
 #include <QAbstractItemModel>
 
-#include "component/sectioninfo.h"
+#include "enum/section.h"
 #include "table/entry.h"
 #include "tag/tagrow.h"
 #include "utils/templateutils.h"
@@ -36,7 +36,7 @@ public:
     ~EntryModel() override { };
 
 protected:
-    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModel(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& list);
@@ -59,8 +59,10 @@ protected:
     void Reset();
 
 protected:
-    EntryList list_ {};
-    CSectionInfo& info_;
+    const Section section_ {};
+    const QStringList header_ {};
     const QHash<QUuid, tag::Row>& tag_hash_ {};
+
+    EntryList list_ {};
 };
 }
