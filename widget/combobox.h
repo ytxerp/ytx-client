@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <QApplication>
 #include <QComboBox>
 #include <QCompleter>
 #include <QLineEdit>
@@ -41,7 +40,12 @@ public:
         setSizeAdjustPolicy(QComboBox::AdjustToContents);
     }
 
-    void setReadOnly(bool read_only) { read_only_ = read_only; }
+    void setReadOnly(bool read_only)
+    {
+        read_only_ = read_only;
+        lineEdit()->setReadOnly(read_only);
+    }
+
     bool isReadOnly() const { return read_only_; }
 
 protected:
@@ -49,9 +53,9 @@ protected:
     {
         QSize sz { QComboBox::sizeHint() };
 
-        const int button_width { QApplication::style()->pixelMetric(QStyle::PM_MenuButtonIndicator) };
-        const int checkbox_width { QApplication::style()->pixelMetric(QStyle::PM_IndicatorWidth) };
-        const int spacing { QApplication::style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing) };
+        const int button_width { style()->pixelMetric(QStyle::PM_MenuButtonIndicator) };
+        const int checkbox_width { style()->pixelMetric(QStyle::PM_IndicatorWidth) };
+        const int spacing { style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing) };
 
         sz.setWidth(sz.width() + button_width + checkbox_width + spacing);
         return sz;
@@ -65,19 +69,15 @@ protected:
         QComboBox::showPopup();
     }
 
-    void wheelEvent(QWheelEvent* event) override
-    {
-        if (read_only_) {
-            event->accept();
-            return;
-        }
-
-        QComboBox::wheelEvent(event);
-    }
+    void wheelEvent(QWheelEvent* event) override { event->ignore(); }
 
     void keyPressEvent(QKeyEvent* event) override
     {
         if (read_only_) {
+            if (event->matches(QKeySequence::Copy)) {
+                lineEdit()->copy();
+            }
+
             event->accept();
             return;
         }

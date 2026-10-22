@@ -44,10 +44,13 @@ protected:
         if (event->key() == Qt::Key_Semicolon) {
             if (modifiers == Qt::ControlModifier) {
                 insert(QDate::currentDate().toString(datetime_format::kDashedDate));
+                event->accept();
                 return;
             }
+
             if (modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
                 insert(QDateTime::currentDateTime().toString(datetime_format::kDateTime));
+                event->accept();
                 return;
             }
         }
