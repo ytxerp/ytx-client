@@ -45,9 +45,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kTargetCode:
         return row->target_code;
     case RowField::kBefore:
-        return JsonValueToString(row->before);
+        return row->before;
     case RowField::kAfter:
-        return JsonValueToString(row->after);
+        return row->after;
     case RowField::kTargetOperation:
         return row->target_operation;
     case RowField::kTargetType:
@@ -90,25 +90,6 @@ void Model::Rebuild(const QJsonArray& array)
     list_ = std::move(new_list);
 
     endResetModel();
-}
-
-QString Model::JsonValueToString(const QJsonValue& value)
-{
-    switch (value.type()) {
-    case QJsonValue::String:
-        return value.toString();
-    case QJsonValue::Object:
-        return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
-    case QJsonValue::Array:
-        return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Indented));
-    case QJsonValue::Bool:
-        return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
-    case QJsonValue::Double:
-        return QString::number(value.toDouble());
-    case QJsonValue::Null:
-    case QJsonValue::Undefined:
-        return {};
-    }
 }
 
 }

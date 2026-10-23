@@ -56,8 +56,8 @@ struct Row {
 
     // -- 4. Variable-length -----------------------------------------------------
     QString target_code {}; // Default: ""
-    QJsonValue before {}; // State before the action — maps to JSONB
-    QJsonValue after {}; // State after the action  — maps to JSONB
+    QString before {}; // State before the action — maps to JSONB
+    QString after {}; // State after the action  — maps to JSONB
 
     void Reset();
     void ReadJson(const QJsonObject& object);

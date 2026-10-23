@@ -68,7 +68,7 @@ void AuditDialog::InitTimer()
 void AuditDialog::InitModel(const QStringList& header)
 {
     data_model_ = new audit::Model(header, this);
-    filter_model_ = new FilterInputModel(header, -1, this);
+    filter_model_ = new FilterInputModel(header, std::to_underlying(audit::RowField::kPlaceholder), this);
     filter_proxy_ = new FilterProxyModel(this);
 
     filter_proxy_->setSourceModel(data_model_);

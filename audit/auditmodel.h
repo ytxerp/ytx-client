@@ -54,9 +54,6 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    static QString JsonValueToString(const QJsonValue& value);
-
-private:
     QList<Row*> list_ {};
     const QStringList& header_;
 };

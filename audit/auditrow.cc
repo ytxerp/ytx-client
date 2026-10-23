@@ -1,7 +1,22 @@
 #include "auditrow.h"
 
+#include <QJsonArray>
+
 #include "component/constant.h"
 #include "component/constantstring.h"
+
+namespace {
+QString JsonValueToString(const QJsonValue& value)
+{
+    if (value.isObject())
+        return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
+
+    if (value.isArray())
+        return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Compact));
+
+    return {};
+}
+} // namespace
 
 void audit::Row::Reset() { *this = Row {}; }
 
@@ -24,9 +39,9 @@ void audit::Row::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kTargetCode); val.isString())
         target_code = val.toString();
     if (const auto val = object.value(kBefore); !val.isUndefined())
-        before = val;
+        before = JsonValueToString(val);
     if (const auto val = object.value(kAfter); !val.isUndefined())
-        after = val;
+        after = JsonValueToString(val);
     if (const auto val = object.value(kTargetField); val.isDouble())
         target_field = val.toInt();
 }

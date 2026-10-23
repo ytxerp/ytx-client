@@ -71,13 +71,12 @@ void MainWindow::InitFilterView(QTableView* filter_view, QTableView* data_view) 
         filter_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         filter_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-        filter_header->setSectionsMovable(true);
-        filter_header->setSectionResizeMode(QHeaderView::Fixed);
-
         filter_view->setSelectionMode(QAbstractItemView::NoSelection);
         filter_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
+        filter_header->setSectionsMovable(true);
         filter_header->setStretchLastSection(false);
+        filter_header->setSectionResizeMode(QHeaderView::Fixed);
     }
 
     {
