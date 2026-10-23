@@ -130,11 +130,15 @@ void utils::ResetSectionContext(SectionContext& sc)
         auto* tab_bar { tab_widget->tabBar() };
         const int count { tab_widget->count() };
 
+        tab_widget->setUpdatesEnabled(false);
+
         for (int index = count - 1; index >= 0; --index) {
             const auto id { tab_bar->tabData(index).toUuid() };
             if (!id.isNull())
                 tab_widget->removeTab(index);
         }
+
+        tab_widget->setUpdatesEnabled(true);
     }
 
     utils::CloseWidgets(sc.widget_hash);

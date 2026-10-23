@@ -193,6 +193,7 @@ void MainWindow::RCleanUp()
     if (std::exchange(cleaned_up_, true))
         return;
 
+    FlushCaches();
     WriteConfig();
 
     utils::CloseWidgets(widget_hash_);
@@ -202,8 +203,6 @@ void MainWindow::RCleanUp()
     utils::CloseWidgets(sc_t_.widget_hash);
     utils::CloseWidgets(sc_sale_.widget_hash);
     utils::CloseWidgets(sc_purchase_.widget_hash);
-
-    FlushCaches();
 }
 
 void MainWindow::IniSectionGroup()

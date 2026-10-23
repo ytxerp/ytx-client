@@ -15,8 +15,8 @@
 TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { info.section }
-    , separator_ { separator }
     , header_ { info.node_header }
+    , separator_ { separator }
 {
     InitRoot();
 }
@@ -952,6 +952,11 @@ void TreeModel::FlushTimer(QUuid id)
 void TreeModel::FlushTimers()
 {
     const auto ids { pending_updates_.keys() };
+
+    if (ids.isEmpty())
+        return;
+
+    qDebug() << std::to_underlying(section_) << Q_FUNC_INFO;
 
     for (const auto& id : ids) {
         FlushTimer(id);

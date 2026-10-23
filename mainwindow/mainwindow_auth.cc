@@ -43,10 +43,10 @@ void MainWindow::on_actionSignOut_triggered()
 
     ResetMainwindow();
 
-    WebSocket::Instance()->Reset();
     TableSStation::Instance()->Reset();
     UserProfile::Instance().Reset();
     PartnerInventoryRegistry::Instance().Reset();
+    WebSocket::Instance()->Reset();
 
     DisableActions();
     SetLoginActions(false);

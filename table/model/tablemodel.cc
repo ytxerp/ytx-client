@@ -178,6 +178,11 @@ void TableModel::FlushTimers()
 {
     const auto ids { pending_updates_.keys() };
 
+    if (ids.isEmpty())
+        return;
+
+    qDebug() << std::to_underlying(section_) << Q_FUNC_INFO;
+
     for (const auto& id : ids) {
         FlushTimer(id);
     }
