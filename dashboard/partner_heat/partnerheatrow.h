@@ -50,25 +50,25 @@ struct Row final {
 
 inline void Row::ReadJson(const QJsonObject& obj)
 {
-    if (const auto val = obj.value("partner_node"); val.isString())
+    if (const auto val = obj.value(QStringLiteral("partner_node")); val.isString())
         partner_node = QUuid::fromString(val.toString());
 
-    if (const auto val = obj.value("order_count"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("order_count")); val.isDouble())
         order_count = val.toInteger();
 
-    if (const auto val = obj.value("inventory_diversity"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("inventory_diversity")); val.isDouble())
         inventory_diversity = val.toInteger();
 
-    if (const auto val = obj.value("active_months"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("active_months")); val.isDouble())
         active_months = val.toInteger();
 
-    if (const auto val = obj.value("active_days"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("active_days")); val.isDouble())
         active_days = val.toInteger();
 
-    if (const auto val = obj.value("total_quantity"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("total_quantity")); val.isDouble())
         total_quantity = val.toDouble();
 
-    if (const auto val = obj.value("heat_score"); val.isDouble())
+    if (const auto val = obj.value(QStringLiteral("heat_score")); val.isDouble())
         heat_score = val.toDouble();
 }
 

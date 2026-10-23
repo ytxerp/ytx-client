@@ -32,7 +32,7 @@ EditDocument::~EditDocument()
 
 void EditDocument::on_pBtnAdd_clicked()
 {
-    const QString filter("*.*");
+    const QString filter(QStringLiteral("*.*"));
     const QString base_path { QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) };
     const QString document_path { QDir(base_path).filePath(document_path_) };
 

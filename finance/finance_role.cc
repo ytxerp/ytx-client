@@ -53,7 +53,7 @@ QString RolesDisplay(Roles roles)
         }
     }
 
-    return result.join(" | ");
+    return result.join(QStringLiteral(" | "));
 }
 
 QString CashKindName(CashKind kind)

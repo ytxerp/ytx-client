@@ -95,8 +95,8 @@ QString utils::AccountIniFileName(const QString& email, const QString& workspace
     static const QRegularExpression invalid_chars { R"([^\p{L}\p{N}_]+)" };
     static const QRegularExpression underscores { "_+" };
 
-    file_name.replace(invalid_chars, "_");
-    file_name.replace(underscores, "_");
+    file_name.replace(invalid_chars, QLatin1String("_"));
+    file_name.replace(underscores, QLatin1String("_"));
 
     if (file_name.startsWith('_'))
         file_name.remove(0, 1);

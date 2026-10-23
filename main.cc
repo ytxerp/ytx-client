@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     }
 
     // Use the Fusion style for a consistent cross-platform appearance
-    application.setStyle("Fusion");
+    application.setStyle(QStringLiteral("Fusion"));
 
     // Disable native file dialogs to ensure consistent behavior across platforms
     application.setAttribute(Qt::AA_DontUseNativeDialogs);
