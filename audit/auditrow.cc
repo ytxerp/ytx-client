@@ -8,11 +8,15 @@
 namespace {
 QString JsonValueToString(const QJsonValue& value)
 {
-    if (value.isObject())
-        return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
+    if (value.isObject()) {
+        const QJsonObject obj { value.toObject() };
+        return obj.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+    }
 
-    if (value.isArray())
-        return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Compact));
+    if (value.isArray()) {
+        const QJsonArray arr { value.toArray() };
+        return arr.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(arr).toJson(QJsonDocument::Compact));
+    }
 
     return {};
 }
