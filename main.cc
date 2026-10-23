@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
 {
     // Create the Qt application instance
     QApplication application(argc, argv);
+    application.setQuitOnLastWindowClosed(false);
 
     // Register resource file (contains icons, translations, themes, etc.)
     const QString resource_file { utils::ResourceFile() };

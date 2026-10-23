@@ -80,6 +80,7 @@ private slots:
     void on_actionSignIn_triggered();
     void on_actionSignOut_triggered();
     void on_actionReconnect_triggered();
+    void on_actionQuit_triggered();
 
     void on_actionProfile_triggered();
     void on_actionWorkspaceManager_triggered();
@@ -134,7 +135,7 @@ private slots:
     void RFinishTreeSync();
 
     void RFreeWidget(Section section, QUuid node_id);
-    void RFlushCaches();
+    void RCleanUp();
 
     void ROrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
 
@@ -202,6 +203,8 @@ private slots:
 private:
     void SetTabWidget(QTabWidget* tab_widget);
     void ResetMainwindow();
+
+    void FlushCaches();
 
     void SetUniqueConnection() const;
     void SetIcon() const;
@@ -370,6 +373,9 @@ private:
     QTranslator ytx_translator_ {};
 
     AppConfig app_config_ {};
+
+    bool quitting_ { false };
+    bool cleaned_up_ { false };
 
     QSharedPointer<QSettings> app_settings_ {};
     QSharedPointer<QSettings> section_settings_ {};

@@ -107,11 +107,7 @@ QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
     return set;
 }
 
-MainWindow::~MainWindow()
-{
-    WriteConfig();
-    delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
 // FocusTabWidget - Activate and focus the leaf widget tab
 // -------------------------------
@@ -192,6 +188,24 @@ void MainWindow::ResetMainwindow()
     }
 }
 
+void MainWindow::RCleanUp()
+{
+    if (std::exchange(cleaned_up_, true))
+        return;
+
+    WriteConfig();
+
+    utils::CloseWidgets(widget_hash_);
+    utils::CloseWidgets(sc_f_.widget_hash);
+    utils::CloseWidgets(sc_i_.widget_hash);
+    utils::CloseWidgets(sc_p_.widget_hash);
+    utils::CloseWidgets(sc_t_.widget_hash);
+    utils::CloseWidgets(sc_sale_.widget_hash);
+    utils::CloseWidgets(sc_purchase_.widget_hash);
+
+    FlushCaches();
+}
+
 void MainWindow::IniSectionGroup()
 {
     section_group_ = new QButtonGroup(this);
@@ -229,7 +243,7 @@ void MainWindow::RFreeWidget(Section section, QUuid node_id)
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
-void MainWindow::RFlushCaches()
+void MainWindow::FlushCaches()
 {
     FlushCaches(&sc_f_);
     FlushCaches(&sc_i_);
@@ -339,7 +353,7 @@ void MainWindow::InitSystemTray()
     });
 
     tray_menu_->addSeparator();
-    tray_menu_->addAction(tr("Quit"), qApp, &QCoreApplication::quit);
+    tray_menu_->addAction(tr("Quit"), ui->actionQuit, &QAction::trigger);
 
     tray_icon_->setContextMenu(tray_menu_);
     tray_icon_->show();
@@ -366,19 +380,21 @@ void MainWindow::InitStatusLabel()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    if (tray_icon_ && tray_icon_->isVisible()) {
+    if (!quitting_ && event->spontaneous() && tray_icon_ && tray_icon_->isVisible()) {
         hide();
         event->ignore();
         return;
     }
+
+    RCleanUp();
 
     QMainWindow::closeEvent(event);
 }
 
 void MainWindow::SetUniqueConnection() const
 {
-    connect(qApp, &QCoreApplication::aboutToQuit, this, &MainWindow::RFlushCaches);
-    connect(ui->actionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &MainWindow::RCleanUp);
+    // connect(qApp, &QGuiApplication::commitDataRequest, this, [this] { quitting_ = true; });
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
@@ -556,6 +572,13 @@ void MainWindow::on_actionPreferences_triggered()
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
     dialog->show();
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    quitting_ = true;
+    if (close())
+        QCoreApplication::quit();
 }
 
 void MainWindow::on_actionAbout_triggered()
