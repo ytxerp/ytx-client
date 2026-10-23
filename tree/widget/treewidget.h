@@ -69,7 +69,7 @@ protected:
         Q_ASSERT(box);
 
         box->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-        box->setSpecialValueText("--");
+        box->setSpecialValueText(QStringLiteral("--"));
         box->setValue(std::numeric_limits<double>::lowest());
     }
 };

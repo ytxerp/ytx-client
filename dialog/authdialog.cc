@@ -281,7 +281,7 @@ bool AuthDialog::ValidateEmail(const QString& email)
         return false;
     }
 
-    static QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
+    static const QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
 
     if (!re.match(email).hasMatch()) {
         utils::ShowMessage(QMessageBox::Warning, tr("Invalid Email"), tr("Please enter a valid email address."), time_const::kAutoCloseMs);
@@ -299,7 +299,7 @@ bool AuthDialog::ValidatePassword(const QString& password)
     }
 
     {
-        static QRegularExpression re(R"([A-Za-z])");
+        static const QRegularExpression re(R"([A-Za-z])");
 
         if (!password.contains(re)) {
             utils::ShowMessage(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one letter."), time_const::kAutoCloseMs);
@@ -308,7 +308,7 @@ bool AuthDialog::ValidatePassword(const QString& password)
     }
 
     {
-        static QRegularExpression re(R"(\d)");
+        static const QRegularExpression re(R"(\d)");
 
         if (!password.contains(re)) {
             utils::ShowMessage(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one digit."), time_const::kAutoCloseMs);
@@ -317,7 +317,7 @@ bool AuthDialog::ValidatePassword(const QString& password)
     }
 
     {
-        static QRegularExpression re(R"([^\w\s])");
+        static const QRegularExpression re(R"([^\w\s])");
 
         if (!password.contains(re)) {
             utils::ShowMessage(
