@@ -203,6 +203,8 @@ void MainWindow::RCleanUp()
     utils::CloseWidgets(sc_t_.widget_hash);
     utils::CloseWidgets(sc_sale_.widget_hash);
     utils::CloseWidgets(sc_purchase_.widget_hash);
+
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 }
 
 void MainWindow::IniSectionGroup()
@@ -248,8 +250,6 @@ void MainWindow::FlushCaches()
     FlushCaches(&sc_i_);
     FlushCaches(&sc_p_);
     FlushCaches(&sc_t_);
-
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
 }
 
 void MainWindow::FlushCaches(const SectionContext* sc) const
