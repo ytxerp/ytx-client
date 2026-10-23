@@ -21,6 +21,7 @@
 
 #include <QDoubleSpinBox>
 #include <QTreeView>
+#include <QUuid>
 #include <QWidget>
 
 class TreeWidget : public QWidget {
@@ -44,12 +45,12 @@ protected:
 
     virtual void InitStaticStatus() { }
     virtual void InitDynamicStatus() { }
-    virtual void SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+    virtual void SyncDynamicValue(QUuid lhs_node_id, QUuid rhs_node_id)
     {
         Q_UNUSED(lhs_node_id)
         Q_UNUSED(rhs_node_id)
     }
-    virtual void SyncStaticValue(const QUuid& node_id) { Q_UNUSED(node_id) }
+    virtual void SyncStaticValue(QUuid node_id) { Q_UNUSED(node_id) }
 
     inline double Operate(double lhs, double rhs, const QString& operation)
     {

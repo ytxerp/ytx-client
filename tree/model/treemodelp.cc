@@ -8,7 +8,7 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     leaf_model_ = new ItemModel(this);
 }
 
-void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
+void TreeModelP::UpdateAmount(QUuid node_id, double initial_delta)
 {
     Q_ASSERT(!node_id.isNull());
 

@@ -21,7 +21,6 @@
 
 #include <QAbstractItemModel>
 
-#include "component/using.h"
 #include "enum/entryenum.h"
 #include "statement.h"
 
@@ -30,7 +29,7 @@ namespace statement {
 class TertiaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit TertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
+    explicit TertiaryModel(const QStringList& header, QUuid partner_id, QObject* parent = nullptr);
     ~TertiaryModel() override;
 
 signals:

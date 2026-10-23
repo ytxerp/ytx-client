@@ -16,7 +16,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
+StatementTertiaryWidget::StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, const utils::DateRange& range, CString& partner_name,
     CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)
@@ -149,7 +149,7 @@ void StatementTertiaryWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementTertiaryWidget::InitModel(const QStringList& header, CUuid& partner_id)
+void StatementTertiaryWidget::InitModel(const QStringList& header, QUuid partner_id)
 {
     data_model_ = new statement::TertiaryModel(header, partner_id, this);
     summary_model_ = new TableSummaryModel(header, this);

@@ -8,7 +8,7 @@ EntryHubF::EntryHubF(const Section section, QObject* parent)
 {
 }
 
-void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side, int version)
+void EntryHubF::UpdateEntryRate(QUuid entry_id, const QJsonObject& update, InputSide input_side, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -43,7 +43,7 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
     }
 }
 
-void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version)
+void EntryHubF::UpdateEntryNumeric(QUuid entry_id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {

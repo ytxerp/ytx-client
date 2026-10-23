@@ -70,7 +70,7 @@ void MainWindow::DeleteEntry(TableWidget* widget)
     model->removeRows(current_row);
 }
 
-void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+void MainWindow::REntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id)
 {
     // Note: For Partner, Sale, and Purchase sections, rhs_node_id check is not required
     if (entry_id.isNull() || lhs_node_id.isNull())
@@ -129,7 +129,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
 //  2. Find and select the entry in the view
 //  3. Scroll to center the IssuedTime column
 //  4. Close any persistent editor on that row
-void MainWindow::RSelectEntry(const QUuid& node_id, const QUuid& entry_id)
+void MainWindow::RSelectEntry(QUuid node_id, QUuid entry_id)
 {
     if (entry_id.isNull() || node_id.isNull())
         return;
@@ -155,7 +155,7 @@ void MainWindow::REntryLocked()
         QMessageBox::Information, tr("Invalid Operation"), tr("This entry is locked. The operation cannot be performed."), time_const::kAutoCloseMs);
 }
 
-void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
+void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
 {
     Q_ASSERT(sc);
 

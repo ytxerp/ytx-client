@@ -19,7 +19,7 @@ void MainWindow::on_actionHeatInventory_triggered()
     dialog->show();
 }
 
-void MainWindow::RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RInventoryHeatAck(QUuid widget_id, const QJsonArray& array)
 {
     auto widget { sc_i_.widget_hash.value(widget_id).widget };
     if (!widget)

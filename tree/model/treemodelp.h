@@ -34,7 +34,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    void UpdateAmount(const QUuid& node_id, double initial_delta);
+    void UpdateAmount(QUuid node_id, double initial_delta);
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;

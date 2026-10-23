@@ -28,7 +28,7 @@ TreeModel::~TreeModel()
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
-void TreeModel::ApplyDelete(const QUuid& node_id)
+void TreeModel::ApplyDelete(QUuid node_id)
 {
     auto* node { node_hash_.value(node_id, nullptr) };
     if (!node)
@@ -80,7 +80,7 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
     EmitNumericChanged(affected_ids);
 }
 
-void TreeModel::ApplyNode(const QUuid& ancestor, const QJsonObject& data)
+void TreeModel::ApplyNode(QUuid ancestor, const QJsonObject& data)
 {
     Node* parent { node_hash_.value(ancestor) };
     if (!parent)
@@ -102,7 +102,7 @@ void TreeModel::ApplyNode(const QUuid& ancestor, const QJsonObject& data)
     RegisterNode(node);
 }
 
-QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, double final_total)
+QSet<QUuid> TreeModel::SyncTotal(QUuid node_id, double initial_total, double final_total)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -165,7 +165,7 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
     if (leaf_ids.isEmpty() || leaf_path_.isEmpty())
         return;
 
-    for (const QUuid& id : leaf_ids) {
+    for (QUuid id : leaf_ids) {
         const QString value { leaf_path_.value(id) };
 
         if (value.isEmpty()) {
@@ -218,7 +218,7 @@ void TreeModel::InitLeafData()
     }
 }
 
-void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int version)
+void TreeModel::ApplyUpdate(QUuid node_id, const QJsonObject& update, int version)
 {
     if (update.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Update is empty";
@@ -263,7 +263,7 @@ void TreeModel::RequestStatus(Node* node, int value)
     WebSocket::Instance()->SendMessage(WsKey::kNodeStatus, message);
 }
 
-void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version)
+void TreeModel::ApplyDirectionRule(QUuid node_id, bool direction_rule, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -297,7 +297,7 @@ void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, in
     emit SSyncValue();
 }
 
-void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
+void TreeModel::ApplyStatus(QUuid node_id, int status, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -332,7 +332,7 @@ void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
     leaf_model_->AppendItem(node_id, path);
 }
 
-void TreeModel::UpdateVersion(const QUuid& node_id, int version)
+void TreeModel::UpdateVersion(QUuid node_id, int version)
 {
     auto* node { GetNode(node_id) };
     if (!node)
@@ -341,7 +341,7 @@ void TreeModel::UpdateVersion(const QUuid& node_id, int version)
     node->version = version;
 }
 
-void TreeModel::ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id)
+void TreeModel::ApplyReplace(QUuid old_node_id, QUuid new_node_id)
 {
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };
@@ -367,7 +367,7 @@ void TreeModel::ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id)
     ApplyDelete(old_node_id);
 }
 
-void TreeModel::ApplyName(const QUuid& node_id, const QString& name, int version)
+void TreeModel::ApplyName(QUuid node_id, const QString& name, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -394,7 +394,7 @@ void TreeModel::ApplyName(const QUuid& node_id, const QString& name, int version
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
-void TreeModel::ApplyDrag(const QUuid& ancestor, const QUuid& descendant)
+void TreeModel::ApplyDrag(QUuid ancestor, QUuid descendant)
 {
     // Get the node to be moved
     auto* node { GetNode(descendant) };
@@ -709,7 +709,7 @@ void TreeModel::Reset()
     endResetModel();
 }
 
-QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
+QModelIndex TreeModel::GetIndex(QUuid node_id) const
 {
     if (node_id.isNull())
         return {};
@@ -731,7 +731,7 @@ QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
     return createIndex(static_cast<int>(row), 0, node);
 }
 
-QString TreeModel::Path(const QUuid& node_id) const
+QString TreeModel::Path(QUuid node_id) const
 {
     if (auto it = leaf_path_.constFind(node_id); it != leaf_path_.constEnd())
         return it.value();
@@ -742,7 +742,7 @@ QString TreeModel::Path(const QUuid& node_id) const
     return {};
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* parent) const
+QSortFilterProxyModel* TreeModel::ExcludeId(QUuid node_id, QObject* parent) const
 {
     auto* model { new ExcludeIdFilterModel(node_id, parent) };
     model->setSourceModel(leaf_model_);
@@ -764,7 +764,7 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
     return model;
 }
 
-QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent)
+QSortFilterProxyModel* TreeModel::ReplaceSelf(QUuid node_id, NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeSetExcludeOneFilterModel(set, node_id, parent) };
@@ -772,7 +772,7 @@ QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit uni
     return model;
 }
 
-void TreeModel::AckNode(const QUuid& node_id) const
+void TreeModel::AckNode(QUuid node_id) const
 {
     if (node_hash_.contains(node_id))
         return;
@@ -875,7 +875,7 @@ void TreeModel::InitAncestorTotal(Node* node, const node::Delta& delta) const
 
 void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
 {
-    for (const QUuid& id : ids) {
+    for (QUuid id : ids) {
         const QModelIndex index = GetIndex(id);
         if (!index.isValid())
             continue;
@@ -888,7 +888,7 @@ void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
 
 void TreeModel::EmitColumnChanged(int column, const QSet<QUuid>& ids)
 {
-    for (const QUuid& id : ids) {
+    for (QUuid id : ids) {
         const QModelIndex index = GetIndex(id);
         if (!index.isValid())
             continue;
@@ -919,7 +919,7 @@ void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, in
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
-void TreeModel::RestartTimer(const QUuid& id)
+void TreeModel::RestartTimer(QUuid id)
 {
     auto*& timer { pending_updates_[id].timer };
 
@@ -932,7 +932,7 @@ void TreeModel::RestartTimer(const QUuid& id)
     timer->start(time_const::kAutoCloseMs);
 }
 
-void TreeModel::FlushTimer(const QUuid& id)
+void TreeModel::FlushTimer(QUuid id)
 {
     auto update { pending_updates_.take(id) };
 
@@ -958,7 +958,7 @@ void TreeModel::FlushTimers()
     }
 }
 
-void TreeModel::RestoreSyncState(const QUuid& node_id)
+void TreeModel::RestoreSyncState(QUuid node_id)
 {
     auto* node { node_hash_.value(node_id, nullptr) };
     if (!node)

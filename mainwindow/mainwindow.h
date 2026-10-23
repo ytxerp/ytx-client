@@ -110,14 +110,14 @@ private slots:
     void tabWidget_tabCloseRequestedFIPT(int index);
     void tabWidget_tabCloseRequestedO(int index);
 
-    void RLocateNode(Section section, const QUuid& node_id);
-    void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
-    void RSelectNode(Section section, const QUuid& node_id);
+    void RLocateNode(Section section, QUuid node_id);
+    void REntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
+    void RSelectNode(Section section, QUuid node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
-    void RSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id);
-    void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
-    void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
+    void RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id);
+    void RUpdatePartner(QUuid widget_id, QUuid partner_id);
+    void RUpdateName(QUuid node_id, const QString& name, bool branch);
     void RMessage(QMessageBox::Icon icon, const QString& message);
 
     void RAccountName(const QString& name);
@@ -133,14 +133,14 @@ private slots:
     void RDenyLogin();
     void RFinishTreeSync();
 
-    void RFreeWidget(Section section, const QUuid& node_id);
+    void RFreeWidget(Section section, QUuid node_id);
     void RFlushCaches();
 
-    void ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void ROrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
 
-    void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RStatementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
+    void RStatemetSecondary(Section section, QUuid widget_id, const QJsonArray& array);
+    void RStatementTertiary(Section section, QUuid widget_id, const QJsonArray& array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Node* node);
@@ -152,34 +152,34 @@ private slots:
 
     void RSectionGroup(int id);
 
-    void RShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
-    void RShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
+    void RShowSecondaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
+    void RShowTertiaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
 
-    void RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
+    void RSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
     void RInsertSettlement(const QJsonObject& obj);
     void RRecallSettlement(const QJsonObject& obj);
     void RUpdateSettlement(const QJsonObject& obj);
-    void RSettlementView(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RSettlementView(Section section, QUuid widget_id, const QJsonArray& array);
 
-    void RReleaseOrder(Section section, const QUuid& node_id, int version);
-    void RRecallOrder(Section section, const QUuid& node_id, int version);
-    void RSaveOrder(Section section, const QUuid& node_id, int version);
+    void RReleaseOrder(Section section, QUuid node_id, int version);
+    void RRecallOrder(Section section, QUuid node_id, int version);
+    void RSaveOrder(Section section, QUuid node_id, int version);
     void RDenyOperation();
     void RPermissionDeny();
-    void ROrderPermissionDeny(Section section, const QUuid& widget_id);
-    void RSettlementPermissionDeny(Section section, const QUuid& widget_id);
+    void ROrderPermissionDeny(Section section, QUuid widget_id);
+    void RSettlementPermissionDeny(Section section, QUuid widget_id);
 
     void RDenyLeafDelete(const QJsonObject& obj);
-    void RLeafDeleteLockedDeny(Section section, const QUuid& node_id);
+    void RLeafDeleteLockedDeny(Section section, QUuid node_id);
 
-    void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
-    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
-    void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
-    void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
-    void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj);
-    void RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj);
+    void RWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array);
+    void RAuditLogAck(QUuid widget_id, const QJsonArray& array);
+    void RInventoryHeatAck(QUuid widget_id, const QJsonArray& array);
+    void RPartnerHeatAck(QUuid widget_id, const QJsonArray& array);
+    void RBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
+    void RIncomeStatementAck(QUuid widget_id, const QJsonObject& obj);
+    void RCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj);
 
     void RAccountRoleUpdate();
 
@@ -196,7 +196,7 @@ private slots:
     void RUpdateDocumentDir(Section section, const QString& document_dir);
     void RUpdateDefaultUnit(Section section, int unit);
     void RDenyDefaultUnit();
-    void RSelectEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RSelectEntry(QUuid node_id, QUuid entry_id);
     void REntryLocked();
 
 private:
@@ -214,13 +214,13 @@ private:
     void InitContextSale();
     void InitContextPurchase();
 
-    void ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id = {});
+    void ShowLeafWidget(QUuid node_id, QUuid entry_id = {});
 
     void CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model);
 
-    void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
-    void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
-    void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
+    void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
+    void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
+    void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const;
 
@@ -288,11 +288,11 @@ private:
     void InsertNodeO(SectionContext* sc, const QModelIndex& parent_index);
 
     // Table
-    void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
-    void CreateLeafO(SectionContext* sc, const QUuid& node_id);
+    void CreateLeafFIPT(SectionContext* sc, QUuid node_id);
+    void CreateLeafO(SectionContext* sc, QUuid node_id);
 
     // Widget
-    void RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role);
+    void RegisterWidget(SectionContext* sc, QWidget* widget, QUuid widget_id, WidgetRole role);
     void FlushCaches(const SectionContext* sc) const;
 
     // Tag
@@ -324,7 +324,7 @@ private:
 
     void IniSectionGroup();
 
-    void FocusTabWidget(const QUuid& node_id) const;
+    void FocusTabWidget(QUuid node_id) const;
 
     void WriteConfig();
 
@@ -340,10 +340,10 @@ private:
     QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
-    void UpdateLeafNodeName(const QUuid& node_id, const QString& name);
-    void UpdateOneTab(const QUuid& node_id, const QString& name);
+    void UpdateLeafNodeName(QUuid node_id, const QString& name);
+    void UpdateOneTab(QUuid node_id, const QString& name);
 
-    void UpdateBranchNodeName(const QUuid& node_id);
+    void UpdateBranchNodeName(QUuid node_id);
     void UpdateMultiTabs(const QSet<QUuid>& nodes);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }

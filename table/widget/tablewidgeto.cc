@@ -98,7 +98,7 @@ bool TableWidgetO::HasPendingUpdate() const
     return node_pending || entry_pending;
 }
 
-void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double count_delta, double measure_delta)
+void TableWidgetO::RSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta)
 {
     Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 

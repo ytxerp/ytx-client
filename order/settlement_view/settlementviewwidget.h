@@ -39,7 +39,7 @@ class SettlementViewWidget final : public QWidget {
 
 public:
     explicit SettlementViewWidget(
-        const QHash<QUuid, QString>& partner_leaf_path, CUuid& widget_id, const int& amount_decimal, Section section, QWidget* parent = nullptr);
+        const QHash<QUuid, QString>& partner_leaf_path, QUuid widget_id, int amount_decimal, Section section, QWidget* parent = nullptr);
     ~SettlementViewWidget() override;
 
     QTableView* DataView() const;
@@ -76,7 +76,7 @@ private:
     settlement_view::Model* data_model_ {};
     DynamicSummaryModel* summary_model_ {};
 
-    CUuid widget_id_ {};
+    const QUuid widget_id_ {};
     const Section section_ {};
 
     QTimer* cooldown_timer_ { nullptr };

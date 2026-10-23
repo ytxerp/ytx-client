@@ -39,7 +39,7 @@ void MainWindow::on_actionOrderOverview_triggered()
     RegisterWidget(sc_, widget, widget_id, WidgetRole::kOrderOverview);
 }
 
-void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::ROrderOverview(Section section, QUuid widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContext(section) };
 

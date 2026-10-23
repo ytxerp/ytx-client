@@ -1,6 +1,6 @@
 #include "partner_inventory_registry.h"
 
-void PartnerInventoryRegistry::ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id)
+void PartnerInventoryRegistry::ReplaceInternalSku(QUuid old_id, QUuid new_id)
 {
     if (old_id.isNull() || new_id.isNull())
         return;

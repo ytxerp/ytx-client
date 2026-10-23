@@ -224,7 +224,7 @@ QUuid utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dia
     return id;
 }
 
-void utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, const QUuid& id)
+void utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, QUuid id)
 {
     Q_ASSERT(dialog);
 

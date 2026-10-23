@@ -38,12 +38,12 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : 1; }
     Qt::ItemFlags flags(const QModelIndex& index) const override { return index.isValid() ? (Qt::ItemIsEnabled | Qt::ItemIsSelectable) : Qt::NoItemFlags; }
 
-    void AppendItem(const QUuid& id, const QString& display);
-    bool RemoveItem(const QUuid& id);
+    void AppendItem(QUuid id, const QString& display);
+    bool RemoveItem(QUuid id);
 
     void SetSeparator(const QString& old_separator, const QString& new_separator);
     // Updates the display text only (no re-sort, no notification); call sort(0) afterwards.
-    void SetDisplay(const QUuid& id, const QString& display);
+    void SetDisplay(QUuid id, const QString& display);
 
     void Rebuild(const QHash<QUuid, QString>& leaf_path);
     void Reset();

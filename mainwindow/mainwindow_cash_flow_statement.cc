@@ -35,7 +35,7 @@ void MainWindow::on_actionCashFlowStatement_triggered()
     dialog->show();
 }
 
-void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj)
+void MainWindow::RCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)

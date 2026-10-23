@@ -46,8 +46,8 @@ private:
     void InitStaticStatus() override;
     void InitDynamicStatus() override;
 
-    void SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
-    void SyncStaticValue(const QUuid& node_id) override;
+    void SyncDynamicValue(QUuid lhs_node_id, QUuid rhs_node_id) override;
+    void SyncStaticValue(QUuid node_id) override;
 
 private:
     Ui::TreeWidgetF* ui;

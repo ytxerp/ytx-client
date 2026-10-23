@@ -12,7 +12,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-PartnerHeatDialog::PartnerHeatDialog(const QStringList& header, const QUuid& widget_id, QWidget* parent)
+PartnerHeatDialog::PartnerHeatDialog(const QStringList& header, QUuid widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::PartnerHeatDialog)
     , range_ { DefaultRange() }

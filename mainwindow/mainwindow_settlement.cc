@@ -65,7 +65,7 @@ void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary
     RegisterWidget(sc_, widget, widget_id, WidgetRole::kSettlement);
 }
 
-void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
+void MainWindow::RUpdatePartner(QUuid widget_id, QUuid partner_id)
 {
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
@@ -109,7 +109,7 @@ void MainWindow::RCreateSettlementSecondaryWidget(settlement::PrimaryModel* mode
     CreateSettlementSecondary(settlement, model);
 }
 
-void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -126,7 +126,7 @@ void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, c
     model->Rebuild(array);
 }
 
-void MainWindow::RSettlementPermissionDeny(Section section, const QUuid& widget_id)
+void MainWindow::RSettlementPermissionDeny(Section section, QUuid widget_id)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -207,7 +207,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     d_widget->UpdateSucceeded(version);
 }
 
-void MainWindow::RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContext(section) };
 

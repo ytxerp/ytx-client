@@ -26,5 +26,5 @@ public:
     explicit EntryHubI(const Section section, QObject* parent = nullptr);
 
 public:
-    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
+    void ReplaceLeaf(QUuid old_node_id, QUuid new_node_id);
 };

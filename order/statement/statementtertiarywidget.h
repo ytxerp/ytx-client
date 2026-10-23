@@ -37,8 +37,8 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
-        CString& company_name, Section section, int unit, QWidget* parent = nullptr);
+    StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, const utils::DateRange& range, CString& partner_name, CString& company_name,
+        Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
     QTableView* DataView() const;
@@ -59,7 +59,7 @@ private:
     void IniUnit(int unit);
     void IniWidget();
     void InitTimer();
-    void InitModel(const QStringList& header, CUuid& partner_id);
+    void InitModel(const QStringList& header, QUuid partner_id);
     QList<QVariantList> BuildExportLines(CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
 
 private:
@@ -77,7 +77,7 @@ private:
     QTimer* cooldown_timer_ { nullptr };
     const Section section_ {};
     const QUuid widget_id_ {};
-    CUuid partner_id_ {};
+    const QUuid partner_id_ {};
 };
 
 inline const char* kStatementTertiaryWidget = "StatementTertiaryWidget";

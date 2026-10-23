@@ -22,13 +22,13 @@ void EntryHub::DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     // Recycle entry resources
     for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {
         const QSet<QUuid>& entry_set = it.value();
-        for (const QUuid& entry_id : entry_set) {
+        for (QUuid entry_id : entry_set) {
             EntryPool::Instance().Recycle(entry_cache_.take(entry_id), section_);
         }
     }
 }
 
-void EntryHub::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide /*input_side*/, int version)
+void EntryHub::UpdateEntryRate(QUuid entry_id, const QJsonObject& update, InputSide /*input_side*/, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -46,7 +46,7 @@ void EntryHub::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update,
     }
 }
 
-void EntryHub::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version)
+void EntryHub::UpdateEntryNumeric(QUuid entry_id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -80,7 +80,7 @@ void EntryHub::InsertEntry(const QJsonObject& data)
     emit SAttachEntry(entry->rhs_node, entry);
 }
 
-void EntryHub::DeleteEntry(const QUuid& entry_id)
+void EntryHub::DeleteEntry(QUuid entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it == entry_cache_.constEnd()) {
@@ -96,7 +96,7 @@ void EntryHub::DeleteEntry(const QUuid& entry_id)
     EntryPool::Instance().Recycle(entry, section_);
 }
 
-void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update, int version)
+void EntryHub::UpdateEntry(QUuid id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(id);
     if (it != entry_cache_.constEnd()) {
@@ -113,7 +113,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update, int versi
     };
 }
 
-void EntryHub::UpdateVersion(const QUuid& id, int version)
+void EntryHub::UpdateVersion(QUuid id, int version)
 {
     auto it = entry_cache_.find(id);
     if (it != entry_cache_.end()) {
@@ -123,7 +123,7 @@ void EntryHub::UpdateVersion(const QUuid& id, int version)
     }
 }
 
-void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side)
+void EntryHub::UpdateEntryLinkedNode(QUuid id, const QJsonObject& update, InputSide input_side)
 {
     Entry* entry {};
 
@@ -167,7 +167,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
     emit SAttachEntry(new_node_id, entry);
 }
 
-void EntryHub::UpdateEntryLocked(const QUuid& entry_id, int version, bool is_locked)
+void EntryHub::UpdateEntryLocked(QUuid entry_id, int version, bool is_locked)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it == entry_cache_.constEnd())
@@ -185,7 +185,7 @@ void EntryHub::UpdateEntryLocked(const QUuid& entry_id, int version, bool is_loc
     emit SRefreshField(entry->rhs_node, entry_id, locked_column, locked_column);
 }
 
-void EntryHub::RestoreSyncState(const QUuid& entry_id)
+void EntryHub::RestoreSyncState(QUuid entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it == entry_cache_.constEnd())
@@ -249,7 +249,7 @@ void EntryHub::RestoreSyncState(const QUuid& entry_id)
 //         .arg(info_.path);
 // }
 
-// bool EntryHub::WriteRelationship(const QUuid& node_id, const QUuid& parent_id, QSqlQuery& query, qlonglong version) const
+// bool EntryHub::WriteRelationship(QUuid node_id, QUuid parent_id, QSqlQuery& query, qlonglong version) const
 // {
 //     auto part_old = QString(R"(
 //     INSERT INTO %1 (ancestor, descendant, distance)
@@ -282,7 +282,7 @@ void EntryHub::RestoreSyncState(const QUuid& entry_id)
 //     return sql + kWhere + condition.join(kAnd);
 // }
 
-void EntryHub::AckTable(const QUuid& node_id, const QJsonArray& array)
+void EntryHub::AckTable(QUuid node_id, const QJsonArray& array)
 {
     if (array.isEmpty())
         return;
@@ -332,7 +332,7 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::MarkEntries(const QUuid& node_id, MarkOperation operation)
+void EntryHub::MarkEntries(QUuid node_id, MarkOperation operation)
 {
     QSet<QUuid> affected_node {};
 
@@ -355,7 +355,7 @@ void EntryHub::MarkEntries(const QUuid& node_id, MarkOperation operation)
     }
 }
 
-void EntryHub::LockEntries(const QUuid& node_id, bool is_locked)
+void EntryHub::LockEntries(QUuid node_id, bool is_locked)
 {
     QSet<QUuid> affected_node {};
 

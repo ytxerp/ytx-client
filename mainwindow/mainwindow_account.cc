@@ -73,7 +73,7 @@ void MainWindow::on_actionWorkspaceManager_triggered()
     dialog->show();
 }
 
-void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array)
 {
     auto widget { widget_hash_.value(widget_id).widget };
     if (!widget)

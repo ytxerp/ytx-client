@@ -59,7 +59,7 @@ public:
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
     void SetWorkspaceRole(workspace::Role value) { role_ = value; }
-    void SetSectionPermissions(section::Permissions value) { permissions_ = value; }
+    void SetSectionPermissions(const section::Permissions& value) { permissions_ = value; }
 
     void Reset()
     {

@@ -34,45 +34,45 @@ namespace JsonGen {
 QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range, int utc_offset);
 QJsonObject Register(CString& email, CString& password);
 
-QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
-QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id);
+QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id);
+QJsonObject NodeDrag(Section section, QUuid node_id, QUuid parent_id);
 
-QJsonObject LeafDelete(Section section, CUuid& node_id, int version);
-QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id, int version);
+QJsonObject LeafDelete(Section section, QUuid node_id, int version);
+QJsonObject BranchDelete(Section section, QUuid node_id, QUuid parent_id, int version);
 
-QJsonObject LeafDeleteCheck(Section section, CUuid& node_id, int version);
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, int version);
+QJsonObject LeafDeleteCheck(Section section, QUuid node_id, int version);
+QJsonObject LeafReplace(Section section, QUuid old_id, QUuid new_id, int version);
 
-QJsonObject MarkEntries(Section section, CUuid& node_id, int operation);
-QJsonObject LockEntries(Section section, CUuid& node_id, bool is_locked);
-QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update, int version);
-QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side, int version);
-QJsonObject EntryMessage(Section section, CUuid& entry_id);
+QJsonObject MarkEntries(Section section, QUuid node_id, int operation);
+QJsonObject LockEntries(Section section, QUuid node_id, bool is_locked);
+QJsonObject EntryUpdate(Section section, QUuid entry_id, CJsonObject& update, int version);
+QJsonObject EntryValue(Section section, QUuid entry_id, CJsonObject& update, InputSide side, int version);
+QJsonObject EntryMessage(Section section, QUuid entry_id);
 
-QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update, int version);
+QJsonObject TagUpdate(Section section, QUuid id, CJsonObject& update, int version);
 QJsonObject TagInsert(Section section, const tag::Row* tag);
-QJsonObject TagDelete(Section section, CUuid& tag_id, int version);
+QJsonObject TagDelete(Section section, QUuid tag_id, int version);
 
-QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update, int version);
-QJsonObject WorkspaceMemberDelete(CUuid& id);
-QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace);
-QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const utils::DateTimeRange& range, Section section);
+QJsonObject WorkspaceMemberUpdate(QUuid id, CJsonObject& update, int version);
+QJsonObject WorkspaceMemberDelete(QUuid id);
+QJsonObject WorkspaceMemberAck(QUuid widget_id, CString& workspace);
+QJsonObject AuditLogAck(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section);
 
 QJsonObject TreeAck(Section section, const utils::DateTimeRange& range);
-QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
-QJsonObject NodeAck(Section section, CUuid& node_id);
-QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const utils::DateTimeRange& range);
-QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);
-QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);
-QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
-QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
-QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
-QJsonObject SettlementView(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
+QJsonObject TableAck(Section section, QUuid node_id, QUuid entry_id = {});
+QJsonObject NodeAck(Section section, QUuid node_id);
+QJsonObject StatementPrimary(Section section, QUuid widget_id, int unit, const utils::DateTimeRange& range);
+QJsonObject StatementSecondary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);
+QJsonObject StatementTertiary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);
+QJsonObject SettlementPrimary(Section section, QUuid widget_id, const utils::DateTimeRange& range);
+QJsonObject SettlementSecondary(Section section, QUuid widget_id, QUuid partner_id, QUuid settlement_id);
+QJsonObject SettlementDelete(Section section, QUuid settlement_id, int version);
+QJsonObject SettlementView(Section section, QUuid widget_id, const utils::DateTimeRange& range);
 
-QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule, int version);
-QJsonObject NodeStatus(Section section, CUuid& node_id, int status, int version);
-QJsonObject NodeName(Section section, CUuid& node_id, CString& name, int version);
-QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update, int version);
+QJsonObject NodeDirectionRule(Section section, QUuid node_id, bool direction_rule, int version);
+QJsonObject NodeStatus(Section section, QUuid node_id, int status, int version);
+QJsonObject NodeName(Section section, QUuid node_id, CString& name, int version);
+QJsonObject NodeUpdate(Section section, QUuid node_id, CJsonObject& update, int version);
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
@@ -81,15 +81,15 @@ QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
 QJsonObject OrderNameSearch(Section section, CString& keyword);
 QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags);
 
-QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update, int version);
+QJsonObject OrderRecall(Section section, QUuid node_id, CJsonObject& update, int version);
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 
-QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam);
-QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam);
-QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const utils::DateTimeRange& range, int level);
-QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const utils::DateTimeRange& range, int level);
-QJsonObject CashFlowStatementAck(CUuid& widget_id, const utils::DateTimeRange& range);
-QJsonObject OrderOverviewAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
+QJsonObject InventoryHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam);
+QJsonObject PartnerHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam);
+QJsonObject BalanceSheetAck(QUuid widget_id, QUuid asset, QUuid liability, QUuid equity, const utils::DateTimeRange& range, int level);
+QJsonObject IncomeStatementAck(QUuid widget_id, QUuid income, QUuid expense, const utils::DateTimeRange& range, int level);
+QJsonObject CashFlowStatementAck(QUuid widget_id, const utils::DateTimeRange& range);
+QJsonObject OrderOverviewAck(Section section, QUuid widget_id, const utils::DateTimeRange& range);
 
 }

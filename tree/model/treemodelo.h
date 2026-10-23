@@ -38,13 +38,13 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void ApplyTree(const QJsonObject& data) override;
-    void ApplyName(const QUuid& node_id, const QString& name, int version) override;
+    void ApplyName(QUuid node_id, const QString& name, int version) override;
 
-    void InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id);
-    void RecallSettlement(const QUuid& settlement_id);
+    void InsertSettlement(const QSet<QUuid>& settled_set, QUuid settlement_id);
+    void RecallSettlement(QUuid settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Value(node_id, &NodeO::partner_id); };
-    void HandleStatusChanged(const QUuid& node_id, OrderStatus value);
+    void HandleStatusChanged(QUuid node_id, OrderStatus value);
 
 protected:
     void RegisterNode(Node* node) override;

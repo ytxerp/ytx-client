@@ -19,7 +19,7 @@ void MainWindow::on_actionIncomeStatement_triggered()
     dialog->show();
 }
 
-void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj)
+void MainWindow::RIncomeStatementAck(QUuid widget_id, const QJsonObject& obj)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)

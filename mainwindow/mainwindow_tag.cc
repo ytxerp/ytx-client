@@ -278,7 +278,7 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row& tag)
 {
     Q_ASSERT(sc);
 
-    const QUuid& tag_id { tag.id };
+    const QUuid tag_id { tag.id };
     Q_ASSERT(!tag_id.isNull());
 
     tag::Icon icon {};
@@ -293,7 +293,7 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row& tag, bool check
 {
     Q_ASSERT(sc);
 
-    const QUuid& tag_id { tag.id };
+    const QUuid tag_id { tag.id };
     Q_ASSERT(!tag_id.isNull());
 
     auto it = sc->tag_icon_hash.find(tag_id);

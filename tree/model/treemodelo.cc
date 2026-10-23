@@ -12,7 +12,7 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
 {
 }
 
-void TreeModelO::HandleStatusChanged(const QUuid& node_id, OrderStatus value)
+void TreeModelO::HandleStatusChanged(QUuid node_id, OrderStatus value)
 {
     auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     if (!d_node)
@@ -31,7 +31,7 @@ void TreeModelO::HandleStatusChanged(const QUuid& node_id, OrderStatus value)
     EmitNumericChanged(ids);
 }
 
-void TreeModelO::ApplyName(const QUuid& node_id, const QString& name, int version)
+void TreeModelO::ApplyName(QUuid node_id, const QString& name, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -55,7 +55,7 @@ void TreeModelO::ApplyName(const QUuid& node_id, const QString& name, int versio
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
-void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id)
+void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, QUuid settlement_id)
 {
     if (settled_set.isEmpty() || settlement_id.isNull())
         return;
@@ -75,7 +75,7 @@ void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& s
     }
 }
 
-void TreeModelO::RecallSettlement(const QUuid& settlement_id)
+void TreeModelO::RecallSettlement(QUuid settlement_id)
 {
     if (settlement_id.isNull())
         return;

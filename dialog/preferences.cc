@@ -117,7 +117,7 @@ void Preferences::InitData()
     ResizeLine(ui->lineDynamic, section_.dynamic_label);
 }
 
-void Preferences::InitComboData(QComboBox* combo, const QUuid& value)
+void Preferences::InitComboData(QComboBox* combo, QUuid value)
 {
     int item_index { combo->findData(value) };
     combo->setCurrentIndex(item_index);

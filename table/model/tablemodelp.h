@@ -30,7 +30,7 @@ public:
 
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;
-    void RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id) override;
+    void RDetachEntry(QUuid entry_id, QUuid counter_node_id) override;
     void RAttachEntry(Entry* entry) override;
 
 public:
@@ -44,11 +44,11 @@ public:
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
 
-    QModelIndex GetIndex(const QUuid& entry_id) const override;
+    QModelIndex GetIndex(QUuid entry_id) const override;
     Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
 
 protected:
-    bool UpdateInternalSku(Entry* entry, const QUuid& value, int row) override;
+    bool UpdateInternalSku(Entry* entry, QUuid value, int row) override;
 
 private:
     QSet<QUuid> internal_sku_set_ {};

@@ -33,7 +33,7 @@ class InventoryHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit InventoryHeatDialog(const QStringList& header, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit InventoryHeatDialog(const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
     ~InventoryHeatDialog() override;
 
     QTableView* View();

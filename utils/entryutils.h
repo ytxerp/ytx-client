@@ -424,7 +424,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
 }
 
 template <typename T, typename F = std::nullptr_t>
-bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, F&& restart_timer = nullptr)
+bool UpdateUuid(QJsonObject& update, T* object, CString& field, QUuid value, QUuid T::* member, F&& restart_timer = nullptr)
 {
     Q_ASSERT(object != nullptr);
 

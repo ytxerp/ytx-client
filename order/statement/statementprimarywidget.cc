@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementPrimaryWidget::StatementPrimaryWidget(const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
+StatementPrimaryWidget::StatementPrimaryWidget(const QStringList& header, QUuid widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementPrimaryWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }

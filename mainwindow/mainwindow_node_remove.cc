@@ -67,7 +67,7 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     dialog->show();
 }
 
-void MainWindow::RLeafDeleteLockedDeny(Section section, const QUuid& node_id)
+void MainWindow::RLeafDeleteLockedDeny(Section section, QUuid node_id)
 {
     auto* sc { GetSectionContext(section) };
     auto model { sc->tree_model };

@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-AuditDialog::AuditDialog(const QString& title, const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
+AuditDialog::AuditDialog(const QString& title, const QStringList& header, QUuid widget_id, Section section, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
     , section_ { section }

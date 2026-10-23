@@ -83,7 +83,7 @@ public:
 
 signals:
     // send to TableWidgetO
-    void SSyncDeltaO(const QUuid& node_id, double initial_delta, double count_delta, double measure_delta);
+    void SSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta);
 
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;
@@ -100,7 +100,7 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
-    QModelIndex GetIndex(const QUuid& entry_id) const override;
+    QModelIndex GetIndex(QUuid entry_id) const override;
 
     const QList<Entry*>& GetEntryList() const { return entry_list_; }
     void Purify();
@@ -110,7 +110,7 @@ public:
     bool HasPendingUpdate() const;
 
 private:
-    bool UpdateInternalSku(Entry* entry, const QUuid& value, int row) override;
+    bool UpdateInternalSku(Entry* entry, QUuid value, int row) override;
     bool UpdateUnitPrice(EntryO* entry, double value);
     bool UpdateMeasure(EntryO* entry, double value);
     bool UpdateCount(EntryO* entry, double value);

@@ -36,7 +36,7 @@ class BalanceSheetDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit BalanceSheetDialog(CTreeModel* tree_model, const QStringList& header, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit BalanceSheetDialog(CTreeModel* tree_model, const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
     ~BalanceSheetDialog() override;
 
     QTreeView* View();

@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, const QStringList& header, const QUuid& widget_id, QWidget* parent)
+IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, const QStringList& header, QUuid widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::IncomeStatementDialog)
     , range_ { DefaultRange() }

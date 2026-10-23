@@ -34,7 +34,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    double UnitPrice(const QUuid& node_id) const { return Value(node_id, &NodeI::unit_price); }
+    double UnitPrice(QUuid node_id) const { return Value(node_id, &NodeI::unit_price); }
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;

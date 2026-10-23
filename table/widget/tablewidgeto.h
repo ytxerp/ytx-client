@@ -61,11 +61,11 @@ public:
 
 signals:
     // send to MainWindow
-    void SSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id);
+    void SSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id);
 
 public slots:
     // receive from TableModelOrder
-    void RSyncDeltaO(const QUuid& node_id, double initial_delta, double count_delta, double measure_delta);
+    void RSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta);
 
 public:
     TableModel* Model() const override { return table_model_; }

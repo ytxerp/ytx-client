@@ -62,7 +62,7 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     dialog->show();
 }
 
-void MainWindow::RLocateNode(Section section, const QUuid& node_id)
+void MainWindow::RLocateNode(Section section, QUuid node_id)
 {
     if (node_id.isNull())
         return;

@@ -39,16 +39,16 @@ protected:
 signals:
     // send to LeafSStation
     void SDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SDeleteEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
-    void SAppendEntries(const QUuid& node_id, const EntryList& entry_list);
+    void SDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set);
+    void SAppendEntries(QUuid node_id, const EntryList& entry_list);
 
-    void SAttachEntry(const QUuid& node_id, Entry* entry);
-    void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id = {});
+    void SAttachEntry(QUuid node_id, Entry* entry);
+    void SDetachEntry(QUuid node_id, QUuid entry_id, QUuid counter_node_id = {});
 
-    void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
+    void SRefreshField(QUuid node_id, QUuid entry_id, int start, int end);
     void SRefreshBatchEntries(const QSet<QUuid>& affected_node, int column);
 
-    void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
+    void SUpdateBalance(QUuid node_id, QUuid entry_id);
 
     // send to SearchEntryModel
     void SSearchEntry(const EntryList& entry_list);
@@ -61,22 +61,22 @@ public:
     void Reset();
 
     virtual void InsertEntry(const QJsonObject& data);
-    virtual void DeleteEntry(const QUuid& entry_id);
-    virtual void UpdateEntry(const QUuid& id, const QJsonObject& update, int version);
-    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side, int version);
-    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version);
+    virtual void DeleteEntry(QUuid entry_id);
+    virtual void UpdateEntry(QUuid id, const QJsonObject& update, int version);
+    virtual void UpdateEntryRate(QUuid entry_id, const QJsonObject& update, InputSide input_side, int version);
+    virtual void UpdateEntryNumeric(QUuid entry_id, const QJsonObject& update, int version);
 
-    void UpdateVersion(const QUuid& id, int version);
-    void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side);
-    void UpdateEntryLocked(const QUuid& entry_id, int version, bool is_locked);
-    void RestoreSyncState(const QUuid& entry_id);
+    void UpdateVersion(QUuid id, int version);
+    void UpdateEntryLinkedNode(QUuid id, const QJsonObject& update, InputSide input_side);
+    void UpdateEntryLocked(QUuid entry_id, int version, bool is_locked);
+    void RestoreSyncState(QUuid entry_id);
 
-    void AckTable(const QUuid& node_id, const QJsonArray& array);
+    void AckTable(QUuid node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
     void PeriodClose(const QJsonArray& array);
 
-    void MarkEntries(const QUuid& node_id, MarkOperation operation);
-    void LockEntries(const QUuid& node_id, bool is_locked);
+    void MarkEntries(QUuid node_id, MarkOperation operation);
+    void LockEntries(QUuid node_id, bool is_locked);
     void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:

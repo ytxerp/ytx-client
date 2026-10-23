@@ -33,7 +33,7 @@ void TableModel::RDirectionRule(bool value)
 
 void TableModel::RRefreshBatchEntries(int column) { EmitDataChanged(0, rowCount() - 1, column, column); }
 
-void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
+void TableModel::RRefreshField(QUuid entry_id, int start, int end)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -63,7 +63,7 @@ void TableModel::RAttachEntry(Entry* entry)
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
-void TableModel::RDetachEntry(const QUuid& entry_id, const QUuid& /*counter_node_id*/)
+void TableModel::RDetachEntry(QUuid entry_id, QUuid /*counter_node_id*/)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -77,7 +77,7 @@ void TableModel::RDetachEntry(const QUuid& entry_id, const QUuid& /*counter_node
     AccumulateBalance(row);
 }
 
-void TableModel::RUpdateBalance(const QUuid& entry_id)
+void TableModel::RUpdateBalance(QUuid entry_id)
 {
     const auto entry_index { GetIndex(entry_id) };
     const int row { entry_index.row() };
@@ -143,7 +143,7 @@ void TableModel::AccumulateBalance(int start)
     EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
-void TableModel::RestartTimer(const QUuid& id)
+void TableModel::RestartTimer(QUuid id)
 {
     auto*& timer { pending_updates_[id].timer };
 
@@ -157,7 +157,7 @@ void TableModel::RestartTimer(const QUuid& id)
     timer->start(time_const::kAutoCloseMs);
 }
 
-void TableModel::FlushTimer(const QUuid& id)
+void TableModel::FlushTimer(QUuid id)
 {
     auto update { pending_updates_.take(id) };
 
@@ -304,7 +304,7 @@ bool TableModel::UpdateLocked(EntryShadow* shadow, bool value)
     return true;
 }
 
-bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)
+bool TableModel::UpdateLinkedNode(EntryShadow* shadow, QUuid value, int row)
 {
     if (*shadow->is_locked) {
         emit SEntryLocked();
@@ -402,7 +402,7 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
+QModelIndex TableModel::GetIndex(QUuid entry_id) const
 {
     int row { 0 };
 
@@ -661,7 +661,7 @@ void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, i
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
-void TableModel::CancelPendingUpdate(const QUuid& entry_id)
+void TableModel::CancelPendingUpdate(QUuid entry_id)
 {
     // Remove pending update to prevent delayed flush after deletion
     // Stop its timer to avoid accessing recycled member.

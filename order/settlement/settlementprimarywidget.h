@@ -34,7 +34,7 @@ class SettlementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementPrimaryWidget(Section section, const QStringList& header, CUuid& widget_id, QWidget* parent = nullptr);
+    explicit SettlementPrimaryWidget(Section section, const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
     ~SettlementPrimaryWidget() override;
 
     QTableView* View() const;

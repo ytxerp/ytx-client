@@ -55,8 +55,8 @@ private:
     bool UpdateName(Row* tag, const QString& new_name);
     bool UpdateColor(Row* tag, const QString& new_color);
 
-    void RestartTimer(const QUuid& id);
-    void FlushTimer(const QUuid& id);
+    void RestartTimer(QUuid id);
+    void FlushTimer(QUuid id);
     void FlushTimers();
 
     void TryInsert(Row* tag);

@@ -120,7 +120,7 @@ MainWindow::~MainWindow()
 //  • Entry jump → switch between different node tabs
 //
 // Note: Clears view selection after switching
-void MainWindow::FocusTabWidget(const QUuid& node_id) const
+void MainWindow::FocusTabWidget(QUuid node_id) const
 {
     auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
     Q_ASSERT_X(widget, Q_FUNC_INFO, "Table widget not found for node_id");
@@ -221,7 +221,7 @@ void MainWindow::IniSectionGroup()
     }
 }
 
-void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
+void MainWindow::RFreeWidget(Section section, QUuid node_id)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -268,7 +268,7 @@ void MainWindow::FlushCaches(const SectionContext* sc) const
     }
 }
 
-void MainWindow::RegisterWidget(SectionContext* sc, QWidget* widget, const QUuid& widget_id, WidgetRole role)
+void MainWindow::RegisterWidget(SectionContext* sc, QWidget* widget, QUuid widget_id, WidgetRole role)
 {
     Q_ASSERT(sc);
     Q_ASSERT(widget);

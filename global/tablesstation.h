@@ -28,8 +28,8 @@ class TableSStation final : public QObject {
 
 public:
     static TableSStation* Instance();
-    void RegisterModel(const QUuid& node_id, const TableModel* model);
-    void DeregisterModel(const QUuid& node_id);
+    void RegisterModel(QUuid node_id, const TableModel* model);
+    void DeregisterModel(QUuid node_id);
 
     void Reset() { model_hash_.clear(); }
 
@@ -41,37 +41,37 @@ public:
 signals:
     // send to TableModel
     void SAttachEntry(Entry* entry);
-    void SDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id = {});
+    void SDetachEntry(QUuid entry_id, QUuid counter_node_id = {});
 
-    void SUpdateBalance(const QUuid& entry_id);
+    void SUpdateBalance(QUuid entry_id);
     void SDirectionRule(bool rule);
     void SRefreshBatchEntries(int column);
 
     void SAppendEntries(const EntryList& entry_list);
     void SDeleteEntries(const QSet<QUuid>& entry_id_set);
 
-    void SRefreshField(const QUuid& entry_id, int start, int end);
+    void SRefreshField(QUuid entry_id, int start, int end);
 
 public slots:
-    void RAttachEntry(const QUuid& node_id, Entry* entry);
-    void RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id = {});
+    void RAttachEntry(QUuid node_id, Entry* entry);
+    void RDetachEntry(QUuid node_id, QUuid entry_id, QUuid counter_node_id = {});
 
-    void RDirectionRule(const QUuid& node_id, bool rule);
+    void RDirectionRule(QUuid node_id, bool rule);
     void RRefreshBatchEntries(const QSet<QUuid>& affected_node, int column);
-    void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
+    void RUpdateBalance(QUuid node_id, QUuid entry_id);
 
     // receive from EntryHub
     void RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void RDeleteEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
-    void RAppendEntries(const QUuid& node_id, const EntryList& entry_list);
+    void RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set);
+    void RAppendEntries(QUuid node_id, const EntryList& entry_list);
 
-    void RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
+    void RRefreshField(QUuid node_id, QUuid entry_id, int start, int end);
 
 private:
     explicit TableSStation(QObject* parent = nullptr);
     ~TableSStation() override { };
 
-    const TableModel* FindModel(const QUuid& node_id) const
+    const TableModel* FindModel(QUuid node_id) const
     {
         auto it = model_hash_.constFind(node_id);
         if (it == model_hash_.constEnd())

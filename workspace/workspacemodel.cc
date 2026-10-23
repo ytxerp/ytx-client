@@ -296,7 +296,7 @@ void Model::Rebuild(const QJsonArray& array)
     endResetModel();
 }
 
-void Model::RestartTimer(const QUuid& id)
+void Model::RestartTimer(QUuid id)
 {
     auto*& timer { pending_updates_[id].timer };
 
@@ -310,7 +310,7 @@ void Model::RestartTimer(const QUuid& id)
     timer->start(time_const::kAutoCloseMs);
 }
 
-void Model::FlushTimer(const QUuid& id)
+void Model::FlushTimer(QUuid id)
 {
     auto update { pending_updates_.take(id) };
 

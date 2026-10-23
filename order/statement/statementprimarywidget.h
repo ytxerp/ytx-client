@@ -23,7 +23,6 @@
 #include <QDateTime>
 #include <QTableView>
 
-#include "component/using.h"
 #include "enum/section.h"
 #include "statementprimarymodel.h"
 #include "table/filterinputmodel.h"
@@ -38,10 +37,10 @@ class StatementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
+    void SShowSecondaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
 
 public:
-    StatementPrimaryWidget(const QStringList& header, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    StatementPrimaryWidget(const QStringList& header, QUuid widget_id, Section section, QWidget* parent = nullptr);
     ~StatementPrimaryWidget() override;
 
     QTableView* DataView() const;

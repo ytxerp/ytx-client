@@ -11,7 +11,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementPrimaryWidget::SettlementPrimaryWidget(Section section, const QStringList& header, CUuid& widget_id, QWidget* parent)
+SettlementPrimaryWidget::SettlementPrimaryWidget(Section section, const QStringList& header, QUuid widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementPrimaryWidget)
     , range_ { DefaultRange() }

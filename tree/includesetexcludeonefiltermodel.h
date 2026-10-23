@@ -24,7 +24,7 @@
 
 class IncludeSetExcludeOneFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit IncludeSetExcludeOneFilterModel(const QSet<QUuid>* set, const QUuid& excluded_id, QObject* parent = nullptr)
+    explicit IncludeSetExcludeOneFilterModel(const QSet<QUuid>* set, QUuid excluded_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
         , excluded_id_ { excluded_id }

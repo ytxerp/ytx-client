@@ -57,7 +57,7 @@ void TreeWidgetP::InitDynamicStatus()
     SyncDynamicValue(config_.dynamic_node_lhs, config_.dynamic_node_rhs);
 }
 
-void TreeWidgetP::SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+void TreeWidgetP::SyncDynamicValue(QUuid lhs_node_id, QUuid rhs_node_id)
 {
     if (lhs_node_id.isNull() || rhs_node_id.isNull() || !model_->Contains(lhs_node_id) || !model_->Contains(rhs_node_id)) {
         ui->dspin_box_dynamic_->setValue(std::numeric_limits<double>::lowest());
@@ -73,7 +73,7 @@ void TreeWidgetP::SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_no
     ui->dspin_box_dynamic_->setValue(total);
 }
 
-void TreeWidgetP::SyncStaticValue(const QUuid& node_id)
+void TreeWidgetP::SyncStaticValue(QUuid node_id)
 {
     if (node_id.isNull() || !model_->Contains(node_id)) {
         ui->dspin_box_static_->setValue(std::numeric_limits<double>::lowest());

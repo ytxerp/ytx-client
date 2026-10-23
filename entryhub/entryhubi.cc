@@ -5,7 +5,7 @@ EntryHubI::EntryHubI(const Section section, QObject* parent)
 {
 }
 
-void EntryHubI::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
+void EntryHubI::ReplaceLeaf(QUuid old_node_id, QUuid new_node_id)
 {
     Q_ASSERT(section_ == Section::kInventory && "Invalid section: only Inventory nodes are allowed to be replaced");
 

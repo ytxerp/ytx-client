@@ -9,7 +9,7 @@
 #include "utils/templateutils.h"
 
 namespace statement {
-TertiaryModel::TertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent)
+TertiaryModel::TertiaryModel(const QStringList& header, QUuid partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , partner_id_ { partner_id }

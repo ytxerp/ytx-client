@@ -29,7 +29,6 @@ using CBoolString = const QMap<bool, QString>;
 
 using CUuidString = const QHash<QUuid, QString>;
 
-using CUuid = const QUuid;
 using CString = const QString;
 using CVariant = const QVariant;
 using CStringList = const QStringList;

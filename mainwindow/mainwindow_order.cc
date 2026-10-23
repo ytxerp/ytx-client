@@ -85,7 +85,7 @@ void MainWindow::on_actionNewBranch_triggered()
     dialog->show();
 }
 
-void MainWindow::RReleaseOrder(Section section, const QUuid& node_id, int version)
+void MainWindow::RReleaseOrder(Section section, QUuid node_id, int version)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -100,7 +100,7 @@ void MainWindow::RReleaseOrder(Section section, const QUuid& node_id, int versio
     }
 }
 
-void MainWindow::RRecallOrder(Section section, const QUuid& node_id, int version)
+void MainWindow::RRecallOrder(Section section, QUuid node_id, int version)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -115,7 +115,7 @@ void MainWindow::RRecallOrder(Section section, const QUuid& node_id, int version
     }
 }
 
-void MainWindow::RSaveOrder(Section section, const QUuid& node_id, int version)
+void MainWindow::RSaveOrder(Section section, QUuid node_id, int version)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -142,7 +142,7 @@ void MainWindow::RPermissionDeny()
         QMessageBox::Information, tr("Permission Denied"), tr("You do not have permission to perform this operation."), time_const::kAutoCloseMs);
 }
 
-void MainWindow::ROrderPermissionDeny(Section section, const QUuid& widget_id)
+void MainWindow::ROrderPermissionDeny(Section section, QUuid widget_id)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -158,7 +158,7 @@ void MainWindow::ROrderPermissionDeny(Section section, const QUuid& widget_id)
     RPermissionDeny();
 }
 
-void MainWindow::RSelectNode(Section section, const QUuid& node_id)
+void MainWindow::RSelectNode(Section section, QUuid node_id)
 {
     auto* sc { GetSectionContext(section) };
     auto tree_model { sc->tree_model };
@@ -227,7 +227,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
+void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
 {
     Q_ASSERT(sc);
 
@@ -298,7 +298,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::RSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id)
+void MainWindow::RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id)
 {
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };

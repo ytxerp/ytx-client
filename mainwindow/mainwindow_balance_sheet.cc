@@ -19,7 +19,7 @@ void MainWindow::on_actionBalanceSheet_triggered()
     dialog->show();
 }
 
-void MainWindow::RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array)
+void MainWindow::RBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)

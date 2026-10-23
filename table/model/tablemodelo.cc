@@ -89,7 +89,7 @@ bool TableModelO::HasPendingUpdate() const
     return false;
 }
 
-QModelIndex TableModelO::GetIndex(const QUuid& entry_id) const
+QModelIndex TableModelO::GetIndex(QUuid entry_id) const
 {
     int row { 0 };
 
@@ -345,7 +345,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
+bool TableModelO::UpdateInternalSku(Entry* entry, QUuid value, int row)
 {
     if (value.isNull())
         return false;

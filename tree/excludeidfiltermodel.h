@@ -24,7 +24,7 @@
 
 class ExcludeIdFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit ExcludeIdFilterModel(const QUuid& node_id, QObject* parent = nullptr)
+    explicit ExcludeIdFilterModel(QUuid node_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , node_id_ { node_id }
     {

@@ -54,7 +54,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 //  2. Otherwise → create widget and request entry data
 //
 // Note: Entry selection is only needed when entry_id is valid.
-void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
+void MainWindow::ShowLeafWidget(QUuid node_id, QUuid entry_id)
 {
     if (sc_->widget_hash.contains(node_id)) {
         FocusTabWidget(node_id);
@@ -215,7 +215,7 @@ void MainWindow::on_actionJumpEntry_triggered()
     ShowLeafWidget(linked_node_id, entry->id);
 }
 
-void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)
+void MainWindow::RUpdateName(QUuid node_id, const QString& name, bool branch)
 {
     auto model { sc_->tree_model };
     auto widget { sc_->tab_widget };
@@ -232,7 +232,7 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
     UpdateLeafNodeName(node_id, name);
 }
 
-void MainWindow::UpdateLeafNodeName(const QUuid& node_id, const QString& name)
+void MainWindow::UpdateLeafNodeName(QUuid node_id, const QString& name)
 {
     if (!sc_->widget_hash.contains(node_id)) {
         return;
@@ -248,7 +248,7 @@ void MainWindow::UpdateLeafNodeName(const QUuid& node_id, const QString& name)
     UpdateOneTab(node_id, name);
 }
 
-void MainWindow::UpdateOneTab(const QUuid& node_id, const QString& name)
+void MainWindow::UpdateOneTab(QUuid node_id, const QString& name)
 {
     auto widget { sc_->tab_widget };
     auto model { sc_->tree_model };
@@ -266,7 +266,7 @@ void MainWindow::UpdateOneTab(const QUuid& node_id, const QString& name)
     }
 }
 
-void MainWindow::UpdateBranchNodeName(const QUuid& node_id)
+void MainWindow::UpdateBranchNodeName(QUuid node_id)
 {
     auto model { sc_->tree_model };
 

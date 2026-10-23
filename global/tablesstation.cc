@@ -13,7 +13,7 @@ TableSStation::TableSStation(QObject* parent)
 {
 }
 
-void TableSStation::RegisterModel(const QUuid& node_id, const TableModel* model)
+void TableSStation::RegisterModel(QUuid node_id, const TableModel* model)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(model);
@@ -21,13 +21,13 @@ void TableSStation::RegisterModel(const QUuid& node_id, const TableModel* model)
     model_hash_.insert(node_id, model);
 }
 
-void TableSStation::DeregisterModel(const QUuid& node_id)
+void TableSStation::DeregisterModel(QUuid node_id)
 {
     Q_ASSERT(!node_id.isNull());
     model_hash_.remove(node_id);
 }
 
-void TableSStation::RAttachEntry(const QUuid& node_id, Entry* entry)
+void TableSStation::RAttachEntry(QUuid node_id, Entry* entry)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -40,7 +40,7 @@ void TableSStation::RAttachEntry(const QUuid& node_id, Entry* entry)
     emit SAttachEntry(entry);
 }
 
-void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id)
+void TableSStation::RDetachEntry(QUuid node_id, QUuid entry_id, QUuid counter_node_id)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -53,7 +53,7 @@ void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, co
     emit SDetachEntry(entry_id, counter_node_id);
 }
 
-void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
+void TableSStation::RUpdateBalance(QUuid node_id, QUuid entry_id)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -66,7 +66,7 @@ void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
     emit SUpdateBalance(entry_id);
 }
 
-void TableSStation::RAppendEntries(const QUuid& node_id, const EntryList& entry_list)
+void TableSStation::RAppendEntries(QUuid node_id, const EntryList& entry_list)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -95,7 +95,7 @@ void TableSStation::RRefreshBatchEntries(const QSet<QUuid>& affected_node, int c
     }
 }
 
-void TableSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end)
+void TableSStation::RRefreshField(QUuid node_id, QUuid entry_id, int start, int end)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -108,7 +108,7 @@ void TableSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, i
     emit SRefreshField(entry_id, start, end);
 }
 
-void TableSStation::RDirectionRule(const QUuid& node_id, bool rule)
+void TableSStation::RDirectionRule(QUuid node_id, bool rule)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -123,7 +123,7 @@ void TableSStation::RDirectionRule(const QUuid& node_id, bool rule)
 void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash)
 {
     for (auto it = entry_hash.constBegin(); it != entry_hash.constEnd(); ++it) {
-        const QUuid& node_id = it.key();
+        QUuid node_id = it.key();
         Q_ASSERT(!node_id.isNull());
 
         const QSet<QUuid>& entry_id_set = it.value();
@@ -137,7 +137,7 @@ void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
     }
 }
 
-void TableSStation::RDeleteEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
+void TableSStation::RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set)
 {
     Q_ASSERT(!node_id.isNull());
 

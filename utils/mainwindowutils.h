@@ -38,12 +38,12 @@ void SetRadioButton(QRadioButton* btn, const QKeySequence& ks);
 QString AccountIniFileName(const QString& email, const QString& workspace);
 
 QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
-void ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, const QUuid& id);
+void ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, QUuid id);
 
 QByteArray ZstdCompress(const QByteArray& data);
 QByteArray ZstdDecompress(const QByteArray& data);
 
-inline void CloseWidget(QHash<QUuid, WidgetContext>& widget_hash, const QUuid& node_id)
+inline void CloseWidget(QHash<QUuid, WidgetContext>& widget_hash, QUuid node_id)
 {
     // Take removes the widget from hash and returns it
     if (auto widget { widget_hash.take(node_id).widget }) {

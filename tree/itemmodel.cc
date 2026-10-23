@@ -54,7 +54,7 @@ void ItemModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void ItemModel::AppendItem(const QUuid& id, const QString& display)
+void ItemModel::AppendItem(QUuid id, const QString& display)
 {
     if (hash_.contains(id))
         return;
@@ -75,7 +75,7 @@ void ItemModel::AppendItem(const QUuid& id, const QString& display)
     endInsertRows();
 }
 
-bool ItemModel::RemoveItem(const QUuid& id)
+bool ItemModel::RemoveItem(QUuid id)
 {
     for (int row = 0; row != list_.size(); ++row) {
         auto* item { list_.at(row) };
@@ -121,7 +121,7 @@ void ItemModel::SetSeparator(const QString& old_separator, const QString& new_se
     sort(0, Qt::AscendingOrder);
 }
 
-void ItemModel::SetDisplay(const QUuid& id, const QString& display)
+void ItemModel::SetDisplay(QUuid id, const QString& display)
 {
     auto* item { hash_.value(id, nullptr) };
     if (!item || item->display == display)

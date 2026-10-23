@@ -214,7 +214,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kColor), color);
 }
 
-void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
+void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const
 {
     auto* issued_time { new IssuedTime(config.date_format, true, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIssuedTime), issued_time);
@@ -257,7 +257,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIsLocked), lock_status);
 }
 
-void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
+void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const
 {
     auto* issued_time { new IssuedTime(config.date_format, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
@@ -296,7 +296,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIsLocked), lock_status);
 }
 
-void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
+void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const
 {
     auto* issued_time { new IssuedTime(config.date_format, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);

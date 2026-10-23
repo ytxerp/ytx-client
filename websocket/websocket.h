@@ -40,8 +40,8 @@ public:
     void SendMessage(WsKey key, const QJsonObject& value);
     void Reset();
 
-    void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
-    void RegisterEntryHub(Section section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
+    void RegisterTreeModel(Section section, const QPointer<TreeModel>& node) { tree_model_hash_.insert(section, node); }
+    void RegisterEntryHub(Section section, const QPointer<EntryHub>& entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
 
     WebSocket(const WebSocket&) = delete;
     WebSocket& operator=(const WebSocket&) = delete;
@@ -57,7 +57,7 @@ signals:
 
     void SRegisterResult(bool result, int code);
     void SRemoteHostClosed();
-    void SEntrySelect(const QUuid& node_id, const QUuid& entry_id);
+    void SEntrySelect(QUuid node_id, QUuid entry_id);
 
     void SLeafDeleteDeny(const QJsonObject& obj);
     void SSharedConfigApply(const QJsonArray& arr);
@@ -71,37 +71,37 @@ signals:
     void STagDelete(const QJsonObject& obj);
 
     void SReplaceResult(bool result);
-    void SOrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SOrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
+    void SStatementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
+    void SStatementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
+    void SStatementTertiary(Section section, QUuid widget_id, const QJsonArray& array);
+    void SSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
+    void SSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
     void SSettlementInsert(const QJsonObject& obj);
     void SSettlementRecall(const QJsonObject& obj);
     void SSettlementUpdate(const QJsonObject& obj);
-    void SSettlementView(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SOrderRelease(Section section, const QUuid& node_id, int version);
-    void SOrderRecall(Section section, const QUuid& node_id, int version);
-    void SOrderSave(Section section, const QUuid& node_id, int version);
+    void SSettlementView(Section section, QUuid widget_id, const QJsonArray& array);
+    void SOrderRelease(Section section, QUuid node_id, int version);
+    void SOrderRecall(Section section, QUuid node_id, int version);
+    void SOrderSave(Section section, QUuid node_id, int version);
     void SOperationDeny();
     void SPermissionDeny();
-    void SLeafDeleteLockedDeny(Section section, const QUuid& node_id);
-    void SOrderPermissionDeny(Section section, const QUuid& widget_id);
-    void SSettlementPermissionDeny(Section section, const QUuid& widget_id);
-    void SNodeSelect(Section section, const QUuid& node_id);
-    void SNodeLocate(Section section, const QUuid& node_id);
+    void SLeafDeleteLockedDeny(Section section, QUuid node_id);
+    void SOrderPermissionDeny(Section section, QUuid widget_id);
+    void SSettlementPermissionDeny(Section section, QUuid widget_id);
+    void SNodeSelect(Section section, QUuid node_id);
+    void SNodeLocate(Section section, QUuid node_id);
     void STreeSyncFinish();
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
-    void SWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
-    void SAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
+    void SWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array);
+    void SAuditLogAck(QUuid widget_id, const QJsonArray& array);
     void SAccountRoleUpdate();
-    void SInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
-    void SPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
-    void SBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void SIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj);
-    void SCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj);
+    void SInventoryHeatAck(QUuid widget_id, const QJsonArray& array);
+    void SPartnerHeatAck(QUuid widget_id, const QJsonArray& array);
+    void SBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
+    void SIncomeStatementAck(QUuid widget_id, const QJsonObject& obj);
+    void SCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj);
 
     // send to SearchNodeModel
     void SOrderSearch(const QJsonObject& obj);

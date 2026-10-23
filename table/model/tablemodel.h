@@ -42,9 +42,9 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SAttachEntry(const QUuid& node_id, Entry* entry);
-    void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
-    void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
+    void SAttachEntry(QUuid node_id, Entry* entry);
+    void SDetachEntry(QUuid node_id, QUuid entry_id, QUuid extra_value = {});
+    void SUpdateBalance(QUuid node_id, QUuid entry_id);
 
     // send to entryhub, FIPT
     void STransferEntry(Entry* entry);
@@ -54,15 +54,15 @@ signals:
 
 public slots:
     virtual void RAppendEntries(const EntryList& entry_list);
-    virtual void RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id = {});
+    virtual void RDetachEntry(QUuid entry_id, QUuid counter_node_id = {});
     virtual void RAttachEntry(Entry* entry);
 
     void RDeleteEntries(const QSet<QUuid>& entry_id_set);
 
-    void RUpdateBalance(const QUuid& entry_id);
+    void RUpdateBalance(QUuid entry_id);
     void RRefreshBatchEntries(int column);
 
-    void RRefreshField(const QUuid& entry_id, int start, int end);
+    void RRefreshField(QUuid entry_id, int start, int end);
     void RDirectionRule(bool value);
 
 public:
@@ -82,7 +82,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    virtual QModelIndex GetIndex(const QUuid& entry_id) const;
+    virtual QModelIndex GetIndex(QUuid entry_id) const;
     virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
 
     void MarkEntries(MarkOperation operation);
@@ -92,7 +92,7 @@ public:
 protected:
     virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side);
     virtual bool UpdateRate(EntryShadow* shadow, double value);
-    virtual bool UpdateInternalSku(Entry* entry, const QUuid& value, int row)
+    virtual bool UpdateInternalSku(Entry* entry, QUuid value, int row)
     {
         Q_UNUSED(entry)
         Q_UNUSED(value)
@@ -101,17 +101,17 @@ protected:
     }
 
     bool UpdateLocked(EntryShadow* shadow, bool value);
-    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row);
+    bool UpdateLinkedNode(EntryShadow* shadow, QUuid value, int row);
     void AccumulateBalance(int start);
-    void RestartTimer(const QUuid& id);
-    void FlushTimer(const QUuid& id);
+    void RestartTimer(QUuid id);
+    void FlushTimer(QUuid id);
     double CalculateBalance(EntryShadow* shadow) const
     {
         return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit);
     }
 
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent = QModelIndex());
-    void CancelPendingUpdate(const QUuid& entry_id);
+    void CancelPendingUpdate(QUuid entry_id);
 
 protected:
     const QStringList header_ {};

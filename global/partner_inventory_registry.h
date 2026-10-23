@@ -45,7 +45,7 @@ public:
         return instance;
     }
 
-    std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& inventory_id) const
+    std::optional<double> UnitPrice(QUuid partner_id, QUuid inventory_id) const
     {
         if (partner_id.isNull() || inventory_id.isNull())
             return std::nullopt;
@@ -57,7 +57,7 @@ public:
         return it->unit_price;
     }
 
-    QString ExternalSku(const QUuid& partner_id, const QUuid& inventory_id) const
+    QString ExternalSku(QUuid partner_id, QUuid inventory_id) const
     {
         if (partner_id.isNull() || inventory_id.isNull())
             return QString();
@@ -66,7 +66,7 @@ public:
         return it == hash_.constEnd() ? QString() : it->external_sku;
     }
 
-    void Insert(const QUuid& partner_id, const QUuid& inventory_id, double unit_price, const QString& external_sku)
+    void Insert(QUuid partner_id, QUuid inventory_id, double unit_price, const QString& external_sku)
     {
         if (partner_id.isNull() || inventory_id.isNull())
             return;
@@ -74,7 +74,7 @@ public:
         hash_.insert({ partner_id, inventory_id }, Value { unit_price, external_sku });
     }
 
-    void Remove(const QUuid& partner_id, const QUuid& inventory_id)
+    void Remove(QUuid partner_id, QUuid inventory_id)
     {
         if (partner_id.isNull() || inventory_id.isNull())
             return;
@@ -82,7 +82,7 @@ public:
         hash_.remove({ partner_id, inventory_id });
     }
 
-    void ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id);
+    void ReplaceInternalSku(QUuid old_id, QUuid new_id);
     void Reset() { hash_.clear(); }
 
     PartnerInventoryRegistry(const PartnerInventoryRegistry&) = delete;

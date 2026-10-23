@@ -80,7 +80,7 @@ private:
 
     static void ResizeLine(QLineEdit* line, CString& text);
     static void InitCombo(QComboBox* combo, CStringList& list);
-    static void InitComboData(QComboBox* combo, const QUuid& value);
+    static void InitComboData(QComboBox* combo, QUuid value);
     static void InitComboData(QComboBox* combo, int value);
     static void InitComboData(QComboBox* combo, CString& string);
 

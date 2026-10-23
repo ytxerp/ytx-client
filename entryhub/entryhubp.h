@@ -30,10 +30,10 @@ public:
 
 public:
     void InsertEntry(const QJsonObject& data) override;
-    void DeleteEntry(const QUuid& entry_id) override;
-    void UpdateEntry(const QUuid& id, const QJsonObject& update, int version) override;
+    void DeleteEntry(QUuid entry_id) override;
+    void UpdateEntry(QUuid id, const QJsonObject& update, int version) override;
 
-    void PushEntry(const QUuid& node_id);
+    void PushEntry(QUuid node_id);
 
     void SearchDescription(QList<Entry*>& entry_list, CString& text) const;
     void SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const;
@@ -41,5 +41,5 @@ public:
     void DeleteSingleLeaf(const QSet<QUuid>& leaf_entry);
     void ApplyPartnerEntry(const QJsonArray& array);
 
-    void ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ReplaceInternalInventoryRef(QUuid old_item_id, QUuid new_item_id);
 };

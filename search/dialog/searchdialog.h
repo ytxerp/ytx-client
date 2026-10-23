@@ -50,8 +50,8 @@ protected:
     ~SearchDialog() override;
 
 signals:
-    void SNodeLocation(Section section, const QUuid& node_id);
-    void SEntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
+    void SNodeLocation(Section section, QUuid node_id);
+    void SEntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
 
 private slots:
     void RContentGroup(int id);

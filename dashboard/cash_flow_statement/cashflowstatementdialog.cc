@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-CashFlowStatementDialog::CashFlowStatementDialog(const HeaderInfo& header_info, const QUuid& widget_id, QWidget* parent)
+CashFlowStatementDialog::CashFlowStatementDialog(const HeaderInfo& header_info, QUuid widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::CashFlowStatementDialog)
     , range_ { DefaultRange() }

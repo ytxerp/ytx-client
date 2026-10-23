@@ -46,11 +46,11 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SDirectionRule(const QUuid& node_id, bool value);
+    void SDirectionRule(QUuid node_id, bool value);
 
     // send to Mainwindow
-    void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
-    void SFreeWidget(Section section, const QUuid& node_id);
+    void SUpdateName(QUuid node_id, const QString& name, bool branch);
+    void SFreeWidget(Section section, QUuid node_id);
 
     // send to NodeWidget
     void SSyncValue();
@@ -95,19 +95,19 @@ public:
 
     // WebSocket's
     virtual void ApplyTree(const QJsonObject& data);
-    void ApplyNode(const QUuid& ancestor, const QJsonObject& data);
+    void ApplyNode(QUuid ancestor, const QJsonObject& data);
 
     void SyncTotalArray(const QJsonArray& total_array);
-    void UpdateVersion(const QUuid& node_id, int version);
+    void UpdateVersion(QUuid node_id, int version);
 
-    void ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id);
-    void ApplyDrag(const QUuid& ancestor, const QUuid& descendant);
-    void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
-    void ApplyStatus(const QUuid& node_id, int status, int version);
-    void ApplyDelete(const QUuid& node_id);
-    void ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int version);
+    void ApplyReplace(QUuid old_node_id, QUuid new_node_id);
+    void ApplyDrag(QUuid ancestor, QUuid descendant);
+    void ApplyDirectionRule(QUuid node_id, bool direction_rule, int version);
+    void ApplyStatus(QUuid node_id, int status, int version);
+    void ApplyDelete(QUuid node_id);
+    void ApplyUpdate(QUuid node_id, const QJsonObject& update, int version);
 
-    virtual void ApplyName(const QUuid& node_id, const QString& name, int version);
+    virtual void ApplyName(QUuid node_id, const QString& name, int version);
 
     // Ytx's
     double InitialTotal(QUuid node_id) const { return Value(node_id, &Node::initial_total); }
@@ -116,7 +116,7 @@ public:
     bool Rule(QUuid node_id) const { return Value(node_id, &Node::direction_rule); }
     QString Name(QUuid node_id) const { return Value(node_id, &Node::name); }
     QString Color(QUuid node_id) const { return Value(node_id, &Node::color); }
-    QString Path(const QUuid& node_id) const;
+    QString Path(QUuid node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_model_; }
     inline CUuidString& LeafPath() const { return leaf_path_; }
@@ -125,16 +125,16 @@ public:
 
     void UpdateSeparator(CString& old_separator, CString& new_separator);
 
-    void AckNode(const QUuid& node_id) const;
+    void AckNode(QUuid node_id) const;
     void SearchName(QList<Node*>& node_list, CString& name) const;
     void SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set) const;
 
     void Reset();
     void FlushTimers();
-    void RestoreSyncState(const QUuid& node_id);
+    void RestoreSyncState(QUuid node_id);
 
-    inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
-    inline Node* GetNode(const QUuid& node_id) const
+    inline bool Contains(QUuid node_id) const { return node_hash_.contains(node_id); }
+    inline Node* GetNode(QUuid node_id) const
     {
         auto* node { node_hash_.value(node_id, nullptr) };
         if (!node) {
@@ -143,12 +143,12 @@ public:
         return node;
     }
 
-    QModelIndex GetIndex(const QUuid& node_id) const;
+    QModelIndex GetIndex(QUuid node_id) const;
     Node* GetNodeByIndex(const QModelIndex& index) const;
 
-    QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent) const;
+    QSortFilterProxyModel* ExcludeId(QUuid node_id, QObject* parent) const;
     QSortFilterProxyModel* IncludeUnit(NodeUnit unit);
-    QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
+    QSortFilterProxyModel* ReplaceSelf(QUuid node_id, NodeUnit unit, QObject* parent);
 
     void SyncFilterModels()
     {
@@ -157,7 +157,7 @@ public:
     }
 
 protected:
-    void RestartTimer(const QUuid& id);
+    void RestartTimer(QUuid id);
 
     void EmitNumericChanged(const QSet<QUuid>& ids);
     void EmitColumnChanged(int column, const QSet<QUuid>& ids);
@@ -185,7 +185,7 @@ protected:
     virtual void ClearUnitSet() { }
     virtual void InitUnitSet() { }
 
-    template <typename Field, typename T> const Field& Value(const QUuid& node_id, Field T::* member) const
+    template <typename Field, typename T> const Field& Value(QUuid node_id, Field T::* member) const
     {
         if (auto it = node_hash_.constFind(node_id); it != node_hash_.constEnd()) {
             auto* derived { static_cast<T*>(it.value()) };
@@ -206,21 +206,21 @@ protected:
 private:
     void InitRoot();
     void InitLeafData();
-    void FlushTimer(const QUuid& id);
+    void FlushTimer(QUuid id);
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
 
-    QSet<QUuid> SyncTotal(const QUuid& node_id, double initial_total, double final_total);
+    QSet<QUuid> SyncTotal(QUuid node_id, double initial_total, double final_total);
 
-    void UnitSetRemove(const QUuid& node_id, NodeUnit unit)
+    void UnitSetRemove(QUuid node_id, NodeUnit unit)
     {
         if (auto* set = UnitSet(unit)) {
             set->remove(node_id);
         }
     }
 
-    void UnitSetInsert(const QUuid& node_id, NodeUnit unit)
+    void UnitSetInsert(QUuid node_id, NodeUnit unit)
     {
         if (auto* set = UnitSet(unit)) {
             set->insert(node_id);

@@ -48,8 +48,8 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    void RestartTimer(const QUuid& id);
-    void FlushTimer(const QUuid& id);
+    void RestartTimer(QUuid id);
+    void FlushTimer(QUuid id);
     void FlushTimers();
 
 private:

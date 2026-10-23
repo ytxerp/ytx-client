@@ -26,7 +26,7 @@ void MainWindow::on_actionSettlementView_triggered()
     RegisterWidget(sc_, widget, widget_id, WidgetRole::kSettlementView);
 }
 
-void MainWindow::RSettlementView(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RSettlementView(Section section, QUuid widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContext(section) };
 

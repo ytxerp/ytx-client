@@ -15,7 +15,7 @@ void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
 {
     qInfo() << Q_FUNC_INFO << leaf_entry.size();
 
-    for (const QUuid& entry_id : leaf_entry) {
+    for (QUuid entry_id : leaf_entry) {
         Entry* entry { entry_cache_.take(entry_id) };
         if (!entry)
             continue;
@@ -25,7 +25,7 @@ void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
     }
 }
 
-void EntryHubP::ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
+void EntryHubP::ReplaceInternalInventoryRef(QUuid old_item_id, QUuid new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->rhs_node == old_item_id) {
@@ -66,7 +66,7 @@ void EntryHubP::SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_se
     }
 }
 
-void EntryHubP::PushEntry(const QUuid& node_id)
+void EntryHubP::PushEntry(QUuid node_id)
 {
     EntryList entry_list {};
 
@@ -107,7 +107,7 @@ void EntryHubP::InsertEntry(const QJsonObject& data)
     emit SAttachEntry(entry->lhs_node, entry);
 }
 
-void EntryHubP::DeleteEntry(const QUuid& entry_id)
+void EntryHubP::DeleteEntry(QUuid entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it == entry_cache_.constEnd()) {
@@ -124,7 +124,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
     EntryPool::Instance().Recycle(entry, section_);
 }
 
-void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update, int version)
+void EntryHubP::UpdateEntry(QUuid id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(id);
     if (it == entry_cache_.constEnd()) {

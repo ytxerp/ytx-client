@@ -16,7 +16,7 @@
 #include "websocket/websocket.h"
 
 StatementSecondaryWidget::StatementSecondaryWidget(
-    CStringList& header, CUuid& widget_id, CUuid& partner_id, CString& partner_name, const utils::DateRange& range, Section section, int unit, QWidget* parent)
+    CStringList& header, QUuid widget_id, QUuid partner_id, CString& partner_name, const utils::DateRange& range, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }

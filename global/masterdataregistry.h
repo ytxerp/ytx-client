@@ -31,9 +31,9 @@ public:
         return instance;
     }
 
-    void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
+    void RegisterTreeModel(Section section, const QPointer<TreeModel>& node) { tree_model_hash_.insert(section, node); }
 
-    QString InventoryName(const QUuid& id) const
+    QString InventoryName(QUuid id) const
     {
         if (auto model = tree_model_hash_.value(Section::kInventory))
             return model->Name(id);
@@ -41,7 +41,7 @@ public:
         return {};
     }
 
-    QString InventoryPath(const QUuid& id) const
+    QString InventoryPath(QUuid id) const
     {
         if (auto model = tree_model_hash_.value(Section::kInventory))
             return model->Path(id);
@@ -49,7 +49,7 @@ public:
         return {};
     }
 
-    double InventoryUnitPrice(const QUuid& id) const
+    double InventoryUnitPrice(QUuid id) const
     {
         if (auto* model = static_cast<TreeModelI*>(tree_model_hash_.value(Section::kInventory).data()))
             return model->UnitPrice(id);
@@ -57,7 +57,7 @@ public:
         return {};
     }
 
-    QString PartnerName(const QUuid& id) const
+    QString PartnerName(QUuid id) const
     {
         if (auto model = tree_model_hash_.value(Section::kPartner))
             return model->Name(id);
@@ -65,7 +65,7 @@ public:
         return {};
     }
 
-    NodeUnit PartnerUnit(const QUuid& id) const
+    NodeUnit PartnerUnit(QUuid id) const
     {
         if (auto model = tree_model_hash_.value(Section::kPartner))
             return model->Unit(id);

@@ -40,7 +40,7 @@ void TableModelP::RAppendEntries(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
-void TableModelP::RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id)
+void TableModelP::RDetachEntry(QUuid entry_id, QUuid counter_node_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -68,7 +68,7 @@ void TableModelP::RAttachEntry(Entry* entry)
         EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 }
 
-QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
+QModelIndex TableModelP::GetIndex(QUuid entry_id) const
 {
     int row { 0 };
 
@@ -118,7 +118,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent
     return true;
 }
 
-bool TableModelP::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
+bool TableModelP::UpdateInternalSku(Entry* entry, QUuid value, int row)
 {
     Q_UNUSED(row)
 
