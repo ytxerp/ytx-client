@@ -107,7 +107,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QTableView" name="tableViewFilter"/>
+    <widget class="FilterTableView" name="tableViewFilter"/>
    </item>
    <item row="2" column="0">
     <widget class="QTableView" name="tableViewData"/>
@@ -119,6 +119,11 @@
    <class>DateEdit</class>
    <extends>QDateEdit</extends>
    <header location="global">widget/dateedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FilterTableView</class>
+   <extends>QTableView</extends>
+   <header location="global">widget/filtertableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

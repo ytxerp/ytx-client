@@ -68,7 +68,7 @@ void AuditDialog::InitTimer()
 void AuditDialog::InitModel(const QStringList& header)
 {
     data_model_ = new audit::Model(header, this);
-    filter_model_ = new FilterInputModel(header, std::to_underlying(audit::RowField::kPlaceholder), this);
+    filter_model_ = new FilterInputModel(header, -1, this);
     filter_proxy_ = new FilterProxyModel(this);
 
     filter_proxy_->setSourceModel(data_model_);
@@ -114,11 +114,4 @@ void AuditDialog::InitDialog()
     utils::SetPushButton(ui->pBtnFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
-void AuditDialog::on_pBtnClear_clicked()
-{
-    filter_model_->ClearFilters();
-
-    auto* view { ui->tableViewFilter };
-    view->clearSelection();
-    view->setCurrentIndex({});
-}
+void AuditDialog::on_pBtnClear_clicked() { filter_model_->ClearFilters(); }

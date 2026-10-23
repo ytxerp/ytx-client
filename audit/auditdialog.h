@@ -24,7 +24,6 @@
 #include <QTimer>
 
 #include "auditmodel.h"
-#include "component/using.h"
 #include "enum/section.h"
 #include "table/filterinputmodel.h"
 #include "table/filterproxymodel.h"

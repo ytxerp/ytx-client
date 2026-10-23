@@ -111,11 +111,4 @@ void OrderOverviewWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void OrderOverviewWidget::on_pushButton_clicked()
-{
-    filter_model_->ClearFilters();
-
-    auto* view { ui->tableViewFilter };
-    view->clearSelection();
-    view->setCurrentIndex({});
-}
+void OrderOverviewWidget::on_pushButton_clicked() { filter_model_->ClearFilters(); }

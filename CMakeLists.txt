@@ -299,6 +299,7 @@ set(HEADERS
     widget/dateedit.h
     widget/datetimeedit.h
     widget/doublespinbox.h
+    widget/filtertableview.h
     widget/lineedit.h
     widget/spinbox.h
     widget/treeview.h

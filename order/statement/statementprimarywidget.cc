@@ -172,11 +172,4 @@ void StatementPrimaryWidget::on_tableViewData_doubleClicked(const QModelIndex& i
     emit SShowSecondaryStatement(row->partner_id, range_, unit_);
 }
 
-void StatementPrimaryWidget::on_pushButtonClear_clicked()
-{
-    filter_model_->ClearFilters();
-
-    auto* view { ui->tableViewFilter };
-    view->clearSelection();
-    view->setCurrentIndex({});
-}
+void StatementPrimaryWidget::on_pushButtonClear_clicked() { filter_model_->ClearFilters(); }
