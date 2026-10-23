@@ -37,7 +37,7 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, const utils::DateRange& range, CString& partner_name, CString& company_name,
+    StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, utils::DateRange range, CString& partner_name, CString& company_name,
         Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 

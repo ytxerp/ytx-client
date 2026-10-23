@@ -30,8 +30,8 @@ public:
         return instance;
     }
 
-    void StatementTertiaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
-    void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
+    void StatementTertiaryAsync(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines);
+    void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines);
 
     ExportHub(const ExportHub&) = delete;
     ExportHub& operator=(const ExportHub&) = delete;
@@ -42,6 +42,6 @@ private:
     ExportHub() = default;
     ~ExportHub() = default;
 
-    static bool StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
-    static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
+    static bool StatementTertiary(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines);
+    static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines);
 };

@@ -175,7 +175,7 @@ void Model::Rebuild(const QJsonArray& array)
     emit SSummaryChanged(summary.SummaryValues());
 }
 
-bool Model::RebuildHeader(const utils::DateRange& date_range)
+bool Model::RebuildHeader(utils::DateRange date_range)
 {
     Q_ASSERT(date_range.IsValid());
     qDebug() << Q_FUNC_INFO;

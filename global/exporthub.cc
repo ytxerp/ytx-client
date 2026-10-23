@@ -11,8 +11,7 @@
 #include "document.h"
 #include "utils/mainwindowutils.h"
 
-void ExportHub::StatementTertiaryAsync(
-    CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+void ExportHub::StatementTertiaryAsync(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines)
 {
     auto future = QtConcurrent::run([=]() -> bool { return StatementTertiary(path, partner_name, unit_string, range, lines); });
 
@@ -34,8 +33,7 @@ void ExportHub::StatementTertiaryAsync(
     watcher->setFuture(future);
 }
 
-void ExportHub::StatementSecondaryAsync(
-    CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+void ExportHub::StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines)
 {
     auto future = QtConcurrent::run([=]() -> bool { return StatementSecondary(path, partner_name, unit_string, range, lines); });
 
@@ -57,7 +55,7 @@ void ExportHub::StatementSecondaryAsync(
     watcher->setFuture(future);
 }
 
-bool ExportHub::StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+bool ExportHub::StatementTertiary(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines)
 {
     // Create excel document
     yxlsx::Document d(path);
@@ -94,7 +92,7 @@ bool ExportHub::StatementTertiary(CString& path, CString& partner_name, CString&
     return d.Save();
 }
 
-bool ExportHub::StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
+bool ExportHub::StatementSecondary(CString& path, CString& partner_name, CString& unit_string, utils::DateRange range, const QList<QVariantList>& lines)
 {
     // Create excel document
     yxlsx::Document d(path);

@@ -37,7 +37,7 @@ class StatementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SShowSecondaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
+    void SShowSecondaryStatement(QUuid partner_id, utils::DateRange range, int unit);
 
 public:
     StatementPrimaryWidget(const QStringList& header, QUuid widget_id, Section section, QWidget* parent = nullptr);

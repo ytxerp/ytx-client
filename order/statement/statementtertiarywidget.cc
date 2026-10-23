@@ -16,7 +16,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, const utils::DateRange& range, CString& partner_name,
+StatementTertiaryWidget::StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, utils::DateRange range, CString& partner_name,
     CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)

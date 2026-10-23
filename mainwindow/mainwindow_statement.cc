@@ -84,7 +84,7 @@ void MainWindow::RStatementTertiary(Section section, QUuid widget_id, const QJso
     model->Rebuild(array);
 }
 
-void MainWindow::RShowSecondaryStatement(QUuid partner_id, const utils::DateRange& range, int unit)
+void MainWindow::RShowSecondaryStatement(QUuid partner_id, utils::DateRange range, int unit)
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
@@ -154,7 +154,7 @@ void MainWindow::InitSummaryView(QTableView* summary_view, QTableView* data_view
     });
 }
 
-void MainWindow::RShowTertiaryStatement(QUuid partner_id, const utils::DateRange& range, int unit)
+void MainWindow::RShowTertiaryStatement(QUuid partner_id, utils::DateRange range, int unit)
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };

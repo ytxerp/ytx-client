@@ -37,11 +37,11 @@ class StatementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SShowTertiaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
+    void SShowTertiaryStatement(QUuid partner_id, utils::DateRange range, int unit);
 
 public:
-    StatementSecondaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, CString& partner_name, const utils::DateRange& range, Section section,
-        int unit, QWidget* parent = nullptr);
+    StatementSecondaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, CString& partner_name, utils::DateRange range, Section section, int unit,
+        QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 
     QTableView* DataView() const;

@@ -51,7 +51,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void Rebuild(const QJsonArray& array);
-    bool RebuildHeader(const utils::DateRange& date_range);
+    bool RebuildHeader(utils::DateRange date_range);
 
 private:
     QList<Column> columns_ {};

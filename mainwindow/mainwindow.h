@@ -152,8 +152,8 @@ private slots:
 
     void RSectionGroup(int id);
 
-    void RShowSecondaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
-    void RShowTertiaryStatement(QUuid partner_id, const utils::DateRange& range, int unit);
+    void RShowSecondaryStatement(QUuid partner_id, utils::DateRange range, int unit);
+    void RShowTertiaryStatement(QUuid partner_id, utils::DateRange range, int unit);
 
     void RSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
     void RSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array);

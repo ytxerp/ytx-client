@@ -95,7 +95,7 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
         abort();
 }
 
-void DailyLogger::OpenLogFile(const QDate& date)
+void DailyLogger::OpenLogFile(QDate date)
 {
     if (file_.isOpen()) {
         log_stream_.flush();

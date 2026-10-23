@@ -42,7 +42,7 @@ private:
     void HandleMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg);
     static void MessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
-    void OpenLogFile(const QDate& date);
+    void OpenLogFile(QDate date);
 
 private:
     QFile file_ {};
