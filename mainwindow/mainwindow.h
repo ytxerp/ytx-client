@@ -395,7 +395,9 @@ private:
     HeaderInfo header_info_ {};
     audit::Info audit_info_ {};
 
+    // Last active section: saved on shutdown and restored on startup for a quick resume.
     Section start_ {};
+
     QLabel* connection_label_ {};
     QLabel* login_label_ {};
 
