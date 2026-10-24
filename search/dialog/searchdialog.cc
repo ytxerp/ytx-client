@@ -168,7 +168,7 @@ void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
     if (node_id.isNull())
         return;
 
-    emit SNodeLocation(section_, node_id);
+    emit SNodeLocate(section_, node_id);
 }
 
 void SearchDialog::REntryDoubleClicked(const QModelIndex& index)
@@ -182,7 +182,7 @@ void SearchDialog::REntryDoubleClicked(const QModelIndex& index)
     if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
         return;
 
-    emit SEntryLocation(entry_id, lhs_id, rhs_id);
+    emit SEntryLocate(section_, entry_id, lhs_id, rhs_id);
 }
 
 void SearchDialog::RContentGroup(int id)

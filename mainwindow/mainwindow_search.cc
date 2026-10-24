@@ -66,8 +66,8 @@ void MainWindow::on_actionSearch_triggered()
 
     utils::ManageDialog(sc_->widget_hash, dialog);
 
-    connect(dialog, &SearchDialog::SNodeLocation, this, &MainWindow::RLocateNode);
-    connect(dialog, &SearchDialog::SEntryLocation, this, &MainWindow::REntryLocation);
+    connect(dialog, &SearchDialog::SNodeLocate, this, &MainWindow::RNodeLocate);
+    connect(dialog, &SearchDialog::SEntryLocate, this, &MainWindow::REntryLocate);
     connect(sc_->entry_hub, &EntryHub::SSearchEntry, entry, &search::EntryModel::RSearchEntry);
 
     dialog->show();

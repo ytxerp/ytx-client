@@ -28,10 +28,6 @@ public:
     SearchDialogO(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner,
         QWidget* parent = nullptr);
 
-private slots:
-    void REntryDoubleClicked(const QModelIndex& index) override;
-    void RNodeDoubleClicked(const QModelIndex& index) override;
-
 private:
     void TreeViewDelegate(QTableView* view) override;
     void TableViewDelegate(QTableView* view) override;

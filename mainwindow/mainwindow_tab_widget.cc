@@ -56,22 +56,23 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 // Note: Entry selection is only needed when entry_id is valid.
 void MainWindow::ShowLeafWidget(QUuid node_id, QUuid entry_id)
 {
+    const Section section { sc_->info.section };
+
     if (sc_->widget_hash.contains(node_id)) {
-        FocusTabWidget(node_id);
-        RSelectEntry(node_id, entry_id);
+        LocateLeafWidget(sc_, node_id, entry_id);
         return;
     }
 
-    if (IsOrderSection(start_)) {
+    if (IsOrderSection(section)) {
         CreateLeafO(sc_, node_id);
     } else {
         CreateLeafFIPT(sc_, node_id);
     }
 
-    if (start_ == Section::kPartner) {
+    if (section == Section::kPartner) {
         static_cast<EntryHubP*>(sc_p_.entry_hub.data())->PushEntry(node_id);
     } else {
-        const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
+        const auto message { JsonGen::TableAck(section, node_id, entry_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
     }
 }
@@ -136,7 +137,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
     const auto id { tab_bar->tabData(index).toUuid() };
 
     if (sc_->widget_hash.contains(id))
-        RLocateNode(start_, id);
+        RNodeLocate(start_, id);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedFIPT(int index)

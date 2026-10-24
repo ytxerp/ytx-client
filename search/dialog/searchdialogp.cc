@@ -40,16 +40,3 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag_);
 }
-
-void SearchDialogP::REntryDoubleClicked(const QModelIndex& index)
-{
-    auto* entry { static_cast<Entry*>(index.internalPointer()) };
-
-    auto lhs_id { entry->lhs_node };
-    auto entry_id { entry->id };
-
-    if (lhs_id.isNull() || entry_id.isNull())
-        return;
-
-    emit SEntryLocation(entry_id, lhs_id, QUuid());
-}

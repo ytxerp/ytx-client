@@ -109,23 +109,33 @@ QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
 
 MainWindow::~MainWindow() { delete ui; }
 
-// FocusTabWidget - Activate and focus the leaf widget tab
-// -------------------------------
-// Used for:
-//  • Node double-click → navigate to node's tab
-//  • Entry jump → switch between different node tabs
-//
-// Note: Clears view selection after switching
-void MainWindow::FocusTabWidget(QUuid node_id) const
+// Switch to the leaf widget of node_id and activate its window. If entry_id is
+// valid, select and scroll to it; otherwise clear the current index and
+// selection. Synchronous. Silently ignored if the tab is not open.
+void MainWindow::LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid entry_id) const
 {
-    auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
-    Q_ASSERT_X(widget, Q_FUNC_INFO, "Table widget not found for node_id");
+    auto* widget { qobject_cast<TableWidget*>(sc->widget_hash.value(node_id).widget) };
+    if (!widget)
+        return;
 
-    sc_->tab_widget->setCurrentWidget(widget);
+    sc->tab_widget->setCurrentWidget(widget);
     widget->activateWindow();
 
-    widget->View()->setCurrentIndex(QModelIndex());
-    widget->View()->clearSelection();
+    auto* view { widget->View() };
+
+    if (entry_id.isNull()) {
+        view->setCurrentIndex(QModelIndex());
+        view->clearSelection();
+        return;
+    }
+
+    const auto index { widget->Model()->GetIndex(entry_id) };
+    if (!index.isValid())
+        return;
+
+    const auto target { index.siblingAtColumn(std::to_underlying(EntryEnum::kIssuedTime)) };
+    view->setCurrentIndex(target);
+    view->scrollTo(target, QAbstractItemView::PositionAtCenter);
 }
 
 void MainWindow::InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index)
@@ -411,7 +421,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLoginAllow, this, &MainWindow::RAllowLogin);
     connect(WebSocket::Instance(), &WebSocket::SLoginDeny, this, &MainWindow::RDenyLogin);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
-    connect(WebSocket::Instance(), &WebSocket::SEntrySelect, this, &MainWindow::RSelectEntry);
+    connect(WebSocket::Instance(), &WebSocket::SEntrySelect, this, &MainWindow::REntrySelect);
     connect(WebSocket::Instance(), &WebSocket::SOrderOverview, this, &MainWindow::ROrderOverview);
     connect(WebSocket::Instance(), &WebSocket::SStatementPrimary, this, &MainWindow::RStatementPrimary);
     connect(WebSocket::Instance(), &WebSocket::SStatementSecondary, this, &MainWindow::RStatemetSecondary);
@@ -429,8 +439,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SPermissionDeny, this, &MainWindow::RPermissionDeny);
     connect(WebSocket::Instance(), &WebSocket::SOrderPermissionDeny, this, &MainWindow::ROrderPermissionDeny);
     connect(WebSocket::Instance(), &WebSocket::SSettlementPermissionDeny, this, &MainWindow::RSettlementPermissionDeny);
-    connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RSelectNode);
-    connect(WebSocket::Instance(), &WebSocket::SNodeLocate, this, &MainWindow::RLocateNode);
+    connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RNodeSelect);
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
     connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);

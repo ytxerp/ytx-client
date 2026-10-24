@@ -111,9 +111,26 @@ private slots:
     void tabWidget_tabCloseRequestedFIPT(int index);
     void tabWidget_tabCloseRequestedO(int index);
 
-    void RLocateNode(Section section, QUuid node_id);
-    void REntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
-    void RSelectNode(Section section, QUuid node_id);
+    // Locate a node that is already in the local tree: switch to the tree tab,
+    // activate the window, then select and focus the node right away.
+    // Synchronous: nothing is fetched here. For on-demand sections (Sale and
+    // Purchase), a missing node is requested from the server instead (see below).
+    void RNodeLocate(Section section, QUuid node_id);
+
+    // Dispatch an entry locate request to the handler matching the section
+    // (FIT / P / O). Synchronous or asynchronous depending on the section.
+    void REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
+
+    // Select a node after its data has been fetched from the server.
+    // Asynchronous: invoked once the node has arrived and been inserted into the
+    // tree model. It only sets the current index; it does not switch tabs or
+    // activate the window. If the node is still missing, the call is ignored.
+    void RNodeSelect(Section section, QUuid node_id);
+
+    // Select and scroll to the entry after its data has arrived (asynchronous).
+    // Does not switch tabs or activate the window. Silently ignored if the tab
+    // was closed or the entry is not in the model yet.
+    void REntrySelect(Section section, QUuid node_id, QUuid entry_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
     void RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id);
@@ -197,7 +214,6 @@ private slots:
     void RUpdateDocumentDir(Section section, const QString& document_dir);
     void RUpdateDefaultUnit(Section section, int unit);
     void RDenyDefaultUnit();
-    void RSelectEntry(QUuid node_id, QUuid entry_id);
     void REntryLocked();
 
 private:
@@ -218,6 +234,7 @@ private:
     void InitContextPurchase();
 
     void ShowLeafWidget(QUuid node_id, QUuid entry_id = {});
+    void LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid entry_id = {}) const;
 
     void CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model);
 
@@ -327,12 +344,28 @@ private:
 
     void IniSectionGroup();
 
-    void FocusTabWidget(QUuid node_id) const;
-
     void WriteConfig();
 
     void MarkEntries(MarkOperation operation);
     void LockEntries(bool locked);
+
+    // Locate an entry in its node tab. If the tab is already open, focus it and
+    // select the entry immediately. Otherwise create the tab for the lhs node and
+    // send a TableAck carrying entry_id; the entry is selected once the table
+    // data arrives from the server (asynchronous).
+    void EntryLocateFIT(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
+
+    // Locate an entry in the partner node tab. Partner entries are fully loaded,
+    // so no server round trip is needed: open the tab if necessary, then focus it
+    // and select the entry immediately (synchronous).
+    void EntryLocateP(Section section, QUuid entry_id, QUuid lhs_node_id);
+
+    // Locate an entry of an order node (Sale/Purchase). Both the node and its
+    // entries are loaded on demand. If the tab is already open, locate directly.
+    // Otherwise make sure the node exists locally (fetch it via AckNode if not),
+    // create the tab, and send a TableAck carrying entry_id; the entry is
+    // selected once the data arrives (asynchronous, see RSelectEntry).
+    void EntryLocateO(Section section, QUuid entry_id, QUuid lhs_node_id);
 
     void InitSystemTray();
     void InitStatusLabel();

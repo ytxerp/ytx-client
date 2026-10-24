@@ -158,18 +158,6 @@ void MainWindow::ROrderPermissionDeny(Section section, QUuid widget_id)
     RPermissionDeny();
 }
 
-void MainWindow::RSelectNode(Section section, QUuid node_id)
-{
-    auto* sc { GetSectionContext(section) };
-    auto tree_model { sc->tree_model };
-
-    const auto index { tree_model->GetIndex(node_id) };
-    if (!index.isValid())
-        return;
-
-    sc->tree_view->setCurrentIndex(index);
-}
-
 void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index)
 {
     // Extract frequently used shortcuts
@@ -314,4 +302,27 @@ void MainWindow::RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id)
             break;
         }
     }
+}
+
+void MainWindow::EntryLocateO(Section section, QUuid entry_id, QUuid lhs_node_id)
+{
+    // Only lhs_node_id is needed for Sale and Purchase sections.
+    if (entry_id.isNull() || lhs_node_id.isNull())
+        return;
+
+    auto* sc { GetSectionContext(section) };
+
+    if (sc->widget_hash.contains(lhs_node_id)) {
+        LocateLeafWidget(sc, lhs_node_id, entry_id);
+        return;
+    }
+
+    auto* tree_model { sc->tree_model.data() };
+    if (!tree_model->Contains(lhs_node_id))
+        tree_model->AckNode(lhs_node_id);
+
+    CreateLeafO(sc, lhs_node_id);
+
+    const auto message { JsonGen::TableAck(section, lhs_node_id, entry_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
 }

@@ -602,7 +602,7 @@ void WebSocket::AckTable(const QJsonObject& obj)
     entry_hub->AckTable(node_id, array);
 
     if (!entry_id.isNull())
-        emit SEntrySelect(node_id, entry_id);
+        emit SEntrySelect(section, node_id, entry_id);
 }
 
 void WebSocket::AckOrderNode(const QJsonObject& obj)
@@ -621,7 +621,7 @@ void WebSocket::AckOrderNode(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->ApplyNode(ancestor, leaf_obj);
 
-    emit SNodeLocate(section, node_id);
+    emit SNodeSelect(section, node_id);
 }
 
 void WebSocket::OnOrderOverview(const QJsonObject& obj)

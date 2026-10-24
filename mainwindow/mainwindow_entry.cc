@@ -1,4 +1,5 @@
 #include "component/constantwebsocket.h"
+#include "entryhub/entryhubp.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -70,72 +71,35 @@ void MainWindow::DeleteEntry(TableWidget* widget)
     model->removeRows(current_row);
 }
 
-void MainWindow::REntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id)
+// Dispatch an entry locate request to the handler matching the section.
+void MainWindow::REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id)
 {
-    // Note: For Partner, Sale, and Purchase sections, rhs_node_id check is not required
-    if (entry_id.isNull() || lhs_node_id.isNull())
-        return;
-
-    QUuid node_id {};
-    auto& widget_hash { sc_->widget_hash };
-
-    if (widget_hash.contains(lhs_node_id)) {
-        node_id = lhs_node_id;
-    } else if (widget_hash.contains(rhs_node_id)) {
-        node_id = rhs_node_id;
-    }
-
-    if (!node_id.isNull()) {
-        FocusTabWidget(node_id);
-        RSelectEntry(node_id, entry_id);
-        return;
-    }
-
-    node_id = lhs_node_id;
-
-    if (IsOrderSection(start_)) {
-        auto& tree_model { sc_->tree_model };
-
-        if (!tree_model->Contains(lhs_node_id)) {
-            tree_model->AckNode(node_id);
-        }
-    }
-
-    const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
-
-    switch (start_) {
-    case Section::kSale:
-    case Section::kPurchase:
-        CreateLeafO(sc_, node_id);
-        break;
-    case Section::kTask:
+    switch (section) {
     case Section::kFinance:
     case Section::kInventory:
-    case Section::kPartner:
-        CreateLeafFIPT(sc_, node_id);
+    case Section::kTask:
+        EntryLocateFIT(section, entry_id, lhs_node_id, rhs_node_id);
         break;
-    default:
+    case Section::kPartner:
+        EntryLocateP(section, entry_id, lhs_node_id);
+        break;
+    case Section::kSale:
+    case Section::kPurchase:
+        EntryLocateO(section, entry_id, lhs_node_id);
         break;
     }
-
-    FocusTabWidget(node_id);
 }
 
-// RSelectEntry - Scroll to and select the specified entry (slot)
-// -------------------------------
-// Behavior:
-//  1. Skip if entry_id is null (no target to scroll to)
-//  2. Find and select the entry in the view
-//  3. Scroll to center the IssuedTime column
-//  4. Close any persistent editor on that row
-void MainWindow::RSelectEntry(QUuid node_id, QUuid entry_id)
+void MainWindow::REntrySelect(Section section, QUuid node_id, QUuid entry_id)
 {
     if (entry_id.isNull() || node_id.isNull())
         return;
 
-    auto* widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
-    Q_ASSERT(widget);
+    auto* sc { GetSectionContext(section) };
+
+    auto* widget { qobject_cast<TableWidget*>(sc->widget_hash.value(node_id).widget) };
+    if (!widget)
+        return;
 
     auto* view { widget->View() };
     const auto index { widget->Model()->GetIndex(entry_id) };
@@ -265,6 +229,50 @@ void MainWindow::LockEntries(bool locked)
 
     auto* table_model { leaf_widget->Model() };
     table_model->LockEntries(locked);
+}
+
+void MainWindow::EntryLocateFIT(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id)
+{
+    if (entry_id.isNull() || lhs_node_id.isNull() || rhs_node_id.isNull())
+        return;
+
+    auto* sc { GetSectionContext(section) };
+
+    QUuid node_id {};
+    auto& widget_hash { sc->widget_hash };
+
+    if (widget_hash.contains(lhs_node_id)) {
+        node_id = lhs_node_id;
+    } else if (widget_hash.contains(rhs_node_id)) {
+        node_id = rhs_node_id;
+    }
+
+    if (!node_id.isNull()) {
+        LocateLeafWidget(sc, node_id, entry_id);
+        return;
+    }
+
+    node_id = lhs_node_id;
+
+    CreateLeafFIPT(sc, node_id);
+
+    const auto message { JsonGen::TableAck(section, node_id, entry_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
+}
+
+void MainWindow::EntryLocateP(Section section, QUuid entry_id, QUuid lhs_node_id)
+{
+    if (entry_id.isNull() || lhs_node_id.isNull())
+        return;
+
+    auto* sc { GetSectionContext(section) };
+
+    if (!sc->widget_hash.contains(lhs_node_id)) {
+        CreateLeafFIPT(sc, lhs_node_id);
+        static_cast<EntryHubP*>(sc->entry_hub.data())->PushEntry(lhs_node_id);
+    }
+
+    LocateLeafWidget(sc, lhs_node_id, entry_id);
 }
 
 void MainWindow::on_actionLockAll_triggered() { LockEntries(true); }

@@ -50,16 +50,16 @@ protected:
     ~SearchDialog() override;
 
 signals:
-    void SNodeLocation(Section section, QUuid node_id);
-    void SEntryLocation(QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
+    void SNodeLocate(Section section, QUuid node_id);
+    void SEntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
 
 private slots:
     void RContentGroup(int id);
     void RSearchNode();
     void RSearchEntry();
 
-    virtual void RNodeDoubleClicked(const QModelIndex& index);
-    virtual void REntryDoubleClicked(const QModelIndex& index);
+    void RNodeDoubleClicked(const QModelIndex& index);
+    void REntryDoubleClicked(const QModelIndex& index);
 
 protected:
     void IniDialog();

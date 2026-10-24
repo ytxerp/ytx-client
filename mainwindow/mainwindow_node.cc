@@ -62,14 +62,26 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     dialog->show();
 }
 
-void MainWindow::RLocateNode(Section section, QUuid node_id)
+void MainWindow::RNodeLocate(Section section, QUuid node_id)
 {
     if (node_id.isNull())
         return;
 
     auto* sc { GetSectionContext(section) };
+    auto* tree_model { sc->tree_model.data() };
 
-    auto index { sc->tree_model->GetIndex(node_id) };
+    // Only the Sale and Purchase sections load tree nodes on demand; all other
+    // sections load the full tree up front. If the node is not in the local
+    // tree yet, request it from the server (AckNode) and return. The locate
+    // request is dropped for this call.
+    if (!tree_model->Contains(node_id)) {
+        if (section == Section::kSale || section == Section::kPurchase)
+            tree_model->AckNode(node_id);
+
+        return;
+    }
+
+    auto index { tree_model->GetIndex(node_id) };
     if (!index.isValid())
         return;
 
@@ -79,6 +91,18 @@ void MainWindow::RLocateNode(Section section, QUuid node_id)
 
     widget->View()->setCurrentIndex(index);
     widget->View()->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+}
+
+void MainWindow::RNodeSelect(Section section, QUuid node_id)
+{
+    auto* sc { GetSectionContext(section) };
+    auto tree_model { sc->tree_model };
+
+    const auto index { tree_model->GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    sc->tree_view->setCurrentIndex(index);
 }
 
 void MainWindow::RMessage(QMessageBox::Icon icon, const QString& message)

@@ -57,7 +57,6 @@ signals:
 
     void SRegisterResult(bool result, int code);
     void SRemoteHostClosed();
-    void SEntrySelect(QUuid node_id, QUuid entry_id);
 
     void SLeafDeleteDeny(const QJsonObject& obj);
     void SSharedConfigApply(const QJsonArray& arr);
@@ -90,7 +89,7 @@ signals:
     void SOrderPermissionDeny(Section section, QUuid widget_id);
     void SSettlementPermissionDeny(Section section, QUuid widget_id);
     void SNodeSelect(Section section, QUuid node_id);
-    void SNodeLocate(Section section, QUuid node_id);
+    void SEntrySelect(Section section, QUuid node_id, QUuid entry_id);
     void STreeSyncFinish();
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
