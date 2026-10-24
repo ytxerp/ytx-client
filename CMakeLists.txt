@@ -11,7 +11,7 @@ if(POLICY CMP0175)
     cmake_policy(SET CMP0175 NEW)
 endif()
 
-project(YTX VERSION 26.3.1 LANGUAGES CXX)
+project(YTX VERSION 26.3.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -717,7 +717,7 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
         ${PROJECT_NAME}
         PRIVATE
             $<$<CONFIG:Debug>:
-                -fsanitize=address
+                -fsanitize=address,undefined
                 -fno-omit-frame-pointer
                 -g
             >
@@ -728,7 +728,7 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
         ${PROJECT_NAME}
         PRIVATE
             $<$<CONFIG:Debug>:
-                -fsanitize=address
+                -fsanitize=address,undefined
             >
     )
 endif()
