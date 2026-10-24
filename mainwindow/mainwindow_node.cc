@@ -12,7 +12,9 @@
 
 void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_index)
 {
-    Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "InsertNodeFIPT must not be used in Sale or Purchase section");
+    const Section section { sc->info.section };
+
+    Q_ASSERT_X(section != Section::kSale && section != Section::kPurchase, Q_FUNC_INFO, "InsertNodeFIPT must not be used in Sale or Purchase section");
 
     auto tree_model { sc->tree_model };
     auto unit_model { sc->info.unit_model };
@@ -22,7 +24,7 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     if (!parent_path.isEmpty())
         parent_path += app_config_.separator;
 
-    auto* node { NodePool::Instance().Allocate(start_) };
+    auto* node { NodePool::Instance().Allocate(section) };
 
     node->id = QUuid::createUuidV7();
     node->direction_rule = parent_node->direction_rule;
@@ -35,7 +37,7 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     const auto children_name { ChildrenName(parent_node) };
     const auto arg { NodeInsertArg { node, unit_model, parent_path, children_name } };
 
-    switch (start_) {
+    switch (section) {
     case Section::kFinance:
     case Section::kTask:
     case Section::kInventory:
@@ -53,11 +55,11 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     utils::ManageDialog(sc->widget_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::accepted, this, [this, node, parent_node, key]() {
-        const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
+    connect(dialog, &QDialog::accepted, this, [node, parent_node, key, section]() {
+        const auto message { JsonGen::NodeInsert(section, node, parent_node->id) };
         WebSocket::Instance()->SendMessage(key, message);
     });
-    connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::destroyed, this, [node, section]() { NodePool::Instance().Recycle(node, section); });
 
     dialog->show();
 }
@@ -112,7 +114,9 @@ void MainWindow::RMessage(QMessageBox::Icon icon, const QString& message)
 
 void MainWindow::EditNameFIPT()
 {
-    Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "EditNameFIPT must not be used in Sale or Purchase section");
+    const Section section { sc_->info.section };
+
+    Q_ASSERT_X(section != Section::kSale && section != Section::kPurchase, Q_FUNC_INFO, "EditNameFIPT must not be used in Sale or Purchase section");
     Q_ASSERT_X(sc_ && sc_->tree_widget && sc_->tree_model, Q_FUNC_INFO, "SectionContext is not fully initialized");
 
     const auto index { sc_->tree_view->currentIndex() };
@@ -138,8 +142,8 @@ void MainWindow::EditNameFIPT()
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::accepted, this, [this, node_id, dialog, node]() {
-        const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName(), node->version) };
+    connect(dialog, &QDialog::accepted, this, [node_id, dialog, node, section]() {
+        const auto message { JsonGen::NodeName(section, node_id, dialog->GetName(), node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 
@@ -155,8 +159,9 @@ void MainWindow::on_actionClearColor_triggered()
         return;
 
     auto model { sc_->tree_model };
+    const Section section { sc_->info.section };
 
-    const int color_column { node::ColorColumn(start_) };
+    const int color_column { node::ColorColumn(section) };
     const QModelIndex color_index { index.siblingAtColumn(color_column) };
 
     model->setData(color_index, QVariant());

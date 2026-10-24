@@ -8,11 +8,12 @@ void MainWindow::on_actionOrderOverview_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    Q_ASSERT(IsOrderSection(start_));
-
     const QUuid widget_id { QUuid::createUuidV7() };
+    const Section section { sc_->info.section };
 
-    auto* widget { new OrderOverviewWidget(header_info_.order_overview, widget_id, start_, this) };
+    Q_ASSERT(IsOrderSection(section));
+
+    auto* widget { new OrderOverviewWidget(header_info_.order_overview, widget_id, section, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Overview")) };

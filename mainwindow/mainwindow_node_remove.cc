@@ -19,7 +19,9 @@ void MainWindow::DeleteNode()
     if (node->sync_state == SyncState::kDeleting)
         return;
 
-    if (start_ == Section::kSale || start_ == Section::kPurchase) {
+    const Section section { sc_->info.section };
+
+    if (section == Section::kSale || section == Section::kPurchase) {
         auto* d_node { static_cast<NodeO*>(node) };
 
         if (d_node->order_status == OrderStatus::kReleased) {

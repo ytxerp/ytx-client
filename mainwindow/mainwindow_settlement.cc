@@ -8,10 +8,12 @@ void MainWindow::on_actionSettlement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    Q_ASSERT(IsOrderSection(start_));
-
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* widget { new SettlementPrimaryWidget(start_, header_info_.settlement_primary, widget_id, this) };
+    const Section section { sc_->info.section };
+
+    Q_ASSERT(IsOrderSection(section));
+
+    auto* widget { new SettlementPrimaryWidget(section, header_info_.settlement_primary, widget_id, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement")) };
@@ -35,12 +37,14 @@ void MainWindow::on_actionSettlement_triggered()
 
 void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model)
 {
-    Q_ASSERT(IsOrderSection(start_));
+    const QUuid widget_id { QUuid::createUuidV7() };
+    const Section section { sc_->info.section };
+
+    Q_ASSERT(IsOrderSection(section));
 
     auto* model { new settlement::SecondaryModel(header_info_.settlement_secondary, primary_row.status, this) };
-    const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, start_, this) };
+    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, section, this) };
     connect(model, &settlement::SecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
     connect(widget, &SettlementSecondaryWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
     connect(widget, &SettlementSecondaryWidget::SInsertPrimaryRow, primary_model, &settlement::PrimaryModel::RInsertePrimaryRow);

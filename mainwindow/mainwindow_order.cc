@@ -19,14 +19,15 @@ void MainWindow::EditNameO()
         return;
 
     auto model { sc_->tree_model };
+    const Section section { sc_->info.section };
 
     auto* dialog { new EditNodeNameO(node->name, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
-        const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName(), node->version) };
+    connect(dialog, &QDialog::accepted, this, [dialog, node, section]() {
+        const auto message { JsonGen::NodeName(section, node->id, dialog->GetName(), node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 
@@ -37,7 +38,8 @@ void MainWindow::on_actionNewBranch_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    if (start_ != Section::kSale && start_ != Section::kPurchase)
+    const Section section { sc_->info.section };
+    if (section != Section::kSale && section != Section::kPurchase)
         return;
 
     auto current_index { sc_->tree_view->currentIndex() };
@@ -53,7 +55,7 @@ void MainWindow::on_actionNewBranch_triggered()
 
     const QUuid parent_id { parent_node->id };
 
-    auto* node { NodePool::Instance().Allocate(start_) };
+    auto* node { NodePool::Instance().Allocate(section) };
     auto* d_node { static_cast<NodeO*>(node) };
 
     node->id = QUuid::createUuidV7();
@@ -75,12 +77,12 @@ void MainWindow::on_actionNewBranch_triggered()
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::accepted, this, [this, node]() {
-        const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
+    connect(dialog, &QDialog::accepted, this, [node, section]() {
+        const auto message { JsonGen::NodeInsert(section, node, node->parent->id) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeInsert, message);
     });
 
-    connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::destroyed, this, [node, section]() { NodePool::Instance().Recycle(node, section); });
 
     dialog->show();
 }

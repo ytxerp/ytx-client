@@ -114,38 +114,39 @@ void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
     section_settings_->endGroup();
 }
 
-void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
+void MainWindow::UpdateSectionConfig(CSectionConfig& section_config) const
 {
     if (!section_settings_)
         return;
 
     auto& current_section { sc_->section_config };
-    if (current_section == section)
+    if (current_section == section_config)
         return;
 
-    const bool resize_column { current_section.amount_decimal != section.amount_decimal || current_section.rate_decimal != section.rate_decimal
-        || current_section.date_format != section.date_format || current_section.quantity_decimal != section.quantity_decimal };
+    const bool resize_column { current_section.amount_decimal != section_config.amount_decimal || current_section.rate_decimal != section_config.rate_decimal
+        || current_section.date_format != section_config.date_format || current_section.quantity_decimal != section_config.quantity_decimal };
 
-    current_section = section;
+    current_section = section_config;
 
-    const QString text { kSectionString.value(start_) };
+    const Section section { sc_->info.section };
+    const QString text { kSectionString.value(section) };
     section_settings_->beginGroup(text);
 
-    if (!IsOrderSection(start_)) {
+    if (!IsOrderSection(section)) {
         sc_->tree_widget->RInitStatus();
 
-        section_settings_->setValue(kStaticLabel, section.static_label);
-        section_settings_->setValue(kStaticNode, section.static_node);
-        section_settings_->setValue(kDynamicLabel, section.dynamic_label);
-        section_settings_->setValue(kDynamicNodeLhs, section.dynamic_node_lhs);
-        section_settings_->setValue(kOperation, section.operation);
-        section_settings_->setValue(kDynamicNodeRhs, section.dynamic_node_rhs);
+        section_settings_->setValue(kStaticLabel, section_config.static_label);
+        section_settings_->setValue(kStaticNode, section_config.static_node);
+        section_settings_->setValue(kDynamicLabel, section_config.dynamic_label);
+        section_settings_->setValue(kDynamicNodeLhs, section_config.dynamic_node_lhs);
+        section_settings_->setValue(kOperation, section_config.operation);
+        section_settings_->setValue(kDynamicNodeRhs, section_config.dynamic_node_rhs);
     }
 
-    section_settings_->setValue(kDateFormat, section.date_format);
-    section_settings_->setValue(kAmountDecimal, section.amount_decimal);
-    section_settings_->setValue(kRateDecimal, section.rate_decimal);
-    section_settings_->setValue(kQuantityDecimal, section.quantity_decimal);
+    section_settings_->setValue(kDateFormat, section_config.date_format);
+    section_settings_->setValue(kAmountDecimal, section_config.amount_decimal);
+    section_settings_->setValue(kRateDecimal, section_config.rate_decimal);
+    section_settings_->setValue(kQuantityDecimal, section_config.quantity_decimal);
 
     section_settings_->endGroup();
 
@@ -154,13 +155,13 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
 
         if (const auto* leaf_widget = qobject_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };
-            ResizeColumn(header, entry::DescriptionColumn(start_));
+            ResizeColumn(header, entry::DescriptionColumn(section));
             return;
         }
 
         if (qobject_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
-            ResizeColumn(header, node::DescriptionColumn(start_));
+            ResizeColumn(header, node::DescriptionColumn(section));
         }
     }
 }

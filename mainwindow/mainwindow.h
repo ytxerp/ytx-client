@@ -333,7 +333,7 @@ private:
     void ReadSectionConfig(SectionConfig& config, CString& section_name);
 
     void UpdateAppConfig(CAppConfig& app);
-    void UpdateSectionConfig(CSectionConfig& section) const;
+    void UpdateSectionConfig(CSectionConfig& section_config) const;
     void UpdateSharedConfig(CSharedConfig& shared);
 
     void UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date);

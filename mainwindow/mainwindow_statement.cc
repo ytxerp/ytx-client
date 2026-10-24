@@ -10,11 +10,12 @@ void MainWindow::on_actionStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    Q_ASSERT(IsOrderSection(start_));
-
+    const Section section { sc_->info.section };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementPrimaryWidget(header_info_.statement_primary, widget_id, start_, this) };
+    Q_ASSERT(IsOrderSection(section));
+
+    auto* widget { new StatementPrimaryWidget(header_info_.statement_primary, widget_id, section, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, tr("Statement")) };
     auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -88,8 +89,9 @@ void MainWindow::RShowSecondaryStatement(QUuid partner_id, utils::DateRange rang
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
+    const Section section { sc_->info.section };
 
-    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, partner_name, range, start_, unit, this) };
+    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, partner_name, range, section, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -158,9 +160,10 @@ void MainWindow::RShowTertiaryStatement(QUuid partner_id, utils::DateRange range
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
+    const Section section { sc_->info.section };
 
     auto* widget { new StatementTertiaryWidget(
-        header_info_.statement_tertiary, widget_id, partner_id, range, partner_name, app_config_.company_name, start_, unit, this) };
+        header_info_.statement_tertiary, widget_id, partner_id, range, partner_name, app_config_.company_name, section, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 

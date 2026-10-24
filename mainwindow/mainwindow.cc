@@ -140,7 +140,7 @@ void MainWindow::LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid
 
 void MainWindow::InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index)
 {
-    switch (start_) {
+    switch (sc->info.section) {
     case Section::kSale:
     case Section::kPurchase:
         InsertNodeO(sc, parent_index);
@@ -535,7 +535,7 @@ void MainWindow::on_actionRename_triggered()
         return;
     }
 
-    switch (start_) {
+    switch (sc_->info.section) {
     case Section::kSale:
     case Section::kPurchase:
         EditNameO();

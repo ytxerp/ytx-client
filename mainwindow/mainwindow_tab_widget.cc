@@ -88,13 +88,15 @@ void MainWindow::tabWidget_currentChanged()
     if (!widget)
         return;
 
+    const Section section { sc_->info.section };
+
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_tree_o { IsTreeWidgetO(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_statement_tertiary { IsStatementTertiaryWidget(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
-    const bool is_order_section { IsOrderSection(start_) };
-    const bool is_finance_section { start_ == Section::kFinance };
+    const bool is_order_section { IsOrderSection(section) };
+    const bool is_finance_section { section == Section::kFinance };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
@@ -125,8 +127,8 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionIncomeStatement->setEnabled(is_finance_section);
     ui->actionPeriodClose->setEnabled(is_finance_section);
 
-    ui->actionHeatInventory->setEnabled(start_ == Section::kInventory);
-    ui->actionHeatPartner->setEnabled(start_ == Section::kPartner);
+    ui->actionHeatInventory->setEnabled(section == Section::kInventory);
+    ui->actionHeatPartner->setEnabled(section == Section::kPartner);
 }
 
 void MainWindow::tabWidget_tabBarDoubleClicked(int index)
@@ -137,7 +139,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
     const auto id { tab_bar->tabData(index).toUuid() };
 
     if (sc_->widget_hash.contains(id))
-        RNodeLocate(start_, id);
+        RNodeLocate(sc_->info.section, id);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedFIPT(int index)
@@ -196,7 +198,8 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
 
     const int row { index.row() };
-    const int linked_node_column { entry::LinkedNodeColumn(start_) };
+    const Section section { sc_->info.section };
+    const int linked_node_column { entry::LinkedNodeColumn(section) };
 
     const auto linked_node_id { index.sibling(row, linked_node_column).data().toUuid() };
     if (linked_node_id.isNull()) {
@@ -209,7 +212,7 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
     }
 
-    if (IsSingleEntry(start_))
+    if (IsSingleEntry(section))
         return;
 
     auto* entry { leaf_widget->Model()->GetEntry(index) };
@@ -241,7 +244,7 @@ void MainWindow::UpdateLeafNodeName(QUuid node_id, const QString& name)
 
     const QSet<QUuid> nodes { node_id };
 
-    if (start_ == Section::kPartner) {
+    if (sc_->info.section == Section::kPartner) {
         UpdatePartnerReference(&sc_sale_, nodes, false);
         UpdatePartnerReference(&sc_purchase_, nodes, false);
     }
@@ -274,7 +277,7 @@ void MainWindow::UpdateBranchNodeName(QUuid node_id)
     if (auto* node = model->GetNode(node_id)) {
         const QSet<QUuid> nodes { LeafChildrenId(node) };
 
-        if (start_ == Section::kPartner) {
+        if (sc_->info.section == Section::kPartner) {
             UpdatePartnerReference(&sc_sale_, nodes, true);
             UpdatePartnerReference(&sc_purchase_, nodes, true);
         }

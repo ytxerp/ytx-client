@@ -5,10 +5,12 @@ void MainWindow::on_actionSettlementView_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    Q_ASSERT(IsOrderSection(start_));
-
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* widget { new SettlementViewWidget(sc_p_.tree_model->LeafPath(), widget_id, sc_->section_config.amount_decimal, start_, this) };
+    const Section section { sc_->info.section };
+
+    Q_ASSERT(IsOrderSection(section));
+
+    auto* widget { new SettlementViewWidget(sc_p_.tree_model->LeafPath(), widget_id, sc_->section_config.amount_decimal, section, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement View")) };
