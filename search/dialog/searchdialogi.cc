@@ -2,8 +2,8 @@
 
 #include "ui_searchdialog.h"
 
-SearchDialogI::SearchDialogI(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
-    : SearchDialog(sc, search_node, search_entry, parent)
+SearchDialogI::SearchDialogI(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent)
+    : SearchDialog(sc, search_node, search_entry, widget_id, parent)
 {
     TreeViewDelegate(ui->searchViewNode);
     TableViewDelegate(ui->searchViewEntry);

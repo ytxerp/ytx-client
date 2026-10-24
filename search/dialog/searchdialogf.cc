@@ -3,8 +3,8 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogF::SearchDialogF(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
-    : SearchDialog(sc, search_node, search_entry, parent)
+SearchDialogF::SearchDialogF(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent)
+    : SearchDialog(sc, search_node, search_entry, widget_id, parent)
 {
     cash_kind_ = new IntStringNoneZeroR(info_.cash_kind_map, this);
     roles_ = new FinanceRolesDelegateR(this);

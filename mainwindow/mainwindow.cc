@@ -119,7 +119,8 @@ void MainWindow::LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid
         return;
 
     sc->tab_widget->setCurrentWidget(widget);
-    widget->activateWindow();
+    widget->window()->raise();
+    widget->window()->activateWindow();
 
     auto* view { widget->View() };
 
@@ -424,7 +425,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SEntrySelect, this, &MainWindow::REntrySelect);
     connect(WebSocket::Instance(), &WebSocket::SOrderOverview, this, &MainWindow::ROrderOverview);
     connect(WebSocket::Instance(), &WebSocket::SStatementPrimary, this, &MainWindow::RStatementPrimary);
-    connect(WebSocket::Instance(), &WebSocket::SStatementSecondary, this, &MainWindow::RStatemetSecondary);
+    connect(WebSocket::Instance(), &WebSocket::SStatementSecondary, this, &MainWindow::RStatementSecondary);
     connect(WebSocket::Instance(), &WebSocket::SStatementTertiary, this, &MainWindow::RStatementTertiary);
     connect(WebSocket::Instance(), &WebSocket::SSettlementPrimary, this, &MainWindow::RSettlementPrimary);
     connect(WebSocket::Instance(), &WebSocket::SSettlementSecondary, this, &MainWindow::RSettlementSecondary);
@@ -440,6 +441,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SOrderPermissionDeny, this, &MainWindow::ROrderPermissionDeny);
     connect(WebSocket::Instance(), &WebSocket::SSettlementPermissionDeny, this, &MainWindow::RSettlementPermissionDeny);
     connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RNodeSelect);
+    connect(WebSocket::Instance(), &WebSocket::SNodeLocate, this, &MainWindow::RNodeLocate);
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
     connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
@@ -452,6 +454,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SIncomeStatementAck, this, &MainWindow::RIncomeStatementAck);
     connect(WebSocket::Instance(), &WebSocket::SCashFlowStatementAck, this, &MainWindow::RCashFlowStatementAck);
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteLockedDeny, this, &MainWindow::RLeafDeleteLockedDeny);
+    connect(WebSocket::Instance(), &WebSocket::SOrderSearch, this, &MainWindow::ROrderSearch);
+    connect(WebSocket::Instance(), &WebSocket::SEntrySearch, this, &MainWindow::REntrySearch);
 }
 
 void MainWindow::SetIcon() const

@@ -621,7 +621,7 @@ void WebSocket::AckOrderNode(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->ApplyNode(ancestor, leaf_obj);
 
-    emit SNodeSelect(section, node_id);
+    emit SNodeLocate(section, node_id);
 }
 
 void WebSocket::OnOrderOverview(const QJsonObject& obj)
@@ -1037,13 +1037,20 @@ void WebSocket::OnLeafDeleteLockedDeny(const QJsonObject& obj)
 void WebSocket::SearchEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
-    auto entry_hub { entry_hub_hash_.value(section) };
-    entry_hub->SearchEntry(array);
+    emit SEntrySearch(section, widget_id, array);
 }
 
-void WebSocket::SearchOrder(const QJsonObject& obj) { emit SOrderSearch(obj); }
+void WebSocket::SearchOrder(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+
+    emit SOrderSearch(section, widget_id, node_array);
+}
 
 void WebSocket::InsertEntry(const QJsonObject& obj)
 {

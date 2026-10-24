@@ -117,18 +117,18 @@ private slots:
     // Purchase), a missing node is requested from the server instead (see below).
     void RNodeLocate(Section section, QUuid node_id);
 
-    // Dispatch an entry locate request to the handler matching the section
-    // (FIT / P / O). Synchronous or asynchronous depending on the section.
-    void REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
-
     // Select a node after its data has been fetched from the server.
     // Asynchronous: invoked once the node has arrived and been inserted into the
     // tree model. It only sets the current index; it does not switch tabs or
     // activate the window. If the node is still missing, the call is ignored.
     void RNodeSelect(Section section, QUuid node_id);
 
+    // Dispatch an entry locate request to the handler matching the section
+    // (FIT / P / O). Synchronous or asynchronous depending on the section.
+    void REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id, QUuid rhs_node_id);
+
     // Select and scroll to the entry after its data has arrived (asynchronous).
-    // Does not switch tabs or activate the window. Silently ignored if the tab
+    // Switch tabs and activate the window. Silently ignored if the tab
     // was closed or the entry is not in the model yet.
     void REntrySelect(Section section, QUuid node_id, QUuid entry_id);
 
@@ -155,9 +155,11 @@ private slots:
     void RCleanUp();
 
     void ROrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
+    void ROrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
+    void REntrySearch(Section section, QUuid widget_id, const QJsonArray& entry_array);
 
     void RStatementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
-    void RStatemetSecondary(Section section, QUuid widget_id, const QJsonArray& array);
+    void RStatementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
     void RStatementTertiary(Section section, QUuid widget_id, const QJsonArray& array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);

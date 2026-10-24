@@ -49,7 +49,7 @@ QVariant NodeModel::headerData(int section, Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-void NodeModel::Search(const QString& text)
+void NodeModel::Search(QUuid /*widget_id*/, const QString& text)
 {
     // Prepare the result list (do not modify the model yet)
     QList<Node*> results {};

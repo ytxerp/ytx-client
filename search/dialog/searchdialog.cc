@@ -11,7 +11,7 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
+SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::SearchDialog)
     , search_node_ { search_node }
@@ -21,6 +21,7 @@ SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, s
     , info_ { sc->info }
     , tag_icon_hash_ { sc->tag_icon_hash }
     , section_ { sc->section }
+    , widget_id_ { widget_id }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -150,13 +151,13 @@ void SearchDialog::ResizeTableColumn(QHeaderView* header)
 
 void SearchDialog::RSearchNode()
 {
-    search_node_->Search(ui->lineEditNode->text().trimmed());
+    search_node_->Search(widget_id_, ui->lineEditNode->text().trimmed());
     ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
 }
 
 void SearchDialog::RSearchEntry()
 {
-    search_entry_->Search(ui->lineEditEntry->text().trimmed());
+    search_entry_->Search(widget_id_, ui->lineEditEntry->text().trimmed());
     ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
 }
 

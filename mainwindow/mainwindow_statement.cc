@@ -56,7 +56,7 @@ void MainWindow::RStatementPrimary(Section section, QUuid widget_id, const QJson
     model->Rebuild(array);
 }
 
-void MainWindow::RStatemetSecondary(Section section, QUuid widget_id, const QJsonArray& array)
+void MainWindow::RStatementSecondary(Section section, QUuid widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContext(section) };
 

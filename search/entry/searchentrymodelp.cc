@@ -1,13 +1,11 @@
 #include "searchentrymodelp.h"
 
 #include "enum/entryenum.h"
-#include "utils/tagutils.h"
 
 namespace search {
 
-EntryModelP::EntryModelP(Section section, const QStringList& header, EntryHub* entry_hub, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
+EntryModelP::EntryModelP(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
     : EntryModel { section, header, tag_hash, parent }
-    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {
 }
 
@@ -84,27 +82,4 @@ void EntryModelP::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void EntryModelP::Search(const QString& text)
-{
-    // 1. Prepare the result list (do not modify the model yet)
-    QList<Entry*> results {};
-
-    if (!text.isEmpty()) {
-        // Parse search input into text and tag set
-        const auto query { tag::ParseSearchQuery(text, tag_hash_) };
-
-        if (!query.tags.isEmpty()) {
-            // Tag search has higher priority
-            entry_hub_p_->SearchTag(results, query.tags);
-        } else if (!query.text.isEmpty()) {
-            // Search by description text if no tags
-            entry_hub_p_->SearchDescription(results, query.text);
-        }
-    }
-
-    // 2. Update the model in one step
-    beginResetModel();
-    list_ = std::move(results); // Move results to avoid copying
-    endResetModel();
-}
 }

@@ -28,15 +28,14 @@ class NodeModelO final : public NodeModel {
 
 public:
     NodeModelO(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
-
-public slots:
-    void ROrderSearch(const QJsonObject& obj) override;
+    ~NodeModelO() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void Search(CString& text) override;
+    void Search(QUuid widget_id, CString& text) override;
+    void Rebuild(const QJsonArray& array) override;
 
 private:
     void ClearModel();

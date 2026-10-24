@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "component/using.h"
 #include "entryhub.h"
 
 class EntryHubP final : public EntryHub {
@@ -34,9 +33,6 @@ public:
     void UpdateEntry(QUuid id, const QJsonObject& update, int version) override;
 
     void PushEntry(QUuid node_id);
-
-    void SearchDescription(QList<Entry*>& entry_list, CString& text) const;
-    void SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const;
 
     void DeleteSingleLeaf(const QSet<QUuid>& leaf_entry);
     void ApplyPartnerEntry(const QJsonArray& array);

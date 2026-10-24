@@ -37,35 +37,6 @@ void EntryHubP::ReplaceInternalInventoryRef(QUuid old_item_id, QUuid new_item_id
     PartnerInventoryRegistry::Instance().ReplaceInternalSku(old_item_id, new_item_id);
 }
 
-void EntryHubP::SearchDescription(QList<Entry*>& entry_list, CString& text) const
-{
-    entry_list.reserve(entry_cache_.size() / 2);
-
-    for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
-        Q_ASSERT(entry && "EntryHubP::SearchEntry encountered null entry in cache");
-
-        if (entry->description.contains(text, Qt::CaseInsensitive)) {
-            entry_list.emplaceBack(entry);
-        }
-    }
-}
-
-void EntryHubP::SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const
-{
-    if (tag_set.isEmpty())
-        return;
-
-    for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
-        Q_ASSERT(entry && "EntryHubP::SearchTag encountered null entry in cache");
-
-        const QStringList& entry_tags { entry->tag };
-
-        if (std::any_of(entry_tags.cbegin(), entry_tags.cend(), [&tag_set](const QString& tag_id) { return tag_set.contains(tag_id); })) {
-            entry_list.emplaceBack(entry);
-        }
-    }
-}
-
 void EntryHubP::PushEntry(QUuid node_id)
 {
     EntryList entry_list {};

@@ -1,6 +1,9 @@
 #include "searchentrymodel.h"
 
+#include <QJsonArray>
+
 #include "component/constantwebsocket.h"
+#include "global/entrypool.h"
 #include "utils/tagutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -14,10 +17,31 @@ EntryModel::EntryModel(Section section, const QStringList& header, const QHash<Q
 {
 }
 
-void EntryModel::RSearchEntry(const EntryList& list)
+EntryModel::~EntryModel() { EntryPool::Instance().Recycle(list_, section_); }
+
+void EntryModel::Rebuild(const QJsonArray& array)
 {
+    EntryList new_list {};
+
+    for (const auto& value : array) {
+        Q_ASSERT(value.isObject());
+
+        const QJsonObject obj { value.toObject() };
+
+        Entry* entry { EntryPool::Instance().Allocate(section_) };
+        entry->ReadJson(obj);
+
+        new_list.emplaceBack(entry);
+    }
+
     beginResetModel();
-    list_ = list;
+
+    if (!list_.isEmpty()) {
+        EntryPool::Instance().Recycle(list_, section_);
+    }
+
+    list_ = std::move(new_list);
+
     endResetModel();
 }
 
@@ -55,7 +79,7 @@ QVariant EntryModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-void EntryModel::Search(const QString& text)
+void EntryModel::Search(QUuid widget_id, const QString& text)
 {
     // 1. Handle empty search input: clear the model if it has data
     if (text.trimmed().isEmpty()) {
@@ -68,13 +92,13 @@ void EntryModel::Search(const QString& text)
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kEntryTagSearch, JsonGen::EntryTagSearch(section_, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryTagSearch, JsonGen::EntryTagSearch(section_, widget_id, query.tags));
         return;
     }
 
     // 4.Send description text search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(section_, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(section_, widget_id, query.text));
         return;
     }
 

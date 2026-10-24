@@ -76,10 +76,10 @@ QJsonObject NodeUpdate(Section section, QUuid node_id, CJsonObject& update, int 
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
-QJsonObject EntryDescriptionSearch(Section section, CString& keyword);
-QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
-QJsonObject OrderNameSearch(Section section, CString& keyword);
-QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags);
+QJsonObject EntryDescriptionSearch(Section section, QUuid widget_id, CString& keyword);
+QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
+QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword);
+QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
 
 QJsonObject OrderRecall(Section section, QUuid node_id, CJsonObject& update, int version);
 QJsonObject AccountName(CString& email, CString& name);

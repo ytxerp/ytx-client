@@ -151,15 +151,16 @@ QJsonObject Register(CString& email, CString& password)
     return message;
 }
 
-QJsonObject EntryDescriptionSearch(Section section, CString& keyword)
+QJsonObject EntryDescriptionSearch(Section section, QUuid widget_id, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     return message;
 }
 
-QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags)
+QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -169,7 +170,9 @@ QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags)
     for (const QString& tag_id : tags) {
         tag_array.append(tag_id);
     }
+
     message.insert(kTagArray, tag_array);
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
 
     return message;
 }
@@ -232,11 +235,12 @@ QJsonObject NodeName(Section section, QUuid node_id, CString& name, int version)
     return message;
 }
 
-QJsonObject OrderNameSearch(Section section, CString& keyword)
+QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     return message;
 }
 
@@ -429,7 +433,7 @@ QJsonObject AuditLogAck(QUuid widget_id, CString& workspace, const utils::DateTi
     return message;
 }
 
-QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags)
+QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -439,7 +443,9 @@ QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags)
     for (const QString& tag_id : tags) {
         tag_array.append(tag_id);
     }
+
     message.insert(kTagArray, tag_array);
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
 
     return message;
 }

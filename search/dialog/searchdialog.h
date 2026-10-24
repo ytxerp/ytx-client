@@ -45,8 +45,12 @@ class SearchDialog;
 class SearchDialog : public QDialog {
     Q_OBJECT
 
+public:
+    search::NodeModel* NodeModel() const { return search_node_; }
+    search::EntryModel* EntryModel() const { return search_entry_; }
+
 protected:
-    SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
+    SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent = nullptr);
     ~SearchDialog() override;
 
 signals:
@@ -105,4 +109,5 @@ protected:
 
     const QHash<QUuid, tag::Icon>& tag_icon_hash_ {};
     const Section section_ {};
+    const QUuid widget_id_ {};
 };

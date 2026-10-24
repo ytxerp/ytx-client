@@ -50,9 +50,6 @@ signals:
 
     void SUpdateBalance(QUuid node_id, QUuid entry_id);
 
-    // send to SearchEntryModel
-    void SSearchEntry(const EntryList& entry_list);
-
 public slots:
     // receive from TableModel
     void RTransferEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
@@ -72,7 +69,6 @@ public:
     void RestoreSyncState(QUuid entry_id);
 
     void AckTable(QUuid node_id, const QJsonArray& array);
-    void SearchEntry(const QJsonArray& array);
     void PeriodClose(const QJsonArray& array);
 
     void MarkEntries(QUuid node_id, MarkOperation operation);

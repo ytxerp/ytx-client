@@ -89,10 +89,12 @@ void MainWindow::RNodeLocate(Section section, QUuid node_id)
 
     auto widget { sc->tree_widget };
     sc->tab_widget->setCurrentWidget(widget);
-    widget->activateWindow();
 
     widget->View()->setCurrentIndex(index);
     widget->View()->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+
+    widget->window()->raise();
+    widget->window()->activateWindow();
 }
 
 void MainWindow::RNodeSelect(Section section, QUuid node_id)

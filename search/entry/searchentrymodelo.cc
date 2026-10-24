@@ -1,15 +1,12 @@
 #include "searchentrymodelo.h"
 
 #include "enum/entryenum.h"
-#include "global/entrypool.h"
 
 namespace search {
 EntryModelO::EntryModelO(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent)
     : EntryModel { section, header, tag_hash, parent }
 {
 }
-
-EntryModelO::~EntryModelO() { EntryPool::Instance().Recycle(list_, section_); }
 
 QVariant EntryModelO::data(const QModelIndex& index, int role) const
 {

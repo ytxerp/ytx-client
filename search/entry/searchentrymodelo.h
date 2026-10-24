@@ -27,7 +27,6 @@ class EntryModelO final : public EntryModel {
     Q_OBJECT
 public:
     explicit EntryModelO(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
-    ~EntryModelO() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -5,9 +5,9 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogO::SearchDialogO(
-    SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner, QWidget* parent)
-    : SearchDialog(sc, search_node, search_entry, parent)
+SearchDialogO::SearchDialogO(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner,
+    QUuid widget_id, QWidget* parent)
+    : SearchDialog(sc, search_node, search_entry, widget_id, parent)
     , inventory_ { inventory }
     , partner_ { partner }
 {

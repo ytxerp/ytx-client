@@ -109,6 +109,9 @@ void MainWindow::REntrySelect(Section section, QUuid node_id, QUuid entry_id)
     if (!index.isValid())
         return;
 
+    widget->window()->raise();
+    widget->window()->activateWindow();
+
     const auto target { index.siblingAtColumn(std::to_underlying(EntryEnum::kIssuedTime)) };
 
     view->setCurrentIndex(target);

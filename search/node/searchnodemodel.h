@@ -34,9 +34,6 @@ class NodeModel : public QAbstractItemModel {
 public:
     ~NodeModel() override { };
 
-public slots:
-    virtual void ROrderSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
-
 protected:
     NodeModel(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
 
@@ -49,7 +46,8 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    virtual void Search(CString& text);
+    virtual void Search(QUuid widget_id, CString& text);
+    virtual void Rebuild(const QJsonArray& array) { Q_UNUSED(array) }
 
 protected:
     const Section section_ {};

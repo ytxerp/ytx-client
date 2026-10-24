@@ -33,13 +33,10 @@ namespace search {
 class EntryModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ~EntryModel() override { };
+    ~EntryModel() override;
 
 protected:
     explicit EntryModel(Section section, const QStringList& header, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);
-
-public slots:
-    void RSearchEntry(const EntryList& list);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -53,7 +50,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 public:
-    virtual void Search(const QString& text);
+    void Search(QUuid widget_id, const QString& text);
+    void Rebuild(const QJsonArray& array);
 
 protected:
     void Reset();

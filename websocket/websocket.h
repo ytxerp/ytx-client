@@ -51,59 +51,74 @@ public:
 signals:
     void SConnectionAllow();
     void SConnectionDeny();
+    void SRemoteHostClosed();
 
     void SLoginAllow(const QString& name, const QString& expire_date);
     void SLoginDeny(int code);
+    void STreeSyncFinish();
 
     void SRegisterResult(bool result, int code);
-    void SRemoteHostClosed();
+    void SReplaceResult(bool result);
 
-    void SLeafDeleteDeny(const QJsonObject& obj);
     void SSharedConfigApply(const QJsonArray& arr);
     void SDocumentDirUpdate(Section section, const QString& document_dir);
     void SDefaultUnitUpdate(Section section, int unit);
-    void SDefaultUnitDeny();
 
     void STagApply(const QJsonObject& obj);
     void STagInsert(const QJsonObject& obj);
     void STagUpdate(const QJsonObject& obj);
     void STagDelete(const QJsonObject& obj);
 
-    void SReplaceResult(bool result);
+    void SSettlementInsert(const QJsonObject& obj);
+    void SSettlementRecall(const QJsonObject& obj);
+    void SSettlementUpdate(const QJsonObject& obj);
+
+    void SOperationDeny();
+    void SPermissionDeny();
+    void SDefaultUnitDeny();
+    void SLeafDeleteDeny(const QJsonObject& obj);
+
+    void SAccountName(const QString& name);
+    void SAccountUsername(const QJsonObject& obj);
+    void SAccountRoleUpdate();
+
     void SOrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
     void SStatementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
     void SStatementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
     void SStatementTertiary(Section section, QUuid widget_id, const QJsonArray& array);
     void SSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
     void SSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
-    void SSettlementInsert(const QJsonObject& obj);
-    void SSettlementRecall(const QJsonObject& obj);
-    void SSettlementUpdate(const QJsonObject& obj);
     void SSettlementView(Section section, QUuid widget_id, const QJsonArray& array);
+    void SOrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
+    void SEntrySearch(Section section, QUuid widget_id, const QJsonArray& entry_array);
+
     void SOrderRelease(Section section, QUuid node_id, int version);
     void SOrderRecall(Section section, QUuid node_id, int version);
     void SOrderSave(Section section, QUuid node_id, int version);
-    void SOperationDeny();
-    void SPermissionDeny();
+    void SNodeSelect(Section section, QUuid node_id);
+    void SNodeLocate(Section section, QUuid node_id);
+    void SEntrySelect(Section section, QUuid node_id, QUuid entry_id);
+
     void SLeafDeleteLockedDeny(Section section, QUuid node_id);
     void SOrderPermissionDeny(Section section, QUuid widget_id);
     void SSettlementPermissionDeny(Section section, QUuid widget_id);
-    void SNodeSelect(Section section, QUuid node_id);
-    void SEntrySelect(Section section, QUuid node_id, QUuid entry_id);
-    void STreeSyncFinish();
-    void SAccountName(const QString& name);
-    void SAccountUsername(const QJsonObject& obj);
+
+    // Targeted replies, routed by widget_id to the dialog that sent the request.
+    // These dialogs are stored in the shared MainWindow::widget_hash_ (not tied
+    // to any section), so no section is carried.
+    // If the dialog has already been closed, the receiver should ignore the reply.
     void SWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array);
     void SAuditLogAck(QUuid widget_id, const QJsonArray& array);
-    void SAccountRoleUpdate();
+
+    // Targeted replies, routed by widget_id to the dialog that sent the request.
+    // Each dialog is stored in its own widget_hash_ and the section is implied
+    // by the signal itself (Inventory / Partner / Finance), so it is not carried.
+    // If the dialog has already been closed, the receiver should ignore the reply.
     void SInventoryHeatAck(QUuid widget_id, const QJsonArray& array);
     void SPartnerHeatAck(QUuid widget_id, const QJsonArray& array);
     void SBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
     void SIncomeStatementAck(QUuid widget_id, const QJsonObject& obj);
     void SCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj);
-
-    // send to SearchNodeModel
-    void SOrderSearch(const QJsonObject& obj);
 
 private slots:
     void RConnected();

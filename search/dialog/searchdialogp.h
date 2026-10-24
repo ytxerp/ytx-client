@@ -25,7 +25,8 @@ class SearchDialogP final : public SearchDialog {
     Q_OBJECT
 
 public:
-    SearchDialogP(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, QWidget* parent = nullptr);
+    SearchDialogP(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, QUuid widget_id,
+        QWidget* parent = nullptr);
 
 private:
     void TreeViewDelegate(QTableView* view) override;

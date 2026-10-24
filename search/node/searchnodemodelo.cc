@@ -16,20 +16,20 @@ NodeModelO::NodeModelO(Section section, const QStringList& header, CTreeModel* t
 {
 }
 
-void NodeModelO::ROrderSearch(const QJsonObject& obj)
+NodeModelO::~NodeModelO() { NodePool::Instance().Recycle(list_, section_); }
+
+void NodeModelO::Rebuild(const QJsonArray& array)
 {
     // 1. Prepare temporary list to store nodes
-    QList<Node*> temp_list {};
+    QList<Node*> new_list {};
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-
-    for (const QJsonValue& val : node_array) {
+    for (const QJsonValue& val : array) {
         const QJsonObject node_obj { val.toObject() };
 
         Node* node { NodePool::Instance().Allocate(section_) };
         node->ReadJson(node_obj);
 
-        temp_list.append(node);
+        new_list.append(node);
     }
 
     // 2. Update model in one step
@@ -41,7 +41,7 @@ void NodeModelO::ROrderSearch(const QJsonObject& obj)
     }
 
     // Move new nodes into model
-    list_ = std::move(temp_list);
+    list_ = std::move(new_list);
 
     endResetModel();
 }
@@ -137,7 +137,7 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void NodeModelO::Search(CString& text)
+void NodeModelO::Search(QUuid widget_id, CString& text)
 {
     if (text.trimmed().isEmpty()) {
         ClearModel();
@@ -149,13 +149,13 @@ void NodeModelO::Search(CString& text)
 
     // Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kOrderTagSearch, JsonGen::OrderTagSearch(section_, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kOrderTagSearch, JsonGen::OrderTagSearch(section_, widget_id, query.tags));
         return;
     }
 
     // Send order partner name search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kOrderNameSearch, JsonGen::OrderNameSearch(section_, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kOrderNameSearch, JsonGen::OrderNameSearch(section_, widget_id, query.text));
         return;
     }
 
