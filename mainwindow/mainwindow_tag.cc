@@ -131,6 +131,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     const auto* node { static_cast<Node*>(index.internalPointer()) };
 
     const auto& tag_hash { sc_->tag_hash };
+    const Section section { sc_->section };
 
     auto* menu = new QMenu(this);
 
@@ -151,11 +152,11 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
 
-            connect(tag_action, &QAction::triggered, this, [this, is_checked, model, tag, node]() {
+            connect(tag_action, &QAction::triggered, this, [this, is_checked, model, tag, node, section]() {
                 if (is_checked) {
-                    RRemoveNodeTag(tag, model, node);
+                    RRemoveNodeTag(section, tag, model, node);
                 } else {
-                    RInsertNodeTag(tag, model, node);
+                    RInsertNodeTag(section, tag, model, node);
                 }
             });
         }
@@ -178,7 +179,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Node* node)
+void MainWindow::RInsertNodeTag(Section section, const tag::Row& tag, TreeModel* model, const Node* node)
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -191,13 +192,13 @@ void MainWindow::RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Nod
         return;
     }
 
-    const int column { node::TagColumn(start_) };
+    const int column { node::TagColumn(section) };
     const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveNodeTag(const tag::Row& tag, TreeModel* model, const Node* node)
+void MainWindow::RRemoveNodeTag(Section section, const tag::Row& tag, TreeModel* model, const Node* node)
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -210,7 +211,7 @@ void MainWindow::RRemoveNodeTag(const tag::Row& tag, TreeModel* model, const Nod
         return;
     }
 
-    const int column { node::TagColumn(start_) };
+    const int column { node::TagColumn(section) };
     const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
@@ -232,6 +233,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     const auto* entry { model->GetEntry(index) };
 
     const auto& tag_hash { sc_->tag_hash };
+    const Section section { sc_->section };
 
     auto* menu = new QMenu(this);
     auto* tag_menu = menu->addMenu(tr("Tags"));
@@ -250,11 +252,11 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
 
-            connect(tag_action, &QAction::triggered, this, [this, is_checked, entry, model, tag]() {
+            connect(tag_action, &QAction::triggered, this, [this, is_checked, entry, model, tag, section]() {
                 if (is_checked) {
-                    RRemoveEntryTag(tag, model, entry);
+                    RRemoveEntryTag(section, tag, model, entry);
                 } else {
-                    RInsertEntryTag(tag, model, entry);
+                    RInsertEntryTag(section, tag, model, entry);
                 }
             });
         }
@@ -309,7 +311,7 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row& tag, bool check
     return checked ? it->icon_checked : it->icon;
 }
 
-void MainWindow::RInsertEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry)
+void MainWindow::RInsertEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry)
 {
     qDebug() << Q_FUNC_INFO;
     auto list { entry->tag };
@@ -321,13 +323,13 @@ void MainWindow::RInsertEntryTag(const tag::Row& tag, TableModel* model, const E
         return;
     }
 
-    const int column { entry::TagColumn(start_) };
+    const int column { entry::TagColumn(section) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry)
+void MainWindow::RRemoveEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry)
 {
     qDebug() << Q_FUNC_INFO;
     auto list { entry->tag };
@@ -339,7 +341,7 @@ void MainWindow::RRemoveEntryTag(const tag::Row& tag, TableModel* model, const E
         return;
     }
 
-    const int column { entry::TagColumn(start_) };
+    const int column { entry::TagColumn(section) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);

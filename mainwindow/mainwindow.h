@@ -161,8 +161,8 @@ private slots:
     void RStatementTertiary(Section section, QUuid widget_id, const QJsonArray& array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertNodeTag(const tag::Row& tag, TreeModel* model, const Node* node);
-    void RRemoveNodeTag(const tag::Row& tag, TreeModel* model, const Node* node);
+    void RInsertNodeTag(Section section, const tag::Row& tag, TreeModel* model, const Node* node);
+    void RRemoveNodeTag(Section section, const tag::Row& tag, TreeModel* model, const Node* node);
 
     void RTreeViewDoubleClicked(const QModelIndex& index);
     void ROpenSettlementSecondaryWidget(const QModelIndex& index);
@@ -207,8 +207,8 @@ private slots:
     void RDeleteTag(const QJsonObject& obj);
 
     void RTableViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry);
-    void RRemoveEntryTag(const tag::Row& tag, TableModel* model, const Entry* entry);
+    void RInsertEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry);
+    void RRemoveEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry);
 
     void RApplySharedConfig(const QJsonArray& arr);
     void RUpdateDocumentDir(Section section, const QString& document_dir);
