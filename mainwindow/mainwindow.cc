@@ -140,7 +140,7 @@ void MainWindow::LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid
 
 void MainWindow::InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index)
 {
-    switch (sc->info.section) {
+    switch (sc->section) {
     case Section::kSale:
     case Section::kPurchase:
         InsertNodeO(sc, parent_index);
@@ -535,7 +535,7 @@ void MainWindow::on_actionRename_triggered()
         return;
     }
 
-    switch (sc_->info.section) {
+    switch (sc_->section) {
     case Section::kSale:
     case Section::kPurchase:
         EditNameO();
@@ -573,7 +573,7 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto model { sc_->tree_model };
 
-    auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, nullptr) };
+    auto* dialog { new Preferences(sc_, model, app_config_, nullptr) };
 
     utils::ManageDialog(widget_hash_, dialog);
     dialog->setModal(true);

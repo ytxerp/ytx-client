@@ -73,7 +73,7 @@ void MainWindow::CreateSection(const SectionContext* sc, CString& name) const
     auto* tree_model { sc->tree_model.data() };
     auto* entry_hub { sc->entry_hub.data() };
 
-    const Section section { sc->info.section };
+    const Section section { sc->section };
 
     SetTreeView(view, section);
 
@@ -155,7 +155,7 @@ void MainWindow::InitContextFinance()
     auto& tree_view { sc_f_.tree_view };
     auto& tree_widget { sc_f_.tree_widget };
 
-    info.section = Section::kFinance;
+    sc_f_.section = Section::kFinance;
 
     for (NodeUnit c : {
              NodeUnit::USD,
@@ -240,7 +240,7 @@ void MainWindow::InitContextFinance()
     info.cash_kind_model->Rebuild(info.cash_kind_map);
 
     entry_hub = new EntryHubF(Section::kFinance, this);
-    tree_model = new TreeModelF(info, app_config_.separator, this);
+    tree_model = new TreeModelF(Section::kFinance, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kFinance, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kFinance, entry_hub);
@@ -263,7 +263,7 @@ void MainWindow::InitContextInventory()
     auto& tree_view { sc_i_.tree_view };
     auto& tree_widget { sc_i_.tree_widget };
 
-    info.section = Section::kInventory;
+    sc_i_.section = Section::kInventory;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::IItem), tr("ITM", "Item"));
     info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
@@ -281,7 +281,7 @@ void MainWindow::InitContextInventory()
     info.unit_model->Rebuild(info.unit_map);
 
     entry_hub = new EntryHubI(Section::kInventory, this);
-    tree_model = new TreeModelI(info, app_config_.separator, this);
+    tree_model = new TreeModelI(Section::kInventory, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
@@ -306,7 +306,7 @@ void MainWindow::InitContextTask()
     auto& tree_view { sc_t_.tree_view };
     auto& tree_widget { sc_t_.tree_widget };
 
-    info.section = Section::kTask;
+    sc_t_.section = Section::kTask;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::TTarget), tr("TGT", "Target"));
     info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
@@ -325,7 +325,7 @@ void MainWindow::InitContextTask()
     info.unit_model->Rebuild(info.unit_map);
 
     entry_hub = new EntryHubT(Section::kTask, this);
-    tree_model = new TreeModelT(info, app_config_.separator, this);
+    tree_model = new TreeModelT(Section::kTask, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kTask, entry_hub);
@@ -348,7 +348,7 @@ void MainWindow::InitContextPartner()
     auto& tree_widget { sc_p_.tree_widget };
     auto& section_config { sc_p_.section_config };
 
-    info.section = Section::kPartner;
+    sc_p_.section = Section::kPartner;
 
     info.unit_map.insert(std::to_underlying(NodeUnit::PCustomer), tr("CUS", "Customer"));
     info.unit_map.insert(std::to_underlying(NodeUnit::PEmployee), tr("EMP", "Employee"));
@@ -364,7 +364,7 @@ void MainWindow::InitContextPartner()
     info.unit_model->Rebuild(info.unit_map);
 
     entry_hub = new EntryHubP(Section::kPartner, this);
-    tree_model = new TreeModelP(info, app_config_.separator, this);
+    tree_model = new TreeModelP(Section::kPartner, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
@@ -388,7 +388,7 @@ void MainWindow::InitContextSale()
     auto& tree_view { sc_sale_.tree_view };
     auto& tree_widget { sc_sale_.tree_widget };
 
-    info.section = Section::kSale;
+    sc_sale_.section = Section::kSale;
 
     info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));
@@ -408,7 +408,7 @@ void MainWindow::InitContextSale()
     info.unit_model->Rebuild(info.unit_map);
 
     entry_hub = new EntryHubO(Section::kSale, this);
-    tree_model = new TreeModelO(info, app_config_.separator, this);
+    tree_model = new TreeModelO(Section::kSale, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kSale, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kSale, entry_hub);
@@ -427,7 +427,7 @@ void MainWindow::InitContextPurchase()
     auto& tree_view { sc_purchase_.tree_view };
     auto& tree_widget { sc_purchase_.tree_widget };
 
-    info.section = Section::kPurchase;
+    sc_purchase_.section = Section::kPurchase;
 
     info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));
@@ -447,7 +447,7 @@ void MainWindow::InitContextPurchase()
     info.unit_model->Rebuild(info.unit_map);
 
     entry_hub = new EntryHubO(Section::kPurchase, this);
-    tree_model = new TreeModelO(info, app_config_.separator, this);
+    tree_model = new TreeModelO(Section::kPurchase, info.node_header, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPurchase, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPurchase, entry_hub);

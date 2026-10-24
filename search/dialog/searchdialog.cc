@@ -20,7 +20,7 @@ SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, s
     , config_ { sc->section_config }
     , info_ { sc->info }
     , tag_icon_hash_ { sc->tag_icon_hash }
-    , section_ { sc->info.section }
+    , section_ { sc->section }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);

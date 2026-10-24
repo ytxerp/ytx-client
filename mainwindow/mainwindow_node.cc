@@ -12,7 +12,7 @@
 
 void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_index)
 {
-    const Section section { sc->info.section };
+    const Section section { sc->section };
 
     Q_ASSERT_X(section != Section::kSale && section != Section::kPurchase, Q_FUNC_INFO, "InsertNodeFIPT must not be used in Sale or Purchase section");
 
@@ -114,7 +114,7 @@ void MainWindow::RMessage(QMessageBox::Icon icon, const QString& message)
 
 void MainWindow::EditNameFIPT()
 {
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     Q_ASSERT_X(section != Section::kSale && section != Section::kPurchase, Q_FUNC_INFO, "EditNameFIPT must not be used in Sale or Purchase section");
     Q_ASSERT_X(sc_ && sc_->tree_widget && sc_->tree_model, Q_FUNC_INFO, "SectionContext is not fully initialized");
@@ -159,7 +159,7 @@ void MainWindow::on_actionClearColor_triggered()
         return;
 
     auto model { sc_->tree_model };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     const int color_column { node::ColorColumn(section) };
     const QModelIndex color_index { index.siblingAtColumn(color_column) };

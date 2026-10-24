@@ -28,6 +28,8 @@
 #include "widgetcontex.h"
 
 struct SectionContext {
+    Section section {};
+
     QPointer<TreeWidget> tree_widget {};
     QPointer<EntryHub> entry_hub {};
     QPointer<TreeModel> tree_model {};

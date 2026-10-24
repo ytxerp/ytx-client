@@ -56,7 +56,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 // Note: Entry selection is only needed when entry_id is valid.
 void MainWindow::ShowLeafWidget(QUuid node_id, QUuid entry_id)
 {
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     if (sc_->widget_hash.contains(node_id)) {
         LocateLeafWidget(sc_, node_id, entry_id);
@@ -88,7 +88,7 @@ void MainWindow::tabWidget_currentChanged()
     if (!widget)
         return;
 
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_tree_o { IsTreeWidgetO(widget) };
@@ -139,7 +139,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
     const auto id { tab_bar->tabData(index).toUuid() };
 
     if (sc_->widget_hash.contains(id))
-        RNodeLocate(sc_->info.section, id);
+        RNodeLocate(sc_->section, id);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedFIPT(int index)
@@ -198,7 +198,7 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
 
     const int row { index.row() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
     const int linked_node_column { entry::LinkedNodeColumn(section) };
 
     const auto linked_node_id { index.sibling(row, linked_node_column).data().toUuid() };
@@ -244,7 +244,7 @@ void MainWindow::UpdateLeafNodeName(QUuid node_id, const QString& name)
 
     const QSet<QUuid> nodes { node_id };
 
-    if (sc_->info.section == Section::kPartner) {
+    if (sc_->section == Section::kPartner) {
         UpdatePartnerReference(&sc_sale_, nodes, false);
         UpdatePartnerReference(&sc_purchase_, nodes, false);
     }
@@ -277,7 +277,7 @@ void MainWindow::UpdateBranchNodeName(QUuid node_id)
     if (auto* node = model->GetNode(node_id)) {
         const QSet<QUuid> nodes { LeafChildrenId(node) };
 
-        if (sc_->info.section == Section::kPartner) {
+        if (sc_->section == Section::kPartner) {
             UpdatePartnerReference(&sc_sale_, nodes, true);
             UpdatePartnerReference(&sc_purchase_, nodes, true);
         }

@@ -10,7 +10,7 @@ void MainWindow::on_actionStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     Q_ASSERT(IsOrderSection(section));
@@ -89,7 +89,7 @@ void MainWindow::RShowSecondaryStatement(QUuid partner_id, utils::DateRange rang
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, partner_name, range, section, unit, this) };
 
@@ -160,7 +160,7 @@ void MainWindow::RShowTertiaryStatement(QUuid partner_id, utils::DateRange range
 {
     const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     auto* widget { new StatementTertiaryWidget(
         header_info_.statement_tertiary, widget_id, partner_id, range, partner_name, app_config_.company_name, section, unit, this) };

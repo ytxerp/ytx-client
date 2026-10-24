@@ -176,7 +176,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kDocument), document);
 }
 
-void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
+void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section_config, Section section) const
 {
     auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, QString(), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_r);
@@ -187,23 +187,24 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind_r { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_r);
 
-    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
+    auto* amount { new AmountR(
+        section_config.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount);
 
-    auto* quantity_r { new DoubleNoneZeroR(section.quantity_decimal, string_const::kFourDigits, tree_view) };
+    auto* quantity_r { new DoubleNoneZeroR(section_config.quantity_decimal, string_const::kFourDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity_r);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity_r);
 
     auto* name_r { new NodeNameR(sc_p_.tree_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployeeId), name_r);
 
-    auto* issued_time { new IssuedTimeR(section.date_format, tree_view) };
+    auto* issued_time { new IssuedTimeR(section_config.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
     auto* status_r { new StatusR(std::to_underlying(OrderStatus::kReleased), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);
 
-    const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
+    const auto& sc { section == Section::kSale ? sc_sale_ : sc_purchase_ };
     auto* tag { new TagDelegate(sc.tag_icon_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag);
 
@@ -368,7 +369,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsLocked), lock_status);
 }
 
-void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const
+void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config, Section section) const
 {
     auto tree_model_i { sc_i_.tree_model };
     auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem) };
@@ -389,7 +390,7 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), amount);
 
-    const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
+    const auto& sc { section == Section::kSale ? sc_sale_ : sc_purchase_ };
     auto* tag { new TagDelegate(sc.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag);
 

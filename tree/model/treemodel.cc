@@ -12,10 +12,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
+TreeModel::TreeModel(Section section, const QStringList& header, CString& separator, QObject* parent)
     : QAbstractItemModel(parent)
-    , section_ { info.section }
-    , header_ { info.node_header }
+    , section_ { section }
+    , header_ { header }
     , separator_ { separator }
 {
     InitRoot();

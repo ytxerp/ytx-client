@@ -120,8 +120,8 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         TreeDelegateI(sc_i_.tree_view, sc_i_.info, sc_i_.section_config);
         TreeDelegateP(sc_p_.tree_view, sc_p_.info, sc_p_.section_config);
         TreeDelegateT(sc_t_.tree_view, sc_t_.info, sc_t_.section_config);
-        TreeDelegateO(sc_sale_.tree_view, sc_sale_.info, sc_sale_.section_config);
-        TreeDelegateO(sc_purchase_.tree_view, sc_purchase_.info, sc_purchase_.section_config);
+        TreeDelegateO(sc_sale_.tree_view, sc_sale_.info, sc_sale_.section_config, Section::kSale);
+        TreeDelegateO(sc_purchase_.tree_view, sc_purchase_.info, sc_purchase_.section_config, Section::kPurchase);
     }
 
     {

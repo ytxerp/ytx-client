@@ -16,7 +16,7 @@ void MainWindow::on_actionTags_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new tag::Model(sc_->info.section, header_info_.tag, this) };
+    auto* model { new tag::Model(sc_->section, header_info_.tag, this) };
 
     auto* dialog { new TagDialog(model) };
 
@@ -266,7 +266,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     // manage_action->setIcon(QIcon(":/icons/settings.png"));
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
 
-    if (IsDoubleEntry(sc_->info.section)) {
+    if (IsDoubleEntry(sc_->section)) {
         menu->addSeparator();
         menu->addAction(ui->actionJumpEntry);
     }

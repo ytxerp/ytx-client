@@ -27,7 +27,7 @@ class TreeModelO final : public TreeModel {
     Q_OBJECT
 
 public:
-    TreeModelO(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
+    TreeModelO(Section section, const QStringList& header, CString& separator, QObject* parent = nullptr);
     ~TreeModelO() override = default;
 
 public:

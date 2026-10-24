@@ -9,11 +9,11 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafDeleteDialog::LeafDeleteDialog(CSectionInfo& info, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent)
+LeafDeleteDialog::LeafDeleteDialog(Section section, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafDeleteDialog)
     , node_id_ { node->id }
-    , section_ { info.section }
+    , section_ { section }
     , node_ { node }
     , internal_ { obj.value(node_ref::kInternal).toBool() }
     , sale_ { obj.value(node_ref::kSale).toBool() }
@@ -21,12 +21,11 @@ LeafDeleteDialog::LeafDeleteDialog(CSectionInfo& info, CJsonObject& obj, TreeMod
     , partner_ { obj.value(node_ref::kPartner).toBool() }
     , settlement_ { obj.value(node_ref::kSettlement).toBool() }
     , model_ { model }
-    , info_ { info }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniData(info.section);
+    IniData(section);
     IniOptionGroup();
     IniConnect();
 }

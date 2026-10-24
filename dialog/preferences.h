@@ -23,7 +23,7 @@
 #include <QDialog>
 
 #include "component/config.h"
-#include "component/sectioninfo.h"
+#include "component/sectioncontex.h"
 #include "component/using.h"
 #include "tree/itemmodel.h"
 #include "tree/model/treemodel.h"
@@ -36,7 +36,7 @@ class Preferences final : public QDialog {
     Q_OBJECT
 
 public:
-    Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app, CSharedConfig& shared, CSectionConfig& section, QWidget* parent = nullptr);
+    Preferences(SectionContext* sc, CTreeModel* model, CAppConfig& app, QWidget* parent = nullptr);
     ~Preferences() override;
 
 signals:

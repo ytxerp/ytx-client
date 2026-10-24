@@ -3,8 +3,8 @@
 #include "finance/finance_role.h"
 #include "utils/nodeutils.h"
 
-TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)
-    : TreeModel(info, separator, parent)
+TreeModelF::TreeModelF(Section section, const QStringList& header, CString& separator, QObject* parent)
+    : TreeModel(section, header, separator, parent)
 {
     leaf_model_ = new ItemModel(this);
 }

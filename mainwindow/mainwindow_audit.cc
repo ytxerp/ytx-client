@@ -8,7 +8,7 @@ void MainWindow::on_actionAuditLog_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     const QString title { tr("Audit") + QStringLiteral(" - ") + audit_info_.section_map.value(std::to_underlying(section)) };
     auto* dialog { new AuditDialog(title, header_info_.audit, widget_id, section) };

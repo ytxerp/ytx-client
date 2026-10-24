@@ -19,7 +19,7 @@ void MainWindow::EditNameO()
         return;
 
     auto model { sc_->tree_model };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     auto* dialog { new EditNodeNameO(node->name, nullptr) };
 
@@ -38,7 +38,7 @@ void MainWindow::on_actionNewBranch_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
     if (section != Section::kSale && section != Section::kPurchase)
         return;
 
@@ -165,7 +165,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     // Extract frequently used shortcuts
     const auto& section_config { sc->section_config };
     const auto& info { sc->info };
-    const Section section { info.section };
+    const Section section { sc->section };
 
     auto tab_widget { sc->tab_widget };
     auto* tab_bar { tab_widget->tabBar() };
@@ -208,7 +208,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     auto* view { widget->View() };
     TableConnectO(table_model, widget);
     SetTableView(view, section, std::to_underlying(EntryEnumO::kDescription));
-    TableDelegateO(view, info, section_config);
+    TableDelegateO(view, section_config, section);
 
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
@@ -225,7 +225,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
     const auto& section_config { sc->section_config };
     const auto& info { sc->info };
 
-    const Section section { info.section };
+    const Section section { sc->section };
     Q_ASSERT(IsOrderSection(section));
 
     auto* tab_widget { sc->tab_widget.data() };
@@ -277,9 +277,9 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
 
     // Configure view
     auto* view = widget->View();
-    SetTableView(view, sc->info.section, std::to_underlying(EntryEnumO::kDescription));
+    SetTableView(view, section, std::to_underlying(EntryEnumO::kDescription));
     TableConnectO(table_model, widget);
-    TableDelegateO(view, sc->info, section_config);
+    TableDelegateO(view, section_config, section);
 
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);

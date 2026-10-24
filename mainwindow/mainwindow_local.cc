@@ -128,7 +128,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section_config) const
 
     current_section = section_config;
 
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
     const QString text { kSectionString.value(section) };
     section_settings_->beginGroup(text);
 

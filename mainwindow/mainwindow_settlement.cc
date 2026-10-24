@@ -9,7 +9,7 @@ void MainWindow::on_actionSettlement_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     Q_ASSERT(IsOrderSection(section));
 
@@ -38,7 +38,7 @@ void MainWindow::on_actionSettlement_triggered()
 void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model)
 {
     const QUuid widget_id { QUuid::createUuidV7() };
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     Q_ASSERT(IsOrderSection(section));
 

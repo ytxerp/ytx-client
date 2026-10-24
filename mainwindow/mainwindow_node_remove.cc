@@ -19,7 +19,7 @@ void MainWindow::DeleteNode()
     if (node->sync_state == SyncState::kDeleting)
         return;
 
-    const Section section { sc_->info.section };
+    const Section section { sc_->section };
 
     if (section == Section::kSale || section == Section::kPurchase) {
         auto* d_node { static_cast<NodeO*>(node) };
@@ -41,7 +41,7 @@ void MainWindow::DeleteNode()
         DeleteBranch(node);
         break;
     case NodeKind::kLeaf: {
-        const auto message { JsonGen::LeafDeleteCheck(sc_->info.section, node->id, node->version) };
+        const auto message { JsonGen::LeafDeleteCheck(sc_->section, node->id, node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kLeafDeleteCheck, message);
         break;
     }
@@ -60,7 +60,7 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     if (!node || !node->IsValid())
         return;
 
-    auto* dialog { new LeafDeleteDialog(sc->info, obj, model, node, nullptr) };
+    auto* dialog { new LeafDeleteDialog(sc->section, obj, model, node, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
@@ -100,7 +100,7 @@ void MainWindow::DeleteBranch(Node* node)
             if (!node || !node->IsValid())
                 return;
 
-            const auto message { JsonGen::BranchDelete(sc_->info.section, node->id, node->parent->id, node->version) };
+            const auto message { JsonGen::BranchDelete(sc_->section, node->id, node->parent->id, node->version) };
             WebSocket::Instance()->SendMessage(WsKey::kBranchDelete, message);
         }
     });

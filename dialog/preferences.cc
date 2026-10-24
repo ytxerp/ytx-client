@@ -12,22 +12,22 @@
 #include "component/signalblocker.h"
 #include "ui_preferences.h"
 
-Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app, CSharedConfig& shared, CSectionConfig& section, QWidget* parent)
+Preferences::Preferences(SectionContext* sc, CTreeModel* model, CAppConfig& app, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::Preferences)
     , app_ { app }
-    , section_ { section }
-    , shared_ { shared }
+    , section_ { sc->section_config }
+    , shared_ { sc->shared_config }
     , model_ { model }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
     InitStringList();
-    InitDialog(info.unit_model, info.section);
+    InitDialog(sc->info.unit_model, sc->section);
     InitConnect();
     InitData();
-    InitText(info.section);
+    InitText(sc->section);
 }
 
 Preferences::~Preferences() { delete ui; }

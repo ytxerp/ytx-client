@@ -7,8 +7,8 @@
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
 
-TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
-    : TreeModel(info, separator, parent)
+TreeModelO::TreeModelO(Section section, const QStringList& header, CString& separator, QObject* parent)
+    : TreeModel(section, header, separator, parent)
 {
 }
 

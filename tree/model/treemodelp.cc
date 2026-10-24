@@ -2,8 +2,8 @@
 
 #include "utils/nodeutils.h"
 
-TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
-    : TreeModel(info, separator, parent)
+TreeModelP::TreeModelP(Section section, const QStringList& header, CString& separator, QObject* parent)
+    : TreeModel(section, header, separator, parent)
 {
     leaf_model_ = new ItemModel(this);
 }

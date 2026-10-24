@@ -30,7 +30,7 @@ void MainWindow::on_actionSearch_triggered()
     SearchDialog* dialog {};
 
     const auto& info { sc_->info };
-    const Section section { info.section };
+    const Section section { sc_->section };
 
     switch (section) {
     case Section::kFinance:

@@ -23,12 +23,9 @@
 #include <QPointer>
 #include <QStringList>
 
-#include "enum/section.h"
 #include "table/unitmodel.h"
 
 struct SectionInfo {
-    Section section {};
-
     QStringList node_header {};
     QStringList entry_header {};
     QStringList full_entry_header {};

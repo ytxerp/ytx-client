@@ -242,7 +242,7 @@ private:
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
     void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
-    void TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const;
+    void TableDelegateO(QTableView* table_view, CSectionConfig& config, Section section) const;
 
     void SetTableView(QTableView* view, Section section, int stretch_column) const;
 
@@ -290,7 +290,7 @@ private:
     void TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
-    void TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
+    void TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section_config, Section section) const;
 
     void TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;

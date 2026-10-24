@@ -57,13 +57,13 @@ void MainWindow::UpdateSharedConfig(CSharedConfig& shared)
         return;
 
     if (current_shared.document_dir != shared.document_dir) {
-        const auto message { JsonGen::DocumentDir(sc_->info.section, shared.document_dir) };
+        const auto message { JsonGen::DocumentDir(sc_->section, shared.document_dir) };
         WebSocket::Instance()->SendMessage(WsKey::kDocumentDirUpdate, message);
         current_shared.document_dir = shared.document_dir;
     }
 
     if (current_shared.default_unit != shared.default_unit) {
-        const auto message { JsonGen::DefaultUnit(sc_->info.section, shared.default_unit) };
+        const auto message { JsonGen::DefaultUnit(sc_->section, shared.default_unit) };
         WebSocket::Instance()->SendMessage(WsKey::kDefaultUnitUpdate, message);
     }
 }

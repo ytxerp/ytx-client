@@ -27,6 +27,7 @@
 
 #include "component/constant.h"
 #include "component/sectioninfo.h"
+#include "enum/section.h"
 #include "tree/includesetfiltermodel.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
@@ -42,7 +43,7 @@ public:
     ~TreeModel() override;
 
 protected:
-    explicit TreeModel(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
+    explicit TreeModel(Section section, const QStringList& header, CString& separator, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation

@@ -28,7 +28,7 @@ void MainWindow::on_actionAppendEntry_triggered()
     if (!model->insertRows(new_row, 1))
         return;
 
-    const int issued_time_col { entry::IssuedTimeColumn(sc_->info.section) };
+    const int issued_time_col { entry::IssuedTimeColumn(sc_->section) };
     const QModelIndex target_index { model->index(new_row, issued_time_col) };
 
     if (!target_index.isValid())
@@ -129,7 +129,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
 
-    const Section section { info.section };
+    const Section section { sc->section };
     Q_ASSERT(!IsOrderSection(section));
 
     // The model is parented to the LeafWidgetFIPT inside its constructor.
