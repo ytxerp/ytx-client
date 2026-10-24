@@ -126,22 +126,26 @@ void utils::ResetSectionContext(SectionContext& sc)
     Q_ASSERT(sc.tree_model);
 
     {
-        auto tab_widget { sc.tab_widget };
-        auto* tab_bar { tab_widget->tabBar() };
+        auto* tab_widget { sc.tab_widget.data() };
+        auto* tree_widget { sc.tree_widget.data() };
+
         const int count { tab_widget->count() };
+        const int tree_index { tab_widget->indexOf(tree_widget) };
 
         tab_widget->setUpdatesEnabled(false);
 
+        if (tree_index >= 0)
+            tab_widget->setCurrentIndex(tree_index);
+
         for (int index = count - 1; index >= 0; --index) {
-            const auto id { tab_bar->tabData(index).toUuid() };
-            if (!id.isNull())
+            if (tab_widget->widget(index) != tree_widget)
                 tab_widget->removeTab(index);
         }
 
         tab_widget->setUpdatesEnabled(true);
     }
 
-    utils::CloseWidgets(sc.widget_hash);
+    utils::DeleteWidgets(sc.widget_hash);
 
     sc.tree_widget->Reset();
     sc.tree_model->Reset();

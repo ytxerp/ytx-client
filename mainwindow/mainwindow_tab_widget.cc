@@ -145,7 +145,7 @@ void MainWindow::tabWidget_tabCloseRequestedFIPT(int index)
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
-    utils::CloseWidget(sc_->widget_hash, node_id);
+    utils::DeleteWidget(sc_->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -177,7 +177,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
             widget->SaveOrder();
     }
 
-    utils::CloseWidget(sc_->widget_hash, node_id);
+    utils::DeleteWidget(sc_->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 

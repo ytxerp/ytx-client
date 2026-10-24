@@ -170,7 +170,7 @@ void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
 
-    utils::CloseWidgets(widget_hash_);
+    utils::DeleteWidgets(widget_hash_);
 
     {
         utils::ResetSectionContext(sc_f_);
@@ -196,13 +196,13 @@ void MainWindow::RCleanUp()
     FlushCaches();
     WriteConfig();
 
-    utils::CloseWidgets(widget_hash_);
-    utils::CloseWidgets(sc_f_.widget_hash);
-    utils::CloseWidgets(sc_i_.widget_hash);
-    utils::CloseWidgets(sc_p_.widget_hash);
-    utils::CloseWidgets(sc_t_.widget_hash);
-    utils::CloseWidgets(sc_sale_.widget_hash);
-    utils::CloseWidgets(sc_purchase_.widget_hash);
+    utils::DeleteWidgets(widget_hash_);
+    utils::DeleteWidgets(sc_f_.widget_hash);
+    utils::DeleteWidgets(sc_i_.widget_hash);
+    utils::DeleteWidgets(sc_p_.widget_hash);
+    utils::DeleteWidgets(sc_t_.widget_hash);
+    utils::DeleteWidgets(sc_sale_.widget_hash);
+    utils::DeleteWidgets(sc_purchase_.widget_hash);
 
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 }
@@ -240,7 +240,7 @@ void MainWindow::RFreeWidget(Section section, QUuid node_id)
 {
     auto* sc { GetSectionContext(section) };
 
-    utils::CloseWidget(sc->widget_hash, node_id);
+    utils::DeleteWidget(sc->widget_hash, node_id);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
