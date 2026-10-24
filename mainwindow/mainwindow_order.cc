@@ -223,7 +223,6 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
 
     // Extract frequently used shortcuts
     const auto& section_config { sc->section_config };
-    const auto& info { sc->info };
 
     const Section section { sc->section };
     Q_ASSERT(IsOrderSection(section));
