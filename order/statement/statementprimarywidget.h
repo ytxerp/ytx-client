@@ -40,7 +40,7 @@ signals:
     void SShowSecondaryStatement(QUuid partner_id, utils::DateRange range, int unit);
 
 public:
-    StatementPrimaryWidget(const QStringList& header, QUuid widget_id, Section section, QWidget* parent = nullptr);
+    StatementPrimaryWidget(Section section, QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
     ~StatementPrimaryWidget() override;
 
     QTableView* DataView() const;

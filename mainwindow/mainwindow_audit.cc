@@ -11,7 +11,7 @@ void MainWindow::on_actionAuditLog_triggered()
     const Section section { sc_->section };
 
     const QString title { tr("Audit") + QStringLiteral(" - ") + audit_info_.section_map.value(std::to_underlying(section)) };
-    auto* dialog { new AuditDialog(title, header_info_.audit, widget_id, section) };
+    auto* dialog { new AuditDialog(section, widget_id, header_info_.audit, title) };
 
     auto* data_view { dialog->DataView() };
     auto* filter_view { dialog->FilterView() };

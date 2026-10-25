@@ -23,7 +23,6 @@
 #include <QTimer>
 #include <QWidget>
 
-#include "component/using.h"
 #include "delegate/readonly/doublenonezeror.h"
 #include "enum/section.h"
 #include "settlement_view_model.h"
@@ -39,7 +38,7 @@ class SettlementViewWidget final : public QWidget {
 
 public:
     explicit SettlementViewWidget(
-        const QHash<QUuid, QString>& partner_leaf_path, QUuid widget_id, int amount_decimal, Section section, QWidget* parent = nullptr);
+        Section section, QUuid widget_id, const QHash<QUuid, QString>& partner_leaf_path, DoubleNoneZeroR* amount_dlg, QWidget* parent = nullptr);
     ~SettlementViewWidget() override;
 
     QTableView* DataView() const;

@@ -37,8 +37,8 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, utils::DateRange range, CString& partner_name, CString& company_name,
-        Section section, int unit, QWidget* parent = nullptr);
+    StatementTertiaryWidget(Section section, QUuid widget_id, CStringList& header, QUuid partner_id, CString& partner_name, utils::DateRange range, int unit,
+        CString& company_name, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
     QTableView* DataView() const;

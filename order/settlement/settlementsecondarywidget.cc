@@ -8,7 +8,7 @@
 #include "websocket/websocket.h"
 
 SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel* model, CSectionConfig& config,
-    const settlement::PrimaryRow& settlement, QUuid widget_id, Section section, QWidget* parent)
+    const settlement::PrimaryRow& settlement, Section section, QUuid widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementSecondaryWidget)
     , settlement_ { settlement }

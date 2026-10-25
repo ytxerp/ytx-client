@@ -40,7 +40,7 @@ signals:
     void SShowTertiaryStatement(QUuid partner_id, utils::DateRange range, int unit);
 
 public:
-    StatementSecondaryWidget(CStringList& header, QUuid widget_id, QUuid partner_id, CString& partner_name, utils::DateRange range, Section section, int unit,
+    StatementSecondaryWidget(Section section, QUuid widget_id, CStringList& header, QUuid partner_id, CString& partner_name, utils::DateRange range, int unit,
         QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 

@@ -37,7 +37,7 @@ class AuditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditDialog(const QString& title, const QStringList& header, QUuid widget_id, Section seciton, QWidget* parent = nullptr);
+    explicit AuditDialog(Section section, QUuid widget_id, const QStringList& header, const QString& title, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
     QTableView* DataView();

@@ -8,15 +8,19 @@
 #include "websocket/websocket.h"
 
 SettlementViewWidget::SettlementViewWidget(
-    const QHash<QUuid, QString>& partner_leaf_path, QUuid widget_id, int amount_decimal, Section section, QWidget* parent)
+    Section section, QUuid widget_id, const QHash<QUuid, QString>& partner_leaf_path, DoubleNoneZeroR* amount_dlg, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementViewWidget)
     , range_(DefaultRange())
     , widget_id_ { widget_id }
     , section_ { section }
-    , amount_dlg_ { new DoubleNoneZeroR(amount_decimal, string_const::kEightDigits, this) }
+    , amount_dlg_ { amount_dlg }
 {
     ui->setupUi(this);
+
+    Q_ASSERT(amount_dlg_);
+    amount_dlg_->setParent(this);
+
     SignalBlocker blocker(this);
 
     IniWidget();

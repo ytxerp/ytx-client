@@ -1,3 +1,4 @@
+#include "component/constantstring.h"
 #include "mainwindow.h"
 #include "order/settlement_view/settlementviewwidget.h"
 
@@ -10,7 +11,8 @@ void MainWindow::on_actionSettlementView_triggered()
 
     Q_ASSERT(IsOrderSection(section));
 
-    auto* widget { new SettlementViewWidget(sc_p_.tree_model->LeafPath(), widget_id, sc_->section_config.amount_decimal, section, this) };
+    DoubleNoneZeroR* amount_dlg { new DoubleNoneZeroR(sc_->section_config.amount_decimal, string_const::kEightDigits, this) };
+    auto* widget { new SettlementViewWidget(section, widget_id, sc_p_.tree_model->LeafPath(), amount_dlg, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement View")) };

@@ -15,7 +15,7 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(section));
 
-    auto* widget { new StatementPrimaryWidget(header_info_.statement_primary, widget_id, section, this) };
+    auto* widget { new StatementPrimaryWidget(section, widget_id, header_info_.statement_primary, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, tr("Statement")) };
     auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -91,7 +91,7 @@ void MainWindow::RShowSecondaryStatement(QUuid partner_id, utils::DateRange rang
     const QUuid widget_id { QUuid::createUuidV7() };
     const Section section { sc_->section };
 
-    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, partner_name, range, section, unit, this) };
+    auto* widget { new StatementSecondaryWidget(section, widget_id, header_info_.statement_secondary, partner_id, partner_name, range, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -163,7 +163,7 @@ void MainWindow::RShowTertiaryStatement(QUuid partner_id, utils::DateRange range
     const Section section { sc_->section };
 
     auto* widget { new StatementTertiaryWidget(
-        header_info_.statement_tertiary, widget_id, partner_id, range, partner_name, app_config_.company_name, section, unit, this) };
+        section, widget_id, header_info_.statement_tertiary, partner_id, partner_name, range, unit, app_config_.company_name, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 

@@ -22,7 +22,6 @@
 #include <QDateTime>
 #include <QTableView>
 
-#include "component/using.h"
 #include "settlementprimarymodel.h"
 #include "utils/daterange.h"
 
@@ -34,7 +33,7 @@ class SettlementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementPrimaryWidget(Section section, const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
+    explicit SettlementPrimaryWidget(Section section, QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
     ~SettlementPrimaryWidget() override;
 
     QTableView* View() const;

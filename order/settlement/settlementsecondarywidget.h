@@ -23,7 +23,6 @@
 #include <QWidget>
 
 #include "component/config.h"
-#include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
 #include "settlementsecondarymodel.h"
@@ -43,7 +42,7 @@ signals:
 
 public:
     explicit SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel* model, CSectionConfig& config,
-        const settlement::PrimaryRow& settlement, QUuid widget_id, Section section, QWidget* parent = nullptr);
+        const settlement::PrimaryRow& settlement, Section section, QUuid widget_id, QWidget* parent = nullptr);
     ~SettlementSecondaryWidget() override;
 
     QTableView* View() const;
