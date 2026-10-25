@@ -7,7 +7,7 @@ void MainWindow::on_actionIncomeStatement_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* dialog { new IncomeStatementDialog(sc_f_.tree_model, header_info_.income_statement, widget_id) };
+    auto* dialog { new IncomeStatementDialog(sc_f_.tree_model, widget_id, header_info_.income_statement) };
 
     {
         auto* view { dialog->View() };

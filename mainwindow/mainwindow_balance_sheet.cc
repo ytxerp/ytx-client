@@ -7,7 +7,7 @@ void MainWindow::on_actionBalanceSheet_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* dialog { new BalanceSheetDialog(sc_f_.tree_model, header_info_.balance_sheet, widget_id) };
+    auto* dialog { new BalanceSheetDialog(sc_f_.tree_model, widget_id, header_info_.balance_sheet) };
 
     {
         auto* view { dialog->View() };

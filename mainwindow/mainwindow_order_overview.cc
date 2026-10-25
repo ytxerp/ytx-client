@@ -13,7 +13,7 @@ void MainWindow::on_actionOrderOverview_triggered()
 
     Q_ASSERT(IsOrderSection(section));
 
-    auto* widget { new OrderOverviewWidget(header_info_.order_overview, widget_id, section, this) };
+    auto* widget { new OrderOverviewWidget(section, widget_id, header_info_.order_overview, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Overview")) };

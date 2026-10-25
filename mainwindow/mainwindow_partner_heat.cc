@@ -8,7 +8,7 @@ void MainWindow::on_actionHeatPartner_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* dialog { new PartnerHeatDialog(header_info_.partner_heat, widget_id) };
+    auto* dialog { new PartnerHeatDialog(widget_id, header_info_.partner_heat) };
 
     {
         auto* view { dialog->View() };

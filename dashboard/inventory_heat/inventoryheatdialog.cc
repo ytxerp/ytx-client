@@ -10,7 +10,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-InventoryHeatDialog::InventoryHeatDialog(const QStringList& header, QUuid widget_id, QWidget* parent)
+InventoryHeatDialog::InventoryHeatDialog(QUuid widget_id, const QStringList& header, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InventoryHeatDialog)
     , range_ { DefaultRange() }

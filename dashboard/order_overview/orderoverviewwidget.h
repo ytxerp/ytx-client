@@ -36,7 +36,7 @@ class OrderOverviewWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit OrderOverviewWidget(const QStringList& header, const QUuid widget_id, const Section section, QWidget* parent = nullptr);
+    explicit OrderOverviewWidget(Section section, QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
     ~OrderOverviewWidget() override;
 
     QTableView* DataView() const;

@@ -41,7 +41,7 @@ class CashFlowStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit CashFlowStatementDialog(const HeaderInfo& header_info, QUuid widget_id, QWidget* parent = nullptr);
+    explicit CashFlowStatementDialog(QUuid widget_id, const HeaderInfo& header_info, QWidget* parent = nullptr);
     ~CashFlowStatementDialog() override;
 
     QTreeView* View();

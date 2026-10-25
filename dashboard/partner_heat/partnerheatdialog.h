@@ -33,7 +33,7 @@ class PartnerHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PartnerHeatDialog(const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
+    explicit PartnerHeatDialog(QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
     ~PartnerHeatDialog() override;
 
     QTableView* View();

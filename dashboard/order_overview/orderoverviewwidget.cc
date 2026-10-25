@@ -11,7 +11,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-OrderOverviewWidget::OrderOverviewWidget(const QStringList& header, const QUuid widget_id, const Section section, QWidget* parent)
+OrderOverviewWidget::OrderOverviewWidget(Section section, QUuid widget_id, const QStringList& header, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::OrderOverviewWidget)
     , range_ { DefaultRange() }

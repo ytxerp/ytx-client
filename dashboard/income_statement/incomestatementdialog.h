@@ -34,7 +34,7 @@ class IncomeStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit IncomeStatementDialog(CTreeModel* tree_model, const QStringList& header, QUuid widget_id, QWidget* parent = nullptr);
+    explicit IncomeStatementDialog(CTreeModel* tree_model, QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
     ~IncomeStatementDialog() override;
 
     QTreeView* View();

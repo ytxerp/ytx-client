@@ -10,7 +10,7 @@ void MainWindow::on_actionCashFlowStatement_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const QUuid widget_id { QUuid::createUuidV7() };
-    auto* dialog { new CashFlowStatementDialog(header_info_, widget_id) };
+    auto* dialog { new CashFlowStatementDialog(widget_id, header_info_) };
 
     {
         auto* view { dialog->View() };
