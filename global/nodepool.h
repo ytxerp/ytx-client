@@ -61,6 +61,9 @@ public:
 
 private:
     NodePool();
+
+    // Pooled nodes are intentionally not deleted here: the pool is a process-lifetime
+    // singleton and the OS reclaims the memory at exit (nodes own no external resources).
     ~NodePool();
 
     // Factory function to create a new Node instance for a given section
@@ -148,6 +151,8 @@ inline void NodePool::Recycle(Node* node, Section section)
         return;
     }
 
+    Q_ASSERT(std::find(pool.begin(), pool.end(), node) == pool.end());
+
     node->Reset();
     pool.push_back(node);
 }
@@ -160,6 +165,8 @@ template <Iterable Container> inline void NodePool::Recycle(Container& container
     QMutexLocker locker(&mutex_);
     auto& pool = pools_[static_cast<size_t>(section)];
 
+    // If the pool would exceed its cap, drop the whole batch instead of partially
+    // recycling it: simpler, and the loss is only a few extra allocations later.
     if (static_cast<qsizetype>(pool.size()) + container.size() >= pool_const::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);

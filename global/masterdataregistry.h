@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <QPointer>
+
 #include "enum/section.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodeli.h"

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "component/config.h"
+#include "component/sectioninfo.h"
 #include "entryhub/entryhub.h"
 #include "tag/tagicon.h"
 #include "tag/tagrow.h"

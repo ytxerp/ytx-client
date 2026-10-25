@@ -20,13 +20,11 @@
 #pragma once
 
 #include <QAbstractItemModel>
-#include <QMessageBox>
 #include <QMimeData>
 #include <QSortFilterProxyModel>
 #include <QTimer>
 
 #include "component/constant.h"
-#include "component/sectioninfo.h"
 #include "enum/section.h"
 #include "tree/includesetfiltermodel.h"
 #include "tree/itemmodel.h"
