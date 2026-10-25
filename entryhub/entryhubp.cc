@@ -6,7 +6,7 @@
 #include "global/partner_inventory_registry.h"
 #include "utils/entryutils.h"
 
-EntryHubP::EntryHubP(const Section section, QObject* parent)
+EntryHubP::EntryHubP(Section section, QObject* parent)
     : EntryHub(section, parent)
 {
 }

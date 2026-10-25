@@ -1,6 +1,6 @@
 #include "entryhubi.h"
 
-EntryHubI::EntryHubI(const Section section, QObject* parent)
+EntryHubI::EntryHubI(Section section, QObject* parent)
     : EntryHub(section, parent)
 {
 }

@@ -181,7 +181,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     const QUuid node_id { node->id };
 
     // Create model and widget
-    TableModelArg table_model_arg { info.entry_header, node_id, node->direction_rule, section };
+    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
     auto* table_model { new TableModelO(table_model_arg, node, this) };
 
     // Prepare dependencies
@@ -243,7 +243,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
     Q_ASSERT(!partner_id.isNull());
 
     // Create model and widget
-    TableModelArg table_model_arg { sc->info.entry_header, node_id, tmp_node->direction_rule, section };
+    TableModelArg table_model_arg { section, node_id, sc->info.entry_header, tmp_node->direction_rule };
     auto* table_model { new TableModelO(table_model_arg, tmp_node, this) };
 
     // Prepare dependencies

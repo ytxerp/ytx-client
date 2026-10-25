@@ -3,7 +3,7 @@
 #include "component/constant.h"
 #include "enum/entryenum.h"
 
-EntryHubF::EntryHubF(const Section section, QObject* parent)
+EntryHubF::EntryHubF(Section section, QObject* parent)
     : EntryHub(section, parent)
 {
 }

@@ -34,7 +34,7 @@ public:
     ~EntryHub() override;
 
 protected:
-    explicit EntryHub(const Section section, QObject* parent = nullptr);
+    explicit EntryHub(Section section, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation

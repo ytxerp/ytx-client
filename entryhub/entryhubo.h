@@ -25,7 +25,7 @@ class EntryHubO final : public EntryHub {
     Q_OBJECT
 
 public:
-    explicit EntryHubO(const Section section, QObject* parent = nullptr);
+    explicit EntryHubO(Section section, QObject* parent = nullptr);
 
 protected:
     EntryList ProcessEntryArray(const QJsonArray& array) override;

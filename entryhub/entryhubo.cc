@@ -4,7 +4,7 @@
 
 #include "global/entrypool.h"
 
-EntryHubO::EntryHubO(const Section section, QObject* parent)
+EntryHubO::EntryHubO(Section section, QObject* parent)
     : EntryHub(section, parent)
 {
 }

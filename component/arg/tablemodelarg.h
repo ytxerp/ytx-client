@@ -25,10 +25,10 @@
 #include "enum/section.h"
 
 struct TableModelArg {
-    QStringList header {};
-    QUuid node_id {};
-    bool direction_rule {};
     Section section {};
+    QUuid node_id {};
+    QStringList header {};
+    bool direction_rule {};
 };
 
 using CTableModelArg = const TableModelArg;

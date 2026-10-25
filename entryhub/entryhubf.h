@@ -23,9 +23,8 @@
 
 class EntryHubF final : public EntryHub {
 public:
-    explicit EntryHubF(const Section section, QObject* parent = nullptr);
+    explicit EntryHubF(Section section, QObject* parent = nullptr);
 
-public:
     void UpdateEntryRate(QUuid entry_id, const QJsonObject& update, InputSide input_side, int version) override;
     void UpdateEntryNumeric(QUuid entry_id, const QJsonObject& update, int version) override;
 };

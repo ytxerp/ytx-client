@@ -23,5 +23,5 @@
 
 class EntryHubT final : public EntryHub {
 public:
-    explicit EntryHubT(const Section section, QObject* parent = nullptr);
+    explicit EntryHubT(Section section, QObject* parent = nullptr);
 };

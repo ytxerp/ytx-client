@@ -23,8 +23,7 @@
 
 class EntryHubI final : public EntryHub {
 public:
-    explicit EntryHubI(const Section section, QObject* parent = nullptr);
+    explicit EntryHubI(Section section, QObject* parent = nullptr);
 
-public:
     void ReplaceLeaf(QUuid old_node_id, QUuid new_node_id);
 };
