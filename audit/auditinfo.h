@@ -19,10 +19,8 @@
 
 #pragma once
 
-#include <QList>
 #include <QMap>
 #include <QString>
-#include <QUuid>
 
 namespace audit {
 

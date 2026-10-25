@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <QColor>
 #include <QQueue>
 
 #include "component/constantbool.h"

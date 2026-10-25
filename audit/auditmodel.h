@@ -55,6 +55,6 @@ public:
 
 private:
     QList<Row*> list_ {};
-    const QStringList& header_;
+    const QStringList header_ {};
 };
 }

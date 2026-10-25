@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include <QDateTime>
 #include <QJsonObject>
-#include <QUuid>
 
 namespace audit {
 

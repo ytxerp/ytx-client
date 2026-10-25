@@ -19,10 +19,11 @@
 
 #pragma once
 
-#include <QDialog>
+#include <QDateTime>
 #include <QHash>
 #include <QMap>
 #include <QString>
+#include <QUuid>
 
 using CIntString = const QMap<int, QString>;
 using CBoolString = const QMap<bool, QString>;
