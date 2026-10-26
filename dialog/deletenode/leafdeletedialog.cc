@@ -44,6 +44,9 @@ void LeafDeleteDialog::IniOptionGroup()
     option_group_ = new QButtonGroup(this);
     option_group_->addButton(ui->rBtnDelete, 0);
     option_group_->addButton(ui->rBtnReplace, 1);
+
+    utils::SetRadioButton(ui->rBtnDelete, QKeySequence(Qt::CTRL | Qt::Key_1));
+    utils::SetRadioButton(ui->rBtnReplace, QKeySequence(Qt::CTRL | Qt::Key_2));
 }
 
 void LeafDeleteDialog::InitCheckBoxGroup()
