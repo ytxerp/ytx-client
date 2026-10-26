@@ -19,9 +19,8 @@
 
 #pragma once
 
-#include <QHash>
-#include <QObject>
 #include <QString>
+#include <span>
 
 namespace workspace {
 

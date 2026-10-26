@@ -118,7 +118,7 @@ public:
     QString Path(QUuid node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_model_; }
-    inline CUuidString& LeafPath() const { return leaf_path_; }
+    inline const QHash<QUuid, QString>& LeafPath() const { return leaf_path_; }
 
     ItemModel* PathModel(QWidget* parent) const;
 

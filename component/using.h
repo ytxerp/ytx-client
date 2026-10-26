@@ -19,20 +19,15 @@
 
 #pragma once
 
-#include <QDateTime>
 #include <QHash>
+#include <QJsonArray>
 #include <QMap>
 #include <QString>
-#include <QUuid>
 
 using CIntString = const QMap<int, QString>;
 using CBoolString = const QMap<bool, QString>;
 
-using CUuidString = const QHash<QUuid, QString>;
-
 using CString = const QString;
-using CVariant = const QVariant;
 using CStringList = const QStringList;
-using CDateTime = const QDateTime;
 using CJsonArray = const QJsonArray;
 using CJsonObject = const QJsonObject;

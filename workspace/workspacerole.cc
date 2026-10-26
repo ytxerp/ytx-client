@@ -1,5 +1,7 @@
 #include "workspacerole.h"
 
+#include <QObject>
+
 namespace workspace {
 std::span<const RoleItem> RoleItems()
 {
