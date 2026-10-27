@@ -201,7 +201,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Direction Rule"),
         tr("Kind"),
         tr("Unit"),
-        tr("Quantity Total"),
+        tr("Quantity Total", "Inventory"),
         tr("Amount Total"),
     };
 
@@ -281,7 +281,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Linked Node"),
         tr("Debit"),
         tr("Credit"),
-        tr("Balance"),
+        tr("Balance", "Inventory"),
     };
 
     task.entry_header = {
@@ -297,7 +297,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Linked Node"),
         tr("Debit"),
         tr("Credit"),
-        tr("Balance"),
+        tr("Balance", "Task"),
     };
 
     partner.entry_header = {
