@@ -82,7 +82,7 @@ public:
         hash_.remove({ partner_id, inventory_id });
     }
 
-    void ReplaceInternalSku(QUuid old_id, QUuid new_id);
+    void MergeInternalSku(QUuid source_id, QUuid target_id);
     void Reset() { hash_.clear(); }
 
     PartnerInventoryRegistry(const PartnerInventoryRegistry&) = delete;

@@ -358,6 +358,7 @@
      <string>Inventory</string>
     </property>
     <addaction name="actionHeatInventory"/>
+    <addaction name="actionMergeInventory"/>
    </widget>
    <widget class="QMenu" name="menuPartner">
     <property name="title">
@@ -748,6 +749,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionMergeInventory">
+   <property name="text">
+    <string>Merge</string>
    </property>
   </action>
  </widget>

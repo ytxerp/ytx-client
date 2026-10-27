@@ -25,16 +25,16 @@ void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
     }
 }
 
-void EntryHubP::ReplaceInternalInventoryRef(QUuid old_item_id, QUuid new_item_id)
+void EntryHubP::ReplaceInternalInventoryRef(QUuid source_id, QUuid target_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->rhs_node == old_item_id) {
-            entry->rhs_node = new_item_id;
+        if (entry->rhs_node == source_id) {
+            entry->rhs_node = target_id;
             entry->version += 1;
         }
     }
 
-    PartnerInventoryRegistry::Instance().ReplaceInternalSku(old_item_id, new_item_id);
+    PartnerInventoryRegistry::Instance().MergeInternalSku(source_id, target_id);
 }
 
 void EntryHubP::PushEntry(QUuid node_id)

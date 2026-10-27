@@ -178,6 +178,7 @@ set(HEADERS
     dialog/insertnode/insertnodebranch.h
     dialog/insertnode/insertnodefit.h
     dialog/insertnode/insertnodep.h
+    dialog/mergenode/leafmergedialog.h
     dialog/preferences.h
     dialog/userprofiledialog.h
     entryhub/entryhub.h
@@ -269,7 +270,6 @@ set(HEADERS
     tag/tagmodel.h
     tag/tagrow.h
     tree/excludeidfiltermodel.h
-    tree/includesetexcludeonefiltermodel.h
     tree/includesetfiltermodel.h
     tree/itemmodel.h
     tree/model/treemodel.h
@@ -380,6 +380,7 @@ set(SOURCES
     dialog/insertnode/insertnodebranch.cc
     dialog/insertnode/insertnodefit.cc
     dialog/insertnode/insertnodep.cc
+    dialog/mergenode/leafmergedialog.cc
     dialog/preferences.cc
     dialog/userprofiledialog.cc
     entryhub/entryhub.cc
@@ -523,6 +524,7 @@ set(UIS
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodefit.ui
     dialog/insertnode/insertnodep.ui
+    dialog/mergenode/leafmergedialog.ui
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui

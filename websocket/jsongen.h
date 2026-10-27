@@ -41,7 +41,7 @@ QJsonObject LeafDelete(Section section, QUuid node_id, int version);
 QJsonObject BranchDelete(Section section, QUuid node_id, QUuid parent_id, int version);
 
 QJsonObject LeafDeleteCheck(Section section, QUuid node_id, int version);
-QJsonObject LeafReplace(Section section, QUuid old_id, QUuid new_id, int version);
+QJsonObject LeafMerge(Section section, QUuid source_id, QUuid target_id, int version);
 
 QJsonObject MarkEntries(Section section, QUuid node_id, int operation);
 QJsonObject LockEntries(Section section, QUuid node_id, bool is_locked);

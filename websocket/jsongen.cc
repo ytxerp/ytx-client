@@ -77,12 +77,12 @@ QJsonObject LeafDeleteCheck(Section section, QUuid node_id, int version)
     return message;
 }
 
-QJsonObject LeafReplace(Section section, QUuid old_id, QUuid new_id, int version)
+QJsonObject LeafMerge(Section section, QUuid source_id, QUuid target_id, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
-    message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
+    message.insert(kSourceNodeId, source_id.toString(QUuid::WithoutBraces));
+    message.insert(kTargetNodeId, target_id.toString(QUuid::WithoutBraces));
     message.insert(kVersion, version);
     return message;
 }

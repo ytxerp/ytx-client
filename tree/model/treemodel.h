@@ -99,7 +99,7 @@ public:
     void SyncTotalArray(const QJsonArray& total_array);
     void UpdateVersion(QUuid node_id, int version);
 
-    void ApplyMerge(QUuid old_node_id, QUuid new_node_id);
+    void ApplyMerge(QUuid source_id, QUuid target_id);
     void ApplyDrag(QUuid ancestor, QUuid descendant);
     void ApplyDirectionRule(QUuid node_id, bool direction_rule, int version);
     void ApplyStatus(QUuid node_id, int status, int version);
@@ -147,7 +147,6 @@ public:
 
     QSortFilterProxyModel* ExcludeId(QUuid node_id, QObject* parent) const;
     QSortFilterProxyModel* IncludeUnit(NodeUnit unit);
-    QSortFilterProxyModel* ReplaceSelf(QUuid node_id, NodeUnit unit, QObject* parent);
 
     void SyncFilterModels()
     {

@@ -97,6 +97,7 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_order_section { IsOrderSection(section) };
     const bool is_finance_section { section == Section::kFinance };
+    const bool is_inventory_section { section == Section::kInventory };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
@@ -127,7 +128,8 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionIncomeStatement->setEnabled(is_finance_section);
     ui->actionPeriodClose->setEnabled(is_finance_section);
 
-    ui->actionHeatInventory->setEnabled(section == Section::kInventory);
+    ui->actionHeatInventory->setEnabled(is_inventory_section);
+    ui->actionMergeInventory->setEnabled(is_inventory_section);
     ui->actionHeatPartner->setEnabled(section == Section::kPartner);
 }
 

@@ -838,15 +838,15 @@ void WebSocket::MergeLeaf(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSessionId));
     Q_ASSERT(obj.contains(kResult));
     Q_ASSERT(obj.contains(node_ref::kPartner));
-    Q_ASSERT(obj.contains(kOldNodeId));
-    Q_ASSERT(obj.contains(kNewNodeId));
+    Q_ASSERT(obj.contains(kSourceNodeId));
+    Q_ASSERT(obj.contains(kTargetNodeId));
 
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool result { obj.value(kResult).toBool() };
     const bool partner { obj.value(node_ref::kPartner).toBool() };
-    const QUuid old_node_id(obj.value(kOldNodeId).toString());
-    const QUuid new_node_id(obj.value(kNewNodeId).toString());
+    const QUuid source_node_id(obj.value(kSourceNodeId).toString());
+    const QUuid target_node_id(obj.value(kTargetNodeId).toString());
 
     Q_ASSERT(section == Section::kInventory);
 
@@ -859,18 +859,18 @@ void WebSocket::MergeLeaf(const QJsonObject& obj)
 
     {
         auto* entry_hub { static_cast<EntryHubI*>(entry_hub_hash_.value(section).data()) };
-        entry_hub->ReplaceLeaf(old_node_id, new_node_id);
+        entry_hub->ReplaceLeaf(source_node_id, target_node_id);
     }
 
     {
         auto entry_hub_p { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
 
         if (partner)
-            entry_hub_p->ReplaceInternalInventoryRef(old_node_id, new_node_id);
+            entry_hub_p->ReplaceInternalInventoryRef(source_node_id, target_node_id);
     }
 
     auto tree_model { tree_model_hash_.value(section) };
-    tree_model->ApplyMerge(old_node_id, new_node_id);
+    tree_model->ApplyMerge(source_node_id, target_node_id);
 }
 
 void WebSocket::UpdateEntry(const QJsonObject& obj)

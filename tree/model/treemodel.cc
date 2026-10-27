@@ -6,7 +6,6 @@
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "tree/excludeidfiltermodel.h"
-#include "tree/includesetexcludeonefiltermodel.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
 #include "websocket/jsongen.h"
@@ -341,10 +340,10 @@ void TreeModel::UpdateVersion(QUuid node_id, int version)
     node->version = version;
 }
 
-void TreeModel::ApplyMerge(QUuid old_node_id, QUuid new_node_id)
+void TreeModel::ApplyMerge(QUuid source_id, QUuid target_id)
 {
-    auto* old_node { GetNode(old_node_id) };
-    auto* new_node { GetNode(new_node_id) };
+    auto* old_node { GetNode(source_id) };
+    auto* new_node { GetNode(target_id) };
 
     if (!old_node || !new_node)
         return;
@@ -360,11 +359,11 @@ void TreeModel::ApplyMerge(QUuid old_node_id, QUuid new_node_id)
     new_node->final_total += delta.final;
 
     auto ids { UpdateAncestorTotal(new_node, delta) };
-    ids.insert(new_node_id);
+    ids.insert(target_id);
 
     EmitNumericChanged(ids);
 
-    ApplyDelete(old_node_id);
+    ApplyDelete(source_id);
 }
 
 void TreeModel::ApplyName(QUuid node_id, const QString& name, int version)
@@ -761,14 +760,6 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
 
     unit_filter_models_.insert(unit, model);
 
-    return model;
-}
-
-QSortFilterProxyModel* TreeModel::ReplaceSelf(QUuid node_id, NodeUnit unit, QObject* parent)
-{
-    auto* set { UnitSet(unit) };
-    auto* model { new IncludeSetExcludeOneFilterModel(set, node_id, parent) };
-    model->setSourceModel(leaf_model_);
     return model;
 }
 

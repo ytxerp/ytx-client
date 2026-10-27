@@ -3,6 +3,7 @@
 #include "dialog/editnodename.h"
 #include "dialog/insertnode/insertnodefit.h"
 #include "dialog/insertnode/insertnodep.h"
+#include "dialog/mergenode/leafmergedialog.h"
 #include "global/nodepool.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -167,4 +168,13 @@ void MainWindow::on_actionClearColor_triggered()
     const QModelIndex color_index { index.siblingAtColumn(color_column) };
 
     model->setData(color_index, QVariant());
+}
+
+void MainWindow::on_actionMergeInventory_triggered()
+{
+    qInfo() << Q_FUNC_INFO;
+    auto* dialog { new LeafMergeDialog(sc_i_.tree_model, this) };
+
+    utils::ManageDialog(sc_i_.widget_hash, dialog);
+    dialog->show();
 }

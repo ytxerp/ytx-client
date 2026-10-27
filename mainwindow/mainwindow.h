@@ -73,6 +73,7 @@ private slots:
     void on_actionJumpEntry_triggered();
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
+    void on_actionMergeInventory_triggered();
 
     void on_actionSearch_triggered();
     void on_actionTags_triggered();
