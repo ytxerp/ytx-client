@@ -79,7 +79,7 @@ enum class WsKey : uint16_t {
     kSettlementView = 1306,
 
     // --- Tree ---
-    kLeafReplace = 1400,
+    kLeafMerge = 1400,
     kBranchDelete = 1401,
     kLeafDelete = 1402,
     kPartnerLeafDelete = 1403,
@@ -282,8 +282,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kLeafDeletePartner";
     case WsKey::kOrderLeafDelete:
         return "kLeafDeleteOrder";
-    case WsKey::kLeafReplace:
-        return "kLeafReplace";
+    case WsKey::kLeafMerge:
+        return "kLeafMerge";
     case WsKey::kBranchDelete:
         return "kBranchDelete";
     case WsKey::kNodeDirectionRuleUpdate:

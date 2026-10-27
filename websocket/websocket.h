@@ -58,7 +58,7 @@ signals:
     void STreeSyncFinish();
 
     void SRegisterResult(bool result, int code);
-    void SReplaceResult(bool result);
+    void SMergeResult(bool result);
 
     void SSharedConfigApply(const QJsonArray& arr);
     void SDocumentDirUpdate(Section section, const QString& document_dir);
@@ -205,7 +205,7 @@ private:
     void InsertNode(const QJsonObject& obj);
     void UpdateNode(const QJsonObject& obj);
     void DragNode(const QJsonObject& obj);
-    void ReplaceLeaf(const QJsonObject& obj);
+    void MergeLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
     void DeleteOrderLeaf(const QJsonObject& obj);
     void DeletePartnerLeaf(const QJsonObject& obj);

@@ -341,7 +341,7 @@ void TreeModel::UpdateVersion(QUuid node_id, int version)
     node->version = version;
 }
 
-void TreeModel::ApplyReplace(QUuid old_node_id, QUuid new_node_id)
+void TreeModel::ApplyMerge(QUuid old_node_id, QUuid new_node_id)
 {
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };

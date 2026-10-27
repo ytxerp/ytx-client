@@ -200,7 +200,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kPartnerLeafDelete] = [this](const QJsonObject& obj) { DeletePartnerLeaf(obj); };
     handler_obj_[WsKey::kOrderLeafDelete] = [this](const QJsonObject& obj) { DeleteOrderLeaf(obj); };
     handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
-    handler_obj_[WsKey::kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
+    handler_obj_[WsKey::kLeafMerge] = [this](const QJsonObject& obj) { MergeLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kOrderNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
@@ -832,7 +832,7 @@ void WebSocket::CommitDeleteNode(const QJsonObject& obj)
 
 void WebSocket::DenyLeafDelete(const QJsonObject& obj) { emit SLeafDeleteDeny(obj); }
 
-void WebSocket::ReplaceLeaf(const QJsonObject& obj)
+void WebSocket::MergeLeaf(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
     Q_ASSERT(obj.contains(kSessionId));
@@ -851,7 +851,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     Q_ASSERT(section == Section::kInventory);
 
     if (session_id == session_id_) {
-        emit SReplaceResult(result);
+        emit SMergeResult(result);
     }
 
     if (!result)
@@ -870,7 +870,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     }
 
     auto tree_model { tree_model_hash_.value(section) };
-    tree_model->ApplyReplace(old_node_id, new_node_id);
+    tree_model->ApplyMerge(old_node_id, new_node_id);
 }
 
 void WebSocket::UpdateEntry(const QJsonObject& obj)

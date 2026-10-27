@@ -60,7 +60,7 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     if (!node || !node->IsValid())
         return;
 
-    auto* dialog { new LeafDeleteDialog(sc->section, obj, model, node, nullptr) };
+    auto* dialog { new LeafDeleteDialog(sc->section, model->Path(node_id), obj, node, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);

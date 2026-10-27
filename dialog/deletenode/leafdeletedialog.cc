@@ -5,49 +5,29 @@
 #include "component/signalblocker.h"
 #include "exactmatchconfirmdialog.h"
 #include "ui_leafdeletedialog.h"
-#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafDeleteDialog::LeafDeleteDialog(Section section, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent)
+LeafDeleteDialog::LeafDeleteDialog(Section section, CString& path, CJsonObject& obj, Node* node, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafDeleteDialog)
     , node_id_ { node->id }
     , section_ { section }
+    , path_ { path }
     , node_ { node }
     , internal_ { obj.value(node_ref::kInternal).toBool() }
     , sale_ { obj.value(node_ref::kSale).toBool() }
     , purchase_ { obj.value(node_ref::kPurchase).toBool() }
     , partner_ { obj.value(node_ref::kPartner).toBool() }
     , settlement_ { obj.value(node_ref::kSettlement).toBool() }
-    , model_ { model }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniData(section);
-    IniOptionGroup();
-    IniConnect();
+    IniData();
 }
 
 LeafDeleteDialog::~LeafDeleteDialog() { delete ui; }
-
-void LeafDeleteDialog::IniConnect()
-{
-    connect(WebSocket::Instance(), &WebSocket::SReplaceResult, this, &LeafDeleteDialog::RReplaceResult);
-    connect(option_group_, &QButtonGroup::idClicked, this, &LeafDeleteDialog::RButtonGroup);
-    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &LeafDeleteDialog::RcomboBoxCurrentIndexChanged);
-}
-
-void LeafDeleteDialog::IniOptionGroup()
-{
-    option_group_ = new QButtonGroup(this);
-    option_group_->addButton(ui->rBtnDelete, 0);
-    option_group_->addButton(ui->rBtnReplace, 1);
-
-    utils::SetRadioButton(ui->rBtnDelete, QKeySequence(Qt::CTRL | Qt::Key_1));
-    utils::SetRadioButton(ui->rBtnReplace, QKeySequence(Qt::CTRL | Qt::Key_2));
-}
 
 void LeafDeleteDialog::InitCheckBoxGroup()
 {
@@ -58,8 +38,6 @@ void LeafDeleteDialog::InitCheckBoxGroup()
     ui->chkBoxSale->hide();
     ui->chkBoxPurchase->hide();
     ui->chkBoxSettlement->hide();
-    ui->rBtnReplace->hide();
-    ui->comboBox->hide();
 
     switch (section_) {
     case Section::kInventory:
@@ -75,8 +53,6 @@ void LeafDeleteDialog::InitCheckBoxGroup()
         ui->chkBoxPartner->setChecked(partner_);
         ui->chkBoxPartner->setEnabled(false);
 
-        ui->rBtnReplace->show();
-        ui->comboBox->show();
         break;
     case Section::kPartner:
         ui->chkBoxSale->show();
@@ -101,45 +77,11 @@ void LeafDeleteDialog::InitCheckBoxGroup()
     }
 }
 
-void LeafDeleteDialog::ReplaceNode()
+void LeafDeleteDialog::on_pBtnOk_clicked()
 {
-    if (!ui->rBtnReplace->isChecked())
+    if (!ui->chkBoxDelete->isEnabled() || !ui->chkBoxDelete->isChecked())
         return;
 
-    const QString path { model_->Path(node_id_) };
-    const QString new_path { ui->comboBox->currentText() };
-    const QString info { tr("Replace <b>%1</b> with <b>%2</b>."
-                            "<br><br>"
-                            "<span style='color:#d32f2f; font-weight:bold;'>"
-                            "⚠️ This action is permanent and cannot be undone."
-                            "</span>")
-            .arg(path, new_path) };
-
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), this) };
-    dlg->setAttribute(Qt::WA_DeleteOnClose);
-
-    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
-        if (model_->Path(node_id_) != path)
-            return;
-
-        if (!node_ || !node_->IsValid())
-            return;
-
-        const auto new_node_id { ui->comboBox->currentData().toUuid() };
-        const auto message { JsonGen::LeafReplace(Section::kInventory, node_id_, new_node_id, node_->version) };
-
-        WebSocket::Instance()->SendMessage(WsKey::kLeafReplace, message);
-    });
-
-    dlg->open();
-}
-
-void LeafDeleteDialog::DeleteNode()
-{
-    if (!ui->rBtnDelete->isChecked())
-        return;
-
-    const QString path { model_->Path(node_id_) };
     QString info {};
     WsKey key {};
 
@@ -159,7 +101,7 @@ void LeafDeleteDialog::DeleteNode()
                   "<span style='color:#d32f2f; font-weight:bold;'>"
                   "⚠️ This action is permanent and cannot be undone."
                   "</span>")
-                   .arg(path);
+                   .arg(path_);
         key = WsKey::kPartnerLeafDelete;
         break;
     case Section::kFinance:
@@ -172,7 +114,7 @@ void LeafDeleteDialog::DeleteNode()
                   "</span>"
                   "<br><br>"
                   "<i>💡 Tip: Consider relocating entries before deleting.</i>")
-                   .arg(path);
+                   .arg(path_);
         key = WsKey::kLeafDelete;
         break;
     }
@@ -180,11 +122,8 @@ void LeafDeleteDialog::DeleteNode()
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path, key]() {
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, key]() {
         if (!node_ || !node_->IsValid())
-            return;
-
-        if (model_->Path(node_id_) != path)
             return;
 
         const QJsonObject value { JsonGen::LeafDelete(section_, node_id_, node_->version) };
@@ -195,53 +134,19 @@ void LeafDeleteDialog::DeleteNode()
     dlg->open();
 }
 
-void LeafDeleteDialog::on_pBtnOk_clicked()
-{
-    DeleteNode();
-    ReplaceNode();
-}
-
-void LeafDeleteDialog::IniData(Section section)
+void LeafDeleteDialog::IniData()
 {
     ui->label->setWordWrap(true);
     ui->pBtnCancel->setDefault(true);
 
     InitCheckBoxGroup();
 
-    this->setWindowTitle(tr("Delete %1").arg(model_->Path(node_id_)));
+    this->setWindowTitle(tr("Delete %1").arg(path_));
 
-    if (sale_ || partner_ || partner_cv_ || partner_emp_ || settlement_) {
-        ui->rBtnDelete->setEnabled(false);
+    if (sale_ || purchase_ || partner_ || settlement_) {
+        ui->chkBoxDelete->setEnabled(false);
         ui->label->setText(tr("The node has external references, so it can’t be deleted."));
     }
-
-    if (section != Section::kInventory)
-        return;
-
-    auto* filter_model { model_->ReplaceSelf(node_id_, node_->unit, this) };
-
-    ui->comboBox->setModel(filter_model);
-    ui->comboBox->setCurrentIndex(-1);
 }
 
-void LeafDeleteDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
-{
-    const auto new_node_id { ui->comboBox->currentData().toUuid() };
-    ui->pBtnOk->setEnabled(!new_node_id.isNull());
-}
-
-void LeafDeleteDialog::RButtonGroup(int id)
-{
-    ui->pBtnOk->setEnabled(id == 0 || ui->comboBox->currentIndex() != -1);
-    ui->comboBox->setEnabled(id == 1);
-}
-
-void LeafDeleteDialog::RReplaceResult(bool result)
-{
-    if (result) {
-        close();
-    } else {
-        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
-            tr("The node cannot be replaced because linked nodes or partner entries conflict with the new node."), time_const::kAutoCloseMs);
-    }
-}
+void LeafDeleteDialog::on_chkBoxDelete_toggled(bool checked) { ui->pBtnOk->setEnabled(checked); }

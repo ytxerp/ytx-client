@@ -99,7 +99,7 @@ public:
     void SyncTotalArray(const QJsonArray& total_array);
     void UpdateVersion(QUuid node_id, int version);
 
-    void ApplyReplace(QUuid old_node_id, QUuid new_node_id);
+    void ApplyMerge(QUuid old_node_id, QUuid new_node_id);
     void ApplyDrag(QUuid ancestor, QUuid descendant);
     void ApplyDirectionRule(QUuid node_id, bool direction_rule, int version);
     void ApplyStatus(QUuid node_id, int status, int version);

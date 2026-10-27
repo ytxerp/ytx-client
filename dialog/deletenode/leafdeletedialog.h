@@ -19,10 +19,11 @@
 
 #pragma once
 
-#include <QButtonGroup>
 #include <QDialog>
 
-#include "tree/model/treemodel.h"
+#include "component/using.h"
+#include "enum/section.h"
+#include "tree/node.h"
 
 namespace Ui {
 class LeafDeleteDialog;
@@ -32,39 +33,28 @@ class LeafDeleteDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    LeafDeleteDialog(Section section, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent = nullptr);
+    LeafDeleteDialog(Section section, CString& path, CJsonObject& obj, Node* node, QWidget* parent = nullptr);
     ~LeafDeleteDialog() override;
 
 private slots:
     void on_pBtnOk_clicked();
-    void RcomboBoxCurrentIndexChanged(int index);
-    void RButtonGroup(int id);
-    void RReplaceResult(bool result);
+    void on_chkBoxDelete_toggled(bool checked);
 
 private:
-    void IniData(Section section);
-    void IniConnect();
-    void IniOptionGroup();
+    void IniData();
     void InitCheckBoxGroup();
-
-    void ReplaceNode();
-    void DeleteNode();
 
 private:
     Ui::LeafDeleteDialog* ui;
-    QButtonGroup* option_group_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};
+    const QString path_ {};
     const Node* node_ {};
 
     const bool internal_ {};
     const bool sale_ {};
     const bool purchase_ {};
     const bool partner_ {};
-    const bool partner_cv_ {};
-    const bool partner_emp_ {};
     const bool settlement_ {};
-
-    TreeModel* model_ {};
 };
