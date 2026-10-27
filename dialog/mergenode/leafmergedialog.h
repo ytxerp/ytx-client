@@ -21,10 +21,12 @@ private slots:
     void on_comboBoxTarget_currentIndexChanged(int index);
 
     void on_pBtnOk_clicked();
+    void RMergeResult(bool result);
 
 private:
     void InitData();
     void UpdateState();
+    void InitConnect();
 
 private:
     Ui::LeafMergeDialog* ui;

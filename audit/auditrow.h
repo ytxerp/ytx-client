@@ -73,7 +73,7 @@ enum class TargetOperation {
     kUpdate = 101,
     kDelete = 102,
     kMove = 103,
-    kReplace = 104,
+    kMerge = 104,
 
     // --- Order workflow: 200–219 ---
     kRelease = 200,

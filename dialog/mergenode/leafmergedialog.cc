@@ -3,6 +3,7 @@
 #include "component/signalblocker.h"
 #include "dialog/deletenode/exactmatchconfirmdialog.h"
 #include "ui_leafmergedialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -15,6 +16,7 @@ LeafMergeDialog::LeafMergeDialog(TreeModel* tree_model, QWidget* parent)
     SignalBlocker blocker(this);
 
     InitData();
+    InitConnect();
 }
 
 LeafMergeDialog::~LeafMergeDialog() { delete ui; }
@@ -56,6 +58,8 @@ void LeafMergeDialog::UpdateState()
     ui->pBtnOk->setEnabled(valid);
 }
 
+void LeafMergeDialog::InitConnect() { connect(WebSocket::Instance(), &WebSocket::SMergeResult, this, &LeafMergeDialog::RMergeResult); }
+
 void LeafMergeDialog::on_pBtnOk_clicked()
 {
     const QUuid source_id { ui->comboBoxSource->currentData(Qt::UserRole).toUuid() };
@@ -67,7 +71,7 @@ void LeafMergeDialog::on_pBtnOk_clicked()
     const QString info { tr("Merge <b>%1</b> into <b>%2</b>."
                             "<br><br>"
                             "<span style='color:#d32f2f; font-weight:bold;'>"
-                            "The source node will be permanently deleted."
+                            "The source node will be permanently deleted. This action cannot be undone."
                             "</span>")
             .arg(source_path.toHtmlEscaped(), target_path.toHtmlEscaped()) };
 
@@ -86,4 +90,14 @@ void LeafMergeDialog::on_pBtnOk_clicked()
     });
 
     dlg->open();
+}
+
+void LeafMergeDialog::RMergeResult(bool result)
+{
+    if (result) {
+        close();
+    } else {
+        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
+            tr("The node cannot be merged because linked nodes or partner entries conflict with the target node."), time_const::kAutoCloseMs);
+    }
 }

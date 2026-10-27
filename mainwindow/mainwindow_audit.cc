@@ -71,7 +71,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetOperation::kUpdate), tr("Update") },
         { std::to_underlying(TargetOperation::kDelete), tr("Delete") },
         { std::to_underlying(TargetOperation::kMove), tr("Move") },
-        { std::to_underlying(TargetOperation::kReplace), tr("Replace") },
+        { std::to_underlying(TargetOperation::kMerge), tr("Merge") },
         { std::to_underlying(TargetOperation::kRelease), tr("Release") },
         { std::to_underlying(TargetOperation::kRecall), tr("Recall") },
         { std::to_underlying(TargetOperation::kPeriodClose), tr("Period Close") },

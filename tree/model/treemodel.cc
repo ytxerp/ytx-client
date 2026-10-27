@@ -342,23 +342,21 @@ void TreeModel::UpdateVersion(QUuid node_id, int version)
 
 void TreeModel::ApplyMerge(QUuid source_id, QUuid target_id)
 {
-    auto* old_node { GetNode(source_id) };
-    auto* new_node { GetNode(target_id) };
+    auto* source { GetNode(source_id) };
+    auto* target { GetNode(target_id) };
 
-    if (!old_node || !new_node)
+    if (!source || !target)
         return;
 
-    const int multiplier { old_node->direction_rule == new_node->direction_rule ? 1 : -1 };
-
     const node::Delta delta {
-        .initial = multiplier * old_node->initial_total,
-        .final = multiplier * old_node->final_total,
+        .initial = source->initial_total,
+        .final = source->final_total,
     };
 
-    new_node->initial_total += delta.initial;
-    new_node->final_total += delta.final;
+    target->initial_total += delta.initial;
+    target->final_total += delta.final;
 
-    auto ids { UpdateAncestorTotal(new_node, delta) };
+    auto ids { UpdateAncestorTotal(target, delta) };
     ids.insert(target_id);
 
     EmitNumericChanged(ids);
