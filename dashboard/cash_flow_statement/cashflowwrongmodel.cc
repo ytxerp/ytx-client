@@ -23,24 +23,6 @@ QModelIndex WrongModel::index(int row, int column, const QModelIndex& parent) co
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex WrongModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int WrongModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int WrongModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return header_.size();
-}
-
 QVariant WrongModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)

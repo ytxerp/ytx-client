@@ -67,9 +67,9 @@ public slots:
 
 public:
     // implemented functions
-    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return shadow_list_.size(); }
-    int columnCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return header_.size(); }
     QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : shadow_list_.size(); }
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : header_.size(); }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

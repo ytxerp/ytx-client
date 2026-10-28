@@ -23,24 +23,6 @@ QModelIndex NodeModel::index(int row, int column, const QModelIndex& parent) con
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex NodeModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int NodeModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int NodeModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return header_.size();
-}
-
 QVariant NodeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)

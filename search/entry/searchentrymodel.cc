@@ -53,24 +53,6 @@ QModelIndex EntryModel::index(int row, int column, const QModelIndex& parent) co
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex EntryModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int EntryModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int EntryModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return header_.size();
-}
-
 QVariant EntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)

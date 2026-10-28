@@ -11,17 +11,17 @@ Model::Model(const QHash<QUuid, QString>& partner_leaf_path, QObject* parent)
 {
 }
 
-Model::~Model() { ResourcePool<Row>::Instance().Recycle(rows_); }
+Model::~Model() { ResourcePool<Row>::Instance().Recycle(list_); }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return {};
 
-    if (section < 0 || section >= columns_.size())
+    if (section < 0 || section >= header_.size())
         return {};
 
-    return columns_.at(section).title;
+    return header_.at(section).title;
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
@@ -29,25 +29,7 @@ QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, rows_.at(row));
-}
-
-QModelIndex Model::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int Model::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return rows_.size();
-}
-
-int Model::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return columns_.size();
+    return createIndex(row, column, list_.at(row));
 }
 
 QVariant Model::data(const QModelIndex& index, int role) const
@@ -56,7 +38,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return {};
 
     const auto* row { static_cast<const Row*>(index.internalPointer()) };
-    const Column& column { columns_.at(index.column()) };
+    const Column& column { header_.at(index.column()) };
 
     switch (column.type) {
     case ColumnType::kPartner:
@@ -89,10 +71,10 @@ QVariant Model::data(const QModelIndex& index, int role) const
 
 void Model::sort(int column, Qt::SortOrder order)
 {
-    if (column < 0 || column >= columns_.size())
+    if (column < 0 || column >= header_.size())
         return;
 
-    const Column& e_column { columns_.at(column) };
+    const Column& e_column { header_.at(column) };
 
     if (e_column.type == ColumnType::kPlaceholder)
         return;
@@ -128,7 +110,7 @@ void Model::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::ranges::sort(rows_, Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 
@@ -165,8 +147,8 @@ void Model::Rebuild(const QJsonArray& array)
 
     beginResetModel();
 
-    ResourcePool<Row>::Instance().Recycle(rows_);
-    rows_ = std::move(new_rows);
+    ResourcePool<Row>::Instance().Recycle(list_);
+    list_ = std::move(new_rows);
 
     endResetModel();
 
@@ -186,11 +168,11 @@ bool Model::RebuildHeader(utils::DateRange date_range)
 
     beginResetModel();
 
-    columns_.clear();
-    ResourcePool<Row>::Instance().Recycle(rows_);
+    header_.clear();
+    ResourcePool<Row>::Instance().Recycle(list_);
 
-    columns_.append({ ColumnType::kPartner, tr("Partner") });
-    columns_.append({ ColumnType::kPreviousBalance, tr("Previous Balance") });
+    header_.append({ ColumnType::kPartner, tr("Partner") });
+    header_.append({ ColumnType::kPreviousBalance, tr("Previous Balance") });
 
     int month_index { 0 };
 
@@ -198,16 +180,16 @@ bool Model::RebuildHeader(utils::DateRange date_range)
     const QDate end { date_range.end.year(), date_range.end.month(), 1 };
 
     while (date <= end) {
-        columns_.append({ ColumnType::kMonth, date.toString(QStringLiteral("yyyy-MM")), month_index++ });
+        header_.append({ ColumnType::kMonth, date.toString(QStringLiteral("yyyy-MM")), month_index++ });
 
         date = date.addMonths(1);
     }
 
-    columns_.append({ ColumnType::kCurrentAmount, tr("Current Amount") });
-    columns_.append({ ColumnType::kPlaceholder, QString() });
-    columns_.append({ ColumnType::kCurrentSettled, tr("Current Settled") });
-    columns_.append({ ColumnType::kCurrentUnsettled, tr("Current Unsettled") });
-    columns_.append({ ColumnType::kCurrentBalance, tr("Current Balance") });
+    header_.append({ ColumnType::kCurrentAmount, tr("Current Amount") });
+    header_.append({ ColumnType::kPlaceholder, QString() });
+    header_.append({ ColumnType::kCurrentSettled, tr("Current Settled") });
+    header_.append({ ColumnType::kCurrentUnsettled, tr("Current Unsettled") });
+    header_.append({ ColumnType::kCurrentBalance, tr("Current Balance") });
 
     range_ = date_range;
 

@@ -23,24 +23,6 @@ QModelIndex SecondaryModel::index(int row, int column, const QModelIndex& parent
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex SecondaryModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int SecondaryModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int SecondaryModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return header_.size();
-}
-
 QVariant SecondaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())

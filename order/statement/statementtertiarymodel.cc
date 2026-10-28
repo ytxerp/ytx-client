@@ -26,20 +26,6 @@ QModelIndex TertiaryModel::index(int row, int column, const QModelIndex& parent)
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex TertiaryModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int TertiaryModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int TertiaryModel::columnCount(const QModelIndex& /*parent*/) const { return header_.size(); }
-
 QVariant TertiaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())

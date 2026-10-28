@@ -24,24 +24,6 @@ QModelIndex PrimaryModel::index(int row, int column, const QModelIndex& parent) 
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex PrimaryModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-int PrimaryModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return list_.size();
-}
-
-int PrimaryModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent);
-    return header_.size();
-}
-
 QVariant PrimaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
