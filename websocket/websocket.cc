@@ -245,7 +245,6 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kPartnerEntryDelete] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
     handler_obj_[WsKey::kPartnerEntryInsert] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
-    handler_obj_[WsKey::kPartnerNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
 
     handler_obj_[WsKey::kEntryLockedUpdate] = [this](const QJsonObject& obj) { OnEntryLockedUpdate(obj); };
     handler_obj_[WsKey::kEntryLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntryLockPermissionDeny(obj); };

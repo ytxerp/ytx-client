@@ -33,7 +33,6 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     node->parent = parent_node;
 
     QDialog* dialog {};
-    WsKey key { WsKey::kNodeInsert };
 
     const auto children_name { ChildrenName(parent_node) };
     const auto arg { NodeInsertArg { node, unit_model, parent_path, children_name } };
@@ -46,7 +45,6 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
         break;
     case Section::kPartner:
         dialog = new InsertNodeP(arg, nullptr);
-        key = WsKey::kPartnerNodeInsert;
         break;
     case Section::kSale:
     case Section::kPurchase:
@@ -56,9 +54,9 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
     utils::ManageDialog(sc->widget_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::accepted, this, [node, parent_node, key, section]() {
+    connect(dialog, &QDialog::accepted, this, [node, parent_node, section]() {
         const auto message { JsonGen::NodeInsert(section, node, parent_node->id) };
-        WebSocket::Instance()->SendMessage(key, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeInsert, message);
     });
     connect(dialog, &QDialog::destroyed, this, [node, section]() { NodePool::Instance().Recycle(node, section); });
 

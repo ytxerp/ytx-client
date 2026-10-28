@@ -182,7 +182,6 @@ enum class WsKey : uint16_t {
     kPartnerEntryDelete = 2500,
     kPartnerEntryInsert = 2501,
     kPartnerEntryUpdate = 2502,
-    kPartnerNodeInsert = 2510,
 
     kPartnerHeatAck = 2520,
 
@@ -422,8 +421,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderDetail";
     case WsKey::kOrderAccept:
         return "kOrderAccept";
-    case WsKey::kPartnerNodeInsert:
-        return "kPartnerNodeInsert";
     case WsKey::kOrderOverview:
         return "kOrderOverview";
     case WsKey::kOrderNodeUpdate:
