@@ -1,6 +1,6 @@
 #include "sectionpermissions.h"
 
-#include <QtCore/qobject.h>
+#include <QObject>
 
 namespace section {
 
@@ -44,21 +44,18 @@ QString PermissionsDisplay(Section section, int permissions)
     }
 
     QStringList result {};
-    const auto items { PermissionItems(section) };
 
-    for (const auto& item : items) {
+    for (const auto& item : PermissionItems(section)) {
         if ((permissions & item.permission) != item.permission) {
             continue;
         }
 
-        const auto covered = std::ranges::any_of(items, [&](const PermissionItem& other) {
-            return other.permission != item.permission && (permissions & other.permission) == other.permission
-                && (other.permission & item.permission) == item.permission;
-        });
-
-        if (!covered) {
-            result.emplaceBack(item.text);
+        // Skip permissions covered by higher-level permissions.
+        if (item.permission == 0b01 && (permissions & 0b11) == 0b11) {
+            continue;
         }
+
+        result.emplaceBack(item.text);
     }
 
     return result.join(QStringLiteral(" | "));
