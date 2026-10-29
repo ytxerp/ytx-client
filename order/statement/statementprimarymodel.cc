@@ -48,10 +48,13 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
 
 QVariant PrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return header_.at(section);
+    if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
+        return {};
 
-    return QVariant();
+    if (section < 0 || section >= header_.size())
+        return {};
+
+    return header_.at(section);
 }
 
 void PrimaryModel::sort(int column, Qt::SortOrder order)

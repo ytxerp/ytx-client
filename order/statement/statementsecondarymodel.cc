@@ -81,10 +81,13 @@ bool SecondaryModel::setData(const QModelIndex& index, const QVariant& value, in
 
 QVariant SecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return header_.at(section);
+    if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
+        return {};
 
-    return QVariant();
+    if (section < 0 || section >= header_.size())
+        return {};
+
+    return header_.at(section);
 }
 
 void SecondaryModel::sort(int column, Qt::SortOrder order)
