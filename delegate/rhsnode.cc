@@ -2,10 +2,10 @@
 
 #include "widget/combobox.h"
 
-RhsNode::RhsNode(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent)
+RhsNode::RhsNode(const QHash<QUuid, QString>& leaf_path, QSortFilterProxyModel* filter_model, QObject* parent)
     : StyledItemDelegate { parent }
-    , tree_model_ { tree_model }
     , filter_model_ { filter_model }
+    , leaf_path_ { leaf_path }
 {
 }
 
@@ -46,17 +46,12 @@ void RhsNode::paint(QPainter* painter, const QStyleOptionViewItem& option, const
     if (linked_node.isNull())
         return PaintEmpty(painter, option, index);
 
-    const QString path { tree_model_->Path(linked_node) };
+    const QString path { leaf_path_.value(linked_node) };
     PaintText(path, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
-
-    // 高度自定义
-    // const int text_margin { CalculateTextMargin(style, option.widget) };
-    // const QRect text_rect { opt.rect.adjusted(text_margin, 0, -text_margin, 0) };
-    // painter->drawText(text_rect, Qt::AlignLeft | Qt::AlignVCenter, path);
 }
 
 QSize RhsNode::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString text { tree_model_->Path(index.data().toUuid()) };
+    const QString text { leaf_path_.value(index.data().toUuid()) };
     return CalculateTextSize(text, option);
 }

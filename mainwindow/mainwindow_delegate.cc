@@ -236,7 +236,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
 
-    auto* node { new RhsNode(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model->LeafPath(), filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -279,7 +279,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
 
-    auto* node { new RhsNode(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model->LeafPath(), filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -318,7 +318,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
 
-    auto* node { new RhsNode(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model->LeafPath(), filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };

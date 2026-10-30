@@ -19,12 +19,13 @@
 
 #pragma once
 
+#include <QSortFilterProxyModel>
+
 #include "delegate/styleditemdelegate.h"
-#include "tree/model/treemodel.h"
 
 class RhsNode final : public StyledItemDelegate {
 public:
-    RhsNode(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
+    RhsNode(const QHash<QUuid, QString>& leaf_path, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -33,6 +34,6 @@ public:
 
 private:
     mutable QUuid last_insert_ {};
-    CTreeModel* tree_model_ {};
     QSortFilterProxyModel* filter_model_ {};
+    const QHash<QUuid, QString>& leaf_path_;
 };
