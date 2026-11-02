@@ -20,13 +20,13 @@
 #pragma once
 
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 
 #include "delegate/styleditemdelegate.h"
-#include "tree/model/treemodel.h"
 
 class FilterUnit : public StyledItemDelegate {
 public:
-    FilterUnit(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
+    FilterUnit(const QHash<QUuid, QString>& leaf_path, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -34,6 +34,6 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    CTreeModel* tree_model_ {};
+    const QHash<QUuid, QString>& leaf_path_;
     QSortFilterProxyModel* filter_model_ {};
 };

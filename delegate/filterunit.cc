@@ -4,9 +4,9 @@
 
 #include "widget/combobox.h"
 
-FilterUnit::FilterUnit(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent)
+FilterUnit::FilterUnit(const QHash<QUuid, QString>& leaf_path, QSortFilterProxyModel* filter_model, QObject* parent)
     : StyledItemDelegate { parent }
-    , tree_model_ { tree_model }
+    , leaf_path_ { leaf_path }
     , filter_model_ { filter_model }
 {
 }
@@ -41,7 +41,7 @@ void FilterUnit::setModelData(QWidget* editor, QAbstractItemModel* model, const 
 
 void FilterUnit::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString& text { tree_model_->Path(index.data().toUuid()) };
+    const QString& text { leaf_path_.value(index.data().toUuid()) };
     if (text.isEmpty())
         return PaintEmpty(painter, option, index);
 
@@ -50,6 +50,6 @@ void FilterUnit::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 
 QSize FilterUnit::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString& text = tree_model_->Path(index.data().toUuid());
+    const QString& text = leaf_path_.value(index.data().toUuid());
     return CalculateTextSize(text, option);
 }

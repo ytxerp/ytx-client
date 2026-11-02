@@ -358,7 +358,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
 
     auto tree_model_i { sc_i_.tree_model };
     auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem) };
-    auto* internal_sku { new FilterUnit(tree_model_i, itm_filter_model, table_view) };
+    auto* internal_sku { new FilterUnit(tree_model_i->LeafPath(), itm_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 
     auto* tag { new TagDelegate(sc_p_.tag_icon_hash, table_view) };
@@ -374,7 +374,7 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config, 
     auto tree_model_i { sc_i_.tree_model };
     auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem) };
 
-    auto* internal_sku { new FilterUnit(tree_model_i, itm_filter_model, table_view) };
+    auto* internal_sku { new FilterUnit(tree_model_i->LeafPath(), itm_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), internal_sku);
 
     auto* line { new Line(table_view) };
