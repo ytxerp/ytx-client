@@ -22,11 +22,10 @@
 // read only
 
 #include "delegate/styleditemdelegate.h"
-#include "tree/model/treemodel.h"
 
 class CashFlowNameR final : public StyledItemDelegate {
 public:
-    CashFlowNameR(CTreeModel* model, QObject* parent = nullptr);
+    CashFlowNameR(const QHash<QUuid, QString>& leaf_path, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
@@ -34,5 +33,5 @@ private:
     QString GetPath(const QModelIndex& index) const;
 
 private:
-    CTreeModel* model_ {};
+    const QHash<QUuid, QString>& leaf_path_;
 };

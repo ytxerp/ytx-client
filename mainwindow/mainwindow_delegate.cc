@@ -667,7 +667,7 @@ void MainWindow::DelegateCashFlowStatementCarrier(QTreeView* view) const
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kDirectionRule), direction_rule);
 
-    auto* name { new CashFlowNameR(sc_f_.tree_model, view) };
+    auto* name { new CashFlowNameR(sc_f_.tree_model->LeafPath(), view) };
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kName), name);
 }
 

@@ -2,9 +2,9 @@
 
 #include "dashboard/cash_flow_statement/cashflowstatementrow.h"
 
-CashFlowNameR::CashFlowNameR(CTreeModel* model, QObject* parent)
+CashFlowNameR::CashFlowNameR(const QHash<QUuid, QString>& leaf_path, QObject* parent)
     : StyledItemDelegate { parent }
-    , model_ { model }
+    , leaf_path_ { leaf_path }
 {
 }
 
@@ -24,5 +24,5 @@ QString CashFlowNameR::GetPath(const QModelIndex& index) const
     }
 
     const auto* row { static_cast<const cash_flow::Row*>(index.internalPointer()) };
-    return model_->Path(row->id);
+    return leaf_path_.value(row->id);
 }

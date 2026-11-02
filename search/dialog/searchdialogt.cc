@@ -21,4 +21,5 @@ void SearchDialogT::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kTag), tag_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kName), tree_path_);
 }
