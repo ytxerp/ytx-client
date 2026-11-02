@@ -572,7 +572,7 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsRate), rate);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsRate), rate);
 
-    auto* path { new SearchPathTableR(sc_f_.tree_model, table_view) };
+    auto* path { new SearchPathTableR(sc_f_.tree_model->LeafPath(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsNode), path);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsNode), path);
 
@@ -588,7 +588,7 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
 
 void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
 {
-    auto* path { new SearchPathTableR(sc_i_.tree_model, table_view) };
+    auto* path { new SearchPathTableR(sc_i_.tree_model->LeafPath(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(inventory_heat::RowField::kInventoryNode), path);
 
     auto* quantity { new DoubleR(sc_i_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };
@@ -600,7 +600,7 @@ void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
 
 void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
 {
-    auto* path { new SearchPathTableR(sc_p_.tree_model, table_view) };
+    auto* path { new SearchPathTableR(sc_p_.tree_model->LeafPath(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(partner_heat::RowField::kPartnerNode), path);
 
     auto* quantity { new DoubleR(sc_p_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };

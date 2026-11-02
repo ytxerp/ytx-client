@@ -111,7 +111,7 @@ void SearchDialog::InitDelegate()
     tree_path_ = new SearchPathTreeR(tree_model_, this);
     check_ = new StatusR(std::to_underlying(EntryStatus::kMarked), this);
     color_ = new ColorR(this);
-    table_path_ = new SearchPathTableR(tree_model_, this);
+    table_path_ = new SearchPathTableR(tree_model_->LeafPath(), this);
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
     tag_ = new TagDelegate(tag_icon_hash_, this);

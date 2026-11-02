@@ -31,7 +31,7 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kUnitPrice), rate_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kLhsNode), table_path_);
 
-    auto* rhs_node_name { new SearchPathTableR(inventory_, view) };
+    auto* rhs_node_name { new SearchPathTableR(inventory_->LeafPath(), view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), check_);

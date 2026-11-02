@@ -1,16 +1,19 @@
 #include "searchpathtabler.h"
 
-SearchPathTableR::SearchPathTableR(CTreeModel* model, QObject* parent)
+SearchPathTableR::SearchPathTableR(const QHash<QUuid, QString>& leaf_path, QObject* parent)
     : StyledItemDelegate { parent }
-    , model_ { model }
+    , leaf_path_ { leaf_path }
 {
 }
 
 void SearchPathTableR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    PaintText(GetPath(index), painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
+    const QString path { leaf_path_.value(index.data().toUuid()) };
+    PaintText(path, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
-QSize SearchPathTableR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const { return CalculateTextSize(GetPath(index), option); }
-
-QString SearchPathTableR::GetPath(const QModelIndex& index) const { return model_->Path(index.data().toUuid()); }
+QSize SearchPathTableR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    const QString path { leaf_path_.value(index.data().toUuid()) };
+    return CalculateTextSize(path, option);
+}
