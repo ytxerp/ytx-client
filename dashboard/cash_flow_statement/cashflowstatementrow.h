@@ -1,5 +1,3 @@
-#pragma once
-
 /*
  * Copyright (C) 2023 YTX
  *
@@ -18,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
+
+#pragma once
 
 #include <QJsonObject>
 #include <QList>
