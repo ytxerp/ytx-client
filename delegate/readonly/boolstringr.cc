@@ -1,7 +1,5 @@
 #include "boolstringr.h"
 
-#include <QMouseEvent>
-
 BoolStringR::BoolStringR(CBoolString& map, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }

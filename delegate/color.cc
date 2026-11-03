@@ -1,10 +1,7 @@
 #include "color.h"
 
-#include <QtWidgets/qapplication.h>
-
 #include <QColorDialog>
-#include <QKeyEvent>
-#include <QPainter>
+#include <QMouseEvent>
 
 Color::Color(QObject* parent)
     : StyledItemDelegate { parent }

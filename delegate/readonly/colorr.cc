@@ -1,9 +1,5 @@
 #include "colorr.h"
 
-#include <QtWidgets/qapplication.h>
-
-#include <QPainter>
-
 ColorR::ColorR(QObject* parent)
     : StyledItemDelegate { parent }
 {

@@ -1,7 +1,5 @@
 #include "issuedtimer.h"
 
-#include <QtCore/qdatetime.h>
-
 IssuedTimeR::IssuedTimeR(const QString& date_format, QObject* parent)
     : StyledItemDelegate { parent }
     , date_format_ { date_format }

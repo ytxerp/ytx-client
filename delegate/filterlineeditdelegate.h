@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QLineEdit>
-
 #include "styleditemdelegate.h"
 
 class FilterLineEditDelegate final : public StyledItemDelegate {

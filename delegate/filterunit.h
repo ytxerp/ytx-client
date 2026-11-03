@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 
 #include "delegate/styleditemdelegate.h"

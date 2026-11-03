@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include <QEvent>
-
 #include "delegate/styleditemdelegate.h"
 
 class BoolColorStringR final : public StyledItemDelegate {

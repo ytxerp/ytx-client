@@ -1,5 +1,7 @@
 #include "filterlineeditdelegate.h"
 
+#include <QLineEdit>
+
 FilterLineEditDelegate::FilterLineEditDelegate(QObject* parent)
     : StyledItemDelegate(parent)
 {

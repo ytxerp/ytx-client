@@ -1,7 +1,5 @@
 #include "intstringnonezeror.h"
 
-#include <widget/combobox.h>
-
 IntStringNoneZeroR::IntStringNoneZeroR(CIntString& map, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }

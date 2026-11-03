@@ -19,8 +19,6 @@
 
 #pragma once
 
-// read only
-
 #include "delegate/styleditemdelegate.h"
 #include "tree/model/treemodel.h"
 

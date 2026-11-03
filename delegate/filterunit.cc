@@ -1,7 +1,5 @@
 #include "filterunit.h"
 
-#include <QPainter>
-
 #include "widget/combobox.h"
 
 FilterUnit::FilterUnit(const QHash<QUuid, QString>& leaf_path, QSortFilterProxyModel* filter_model, QObject* parent)

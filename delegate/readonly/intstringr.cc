@@ -1,7 +1,5 @@
 #include "intstringr.h"
 
-#include <widget/combobox.h>
-
 IntStringR::IntStringR(CIntString& map, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }

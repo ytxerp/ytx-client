@@ -19,8 +19,6 @@
 
 #pragma once
 
-// read only
-
 #include "delegate/styleditemdelegate.h"
 
 class SearchPathTableR final : public StyledItemDelegate {
