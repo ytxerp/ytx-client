@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <QString>
+#include <cstdint>
 
 // ================= WS Key Naming Convention =================
 //

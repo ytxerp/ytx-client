@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <QHash>
 #include <QJsonArray>
 #include <QMap>
 #include <QString>
