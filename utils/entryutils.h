@@ -34,20 +34,11 @@ inline QStringList ReadStringList(const QJsonObject& object, const QString& key)
 {
     QStringList result {};
     const QJsonArray array { object.value(key).toArray() };
+
     for (const QJsonValue& value : array)
         result.append(value.toString());
+
     return result;
-}
-
-inline QJsonArray WriteStringList(const QStringList& list)
-{
-    QJsonArray array {};
-
-    for (const auto& uuid : list) {
-        array.append(uuid);
-    }
-
-    return array;
 }
 }
 
@@ -284,7 +275,7 @@ bool UpdateShadowStringList(QJsonObject& update, T* object, CString& field, cons
         return true;
     }
 
-    update.insert(field, utils::WriteStringList(value));
+    update.insert(field, QJsonArray::fromStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
@@ -364,7 +355,7 @@ bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStr
         return true;
     }
 
-    update.insert(field, utils::WriteStringList(value));
+    update.insert(field, QJsonArray::fromStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

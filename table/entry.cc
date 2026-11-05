@@ -1,7 +1,6 @@
 #include "entry.h"
 
 #include <QJsonArray>
-#include <QJsonObject>
 
 #include "component/constant.h"
 #include "component/constantint.h"
@@ -108,8 +107,8 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kExternalSku, external_sku);
     obj.insert(kStatus, status);
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
-    obj.insert(kTag, utils::WriteStringList(tag));
-    obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
     obj.insert(kVersion, version);
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', numeric_const::kDecimalPlaces8));
@@ -161,9 +160,9 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kCount, QString::number(count, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kMeasure, QString::number(measure, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kInitial, QString::number(initial, 'f', numeric_const::kDecimalPlaces4));
-    obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
     obj.insert(kVersion, version);
-    obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
 
     return obj;
 }

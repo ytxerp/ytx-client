@@ -60,8 +60,8 @@ QJsonObject Node::WriteJson() const
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kFinalTotal, QString::number(final_total, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', numeric_const::kDecimalPlaces4));
-    obj.insert(kTag, utils::WriteStringList(tag));
-    obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
     obj.insert(kVersion, version);
     // Status is initialized to 1 by the database.
     // obj.insert(kStatus, std::to_underlying(status));
@@ -152,8 +152,8 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kColor, color);
-    obj.insert(kTag, utils::WriteStringList(tag));
-    obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
     obj.insert(kVersion, version);
     obj.insert(kStatus, std::to_underlying(NodeStatus::kActive));
 
@@ -237,10 +237,10 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kCountTotal, QString::number(count_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(order_status));
-    obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
     obj.insert(kVersion, version);
     obj.insert(kColor, color);
-    obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
 
     // server will ignore this value
     obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));

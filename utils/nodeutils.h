@@ -28,7 +28,6 @@
 #include "enum/nodeenum.h"
 #include "enum/section.h"
 #include "tree/node.h"
-#include "utils/entryutils.h"
 
 template <typename T>
 concept TreeNode = requires(T node) {
@@ -242,7 +241,7 @@ bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStr
         return false;
 
     current_value = value;
-    update.insert(field, utils::WriteStringList(value));
+    update.insert(field, QJsonArray::fromStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
