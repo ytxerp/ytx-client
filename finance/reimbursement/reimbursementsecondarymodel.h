@@ -28,7 +28,7 @@ namespace reimbursement {
 class SecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit SecondaryModel(const QStringList& header, Status status, int finance_permission, QObject* parent = nullptr);
+    explicit SecondaryModel(const QStringList& header, Status status, QUuid primary_id, int finance_permission, QObject* parent = nullptr);
     ~SecondaryModel() override;
 
 signals:
@@ -48,6 +48,9 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
+    bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
+
     void Rebuild(const QJsonArray& array);
     void UpdateStatus(Status status);
 
@@ -65,8 +68,10 @@ private:
 
 private:
     const QStringList header_ {};
-    Status status_ {};
+    const QUuid primary_id_ {};
     const int finance_permission_ {};
+
+    Status status_ {};
 
     QList<SecondaryRow*> list_ {};
     QSet<QUuid> pending_delete_ {};

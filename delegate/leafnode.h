@@ -32,6 +32,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
+    mutable QUuid last_insert_ {};
     ItemModel* leaf_model_ {};
     const QHash<QUuid, QString>& leaf_path_;
 };

@@ -70,6 +70,7 @@ enum class SecondaryField {
 
 struct SecondaryRow final {
     QUuid id {};
+    QUuid lhs_node {};
     QUuid debit_node {};
     QUuid credit_node {};
 

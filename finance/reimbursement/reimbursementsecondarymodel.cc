@@ -8,11 +8,12 @@
 
 namespace reimbursement {
 
-SecondaryModel::SecondaryModel(const QStringList& header, Status status, int finance_permission, QObject* parent)
+SecondaryModel::SecondaryModel(const QStringList& header, Status status, QUuid primary_id, int finance_permission, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
-    , status_ { status }
+    , primary_id_ { primary_id }
     , finance_permission_ { finance_permission }
+    , status_ { status }
 {
 }
 
@@ -350,6 +351,59 @@ Qt::ItemFlags SecondaryModel::flags(const QModelIndex& index) const
     }
 
     return flags;
+}
+
+bool SecondaryModel::insertRows(int row, int count, const QModelIndex& parent)
+{
+    if (parent.isValid() || count != 1)
+        return false;
+
+    if (row < 0 || row > list_.size())
+        return false;
+
+    if (status_ != Status::kDraft)
+        return false;
+
+    auto* entry { ResourcePool<SecondaryRow>::Instance().Allocate() };
+
+    entry->id = QUuid::createUuidV7();
+    entry->lhs_node = primary_id_;
+    entry->sync_state = SyncState::kCreating;
+
+    beginInsertRows(parent, row, row);
+    list_.insert(row, entry);
+    endInsertRows();
+
+    return true;
+}
+
+bool SecondaryModel::removeRows(int row, int count, const QModelIndex& parent)
+{
+    if (parent.isValid() || count != 1)
+        return false;
+
+    if (row < 0 || row >= list_.size())
+        return false;
+
+    if (status_ != Status::kDraft)
+        return false;
+
+    auto* entry = list_.at(row);
+    const QUuid entry_id { entry->id };
+    const double initial_delta { -entry->initial };
+
+    beginRemoveRows(parent, row, row);
+    list_.removeAt(row);
+    endRemoveRows();
+
+    if (!qFuzzyIsNull(initial_delta))
+        emit SSyncInitial(initial_delta);
+
+    if (entry->sync_state != SyncState::kCreating)
+        pending_delete_.insert(entry_id);
+
+    ResourcePool<SecondaryRow>::Instance().Recycle(entry);
+    return true;
 }
 
 }

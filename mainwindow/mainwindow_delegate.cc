@@ -775,6 +775,9 @@ void MainWindow::DelegateReimbursementSecondary(QTableView* table_view, CSection
     auto* node { new LeafNode(sc_f_.tree_model->LeafPath(), sc_f_.tree_model->LeafModel(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDebitNode), node);
     table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kCreditNode), node);
+
+    auto* document { new Document(sc_f_.shared_config.document_dir, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDocument), document);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

@@ -38,6 +38,7 @@ void MainWindow::RCreateReimbursementSecondaryWidget(reimbursement::PrimaryModel
 
     primary_row.issued_time = QDateTime::currentDateTime();
     primary_row.id = QUuid::createUuidV7();
+    primary_row.sync_state = SyncState::kCreating;
 
     CreateReimbursementSecondary(primary_row, model);
 }
@@ -63,17 +64,17 @@ void MainWindow::ROpenReimbursementSecondaryWidget(const QModelIndex& index)
 void MainWindow::CreateReimbursementSecondary(const reimbursement::PrimaryRow& primary_row, reimbursement::PrimaryModel* primary_model)
 {
     const QUuid widget_id { QUuid::createUuidV7() };
+    const int finance_permission { UserProfile::Instance().SectionPermissions(Section::kFinance) };
 
-    auto* model { new reimbursement::SecondaryModel(
-        header_info_.reimbursement_secondary, primary_row.status, UserProfile::Instance().SectionPermissions(Section::kFinance), this) };
+    auto* model { new reimbursement::SecondaryModel(header_info_.reimbursement_secondary, primary_row.status, primary_row.id, finance_permission, this) };
+    auto* widget { new ReimbursementSecondaryWidget(model, sc_f_.section_config, primary_row, widget_id, finance_permission, this) };
 
-    auto* widget { new ReimbursementSecondaryWidget(model, sc_f_.section_config, primary_row, widget_id, this) };
     connect(widget, &ReimbursementSecondaryWidget::SInsertPrimaryRow, primary_model, &reimbursement::PrimaryModel::RInsertePrimaryRow);
     connect(widget, &ReimbursementSecondaryWidget::SUpdatePrimaryRow, primary_model, &reimbursement::PrimaryModel::RUpdatePrimaryRow);
 
     {
-        const QString name { UserProfile::Instance().Username() };
-        const QString label { QString("%1-%2").arg(tr("Reimbursement"), name) };
+        const QString username { primary_row.sync_state == SyncState::kSynced ? primary_row.username : UserProfile::Instance().Username() };
+        const QString label { tr("Reimbursement") + "-" + username };
 
         const int tab_index { sc_->tab_widget->addTab(widget, label) };
         auto* tab_bar { sc_->tab_widget->tabBar() };

@@ -50,6 +50,8 @@ void reimbursement::SecondaryRow::ReadJson(const QJsonObject& object)
 
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
+    if (const auto val = object.value(kLhsNode); val.isString())
+        lhs_node = QUuid(val.toString());
     if (const auto val = object.value(kDebitNode); val.isString())
         debit_node = QUuid(val.toString());
     if (const auto val = object.value(kCreditNode); val.isString())
@@ -69,6 +71,7 @@ QJsonObject reimbursement::SecondaryRow::WriteJson() const
     QJsonObject obj {};
 
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kDebitNode, debit_node.toString(QUuid::WithoutBraces));
     obj.insert(kCreditNode, credit_node.toString(QUuid::WithoutBraces));
     obj.insert(kDescription, description);

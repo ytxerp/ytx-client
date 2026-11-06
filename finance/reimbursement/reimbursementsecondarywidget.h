@@ -34,8 +34,8 @@ class ReimbursementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit ReimbursementSecondaryWidget(
-        reimbursement::SecondaryModel* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id, QWidget* parent = nullptr);
+    explicit ReimbursementSecondaryWidget(reimbursement::SecondaryModel* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id,
+        int finance_permission, QWidget* parent = nullptr);
     ~ReimbursementSecondaryWidget() override;
 
     QTableView* View() const;
@@ -51,18 +51,26 @@ private slots:
     void on_pushButtonSave_clicked();
     void on_pushButtonApprove_clicked();
     void on_pushButtonPost_clicked();
+    void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
+    void on_lineEditDescription_textEdited(const QString& arg1);
+    void on_pushButtonUnapprove_clicked();
+    void on_pushButtonUnpost_clicked();
 
 private:
     void InitWidget();
-    void InitModel(const QStringList& header);
+    void InitData();
+    void FetchNode();
+    void UpdateButtons();
 
 private:
     Ui::ReimbursementSecondaryWidget* ui;
     reimbursement::SecondaryModel* model_ {};
 
-    reimbursement::PrimaryRow row_ {};
+    reimbursement::PrimaryRow primary_row_ {};
     QJsonObject pending_update_ {};
+
     const QUuid widget_id_ {};
+    const int finance_permission_ {};
 
     CSectionConfig& config_ {};
 };

@@ -24,7 +24,9 @@ void LeafNode::setEditorData(QWidget* editor, const QModelIndex& index) const
         return;
 
     auto key { index.data().toUuid() };
-  
+    if (key.isNull())
+        key = last_insert_;
+
     const int item_index { cast_editor->findData(key) };
     cast_editor->setCurrentIndex(item_index);
 }
@@ -34,6 +36,7 @@ void LeafNode::setModelData(QWidget* editor, QAbstractItemModel* model, const QM
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
     const auto key { cast_editor->currentData().toUuid() };
+    last_insert_ = key;
     model->setData(index, key);
 }
 
