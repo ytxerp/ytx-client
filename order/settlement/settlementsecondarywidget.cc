@@ -29,7 +29,7 @@ SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, se
 
     QTimer::singleShot(0, this, &SettlementSecondaryWidget::FetchNode);
     if (settlement.sync_state == SyncState::kCreating)
-        QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
+        ui->comboPartner->setFocus();
 }
 
 SettlementSecondaryWidget::~SettlementSecondaryWidget() { delete ui; }
@@ -113,8 +113,11 @@ void SettlementSecondaryWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime&
         pending_update_.insert(kIssuedTime, dateTime.toUTC().toString(Qt::ISODate));
 }
 
-void SettlementSecondaryWidget::on_lineDescription_textChanged(const QString& arg1)
+void SettlementSecondaryWidget::on_lineDescription_textEdited(const QString& arg1)
 {
+    if (settlement_.description == arg1)
+        return;
+
     settlement_.description = arg1;
 
     if (settlement_.sync_state == SyncState::kSynced)

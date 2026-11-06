@@ -58,7 +58,7 @@ public slots:
 
 private slots:
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
-    void on_lineDescription_textChanged(const QString& arg1);
+    void on_lineDescription_textEdited(const QString& arg1);
     void on_comboPartner_currentIndexChanged(int index);
 
     void on_pBtnRelease_clicked();
