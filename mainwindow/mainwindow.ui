@@ -352,6 +352,8 @@
     <addaction name="actionBalanceSheet"/>
     <addaction name="actionIncomeStatement"/>
     <addaction name="actionCashFlowStatement"/>
+    <addaction name="separator"/>
+    <addaction name="actionReimbursement"/>
    </widget>
    <widget class="QMenu" name="menuInventory">
     <property name="title">
@@ -754,6 +756,14 @@
   <action name="actionMergeInventory">
    <property name="text">
     <string>Merge</string>
+   </property>
+  </action>
+  <action name="actionReimbursement">
+   <property name="text">
+    <string>Reimbursement</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
  </widget>

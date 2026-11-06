@@ -165,12 +165,23 @@ enum class WsKey : uint16_t {
     kOrderDetail = 2116,
     kOrderAccept = 2117,
 
-    // --- Finance ---
+    // --- Finance (2200-2299) ---
     kBalanceSheetAck = 2200,
     kCashFlowStatementAck = 2201,
     kIncomeStatementAck = 2202,
 
     kPeriodClose = 2210,
+
+    // Reimbursement
+    kReimbursementPrimary = 2220,
+    kReimbursementDelete = 2221,
+    kReimbursementInsert = 2222,
+    kReimbursementSecondary = 2223,
+    kReimbursementUpdate = 2224,
+    kReimbursementApprove = 2225,
+    kReimbursementUnapprove = 2226,
+    kReimbursementPost = 2227,
+    kReimbursementUnpost = 2228,
 
     // --- Task (2300-2399) ---
     // reserved
@@ -427,5 +438,23 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderNodeUpdate";
     case WsKey::kLeafDeleteLockedDeny:
         return "kLeafDeleteLockedDeny";
+    case WsKey::kReimbursementPrimary:
+        return "kReimbursementPrimary";
+    case WsKey::kReimbursementDelete:
+        return "kReimbursementDelete";
+    case WsKey::kReimbursementInsert:
+        return "kReimbursementInsert";
+    case WsKey::kReimbursementSecondary:
+        return "kReimbursementSecondary";
+    case WsKey::kReimbursementUpdate:
+        return "kReimbursementUpdate";
+    case WsKey::kReimbursementApprove:
+        return "kReimbursementApprove";
+    case WsKey::kReimbursementUnapprove:
+        return "kReimbursementUnapprove";
+    case WsKey::kReimbursementPost:
+        return "kReimbursementPost";
+    case WsKey::kReimbursementUnpost:
+        return "kReimbursementUnpost";
     }
 }

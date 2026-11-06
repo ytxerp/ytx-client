@@ -32,6 +32,7 @@ enum class WidgetRole {
     kSettlementView,
     kStatement,
     kOrderOverview,
+    kReimbursement,
 };
 
 struct WidgetContext {

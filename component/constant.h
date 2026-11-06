@@ -176,6 +176,10 @@ inline const QString kPurchasePermissions = QStringLiteral("purchase_permissions
 inline const QString kRoles = QStringLiteral("roles");
 inline const QString kCashKind = QStringLiteral("cash_kind");
 
+inline const QString kDebitNode = QStringLiteral("debit_node");
+inline const QString kCreditNode = QStringLiteral("credit_node");
+inline const QString kReimbursementId = QStringLiteral("reimbursement_id");
+
 inline const QString kId = QStringLiteral("id");
 inline const QString kUserId = QStringLiteral("user_id");
 inline const QString kSessionId = QStringLiteral("session_id");

@@ -52,3 +52,10 @@ inline constexpr qsizetype kMaxSize = 1000;
 namespace zstd_const {
 inline constexpr qsizetype kCompressThreshold { 256 };
 }
+
+namespace finance_permission {
+inline constexpr int kApprove = 1 << 4;
+inline constexpr int kUnapprove = 1 << 5;
+inline constexpr int kPost = 1 << 6;
+inline constexpr int kUnpost = 1 << 7;
+}

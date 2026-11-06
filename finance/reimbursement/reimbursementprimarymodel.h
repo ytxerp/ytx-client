@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2023 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#pragma once
+
+#include <QAbstractItemModel>
+#include <QJsonObject>
+
+#include "reimbursementrow.h"
+
+namespace reimbursement {
+
+class PrimaryModel final : public QAbstractItemModel {
+    Q_OBJECT
+
+public:
+    explicit PrimaryModel(const QStringList& header, QObject* parent = nullptr);
+    ~PrimaryModel() override;
+
+public slots:
+    void RInsertePrimaryRow(const reimbursement::PrimaryRow& row);
+    void RUpdatePrimaryRow(const reimbursement::PrimaryRow& row);
+
+public:
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : header_.size(); }
+
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
+    void sort(int column, Qt::SortOrder order) override;
+    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
+    void Rebuild(const QJsonArray& array);
+
+private:
+    std::optional<int> FindRow(QUuid id)
+    {
+        for (int i = 0; i != list_.size(); ++i) {
+            if (auto* s = list_[i]; s && s->id == id)
+                return i;
+        }
+
+        return std::nullopt;
+    }
+
+private:
+    const QStringList header_ {};
+    QList<PrimaryRow*> list_ {};
+};
+
+}

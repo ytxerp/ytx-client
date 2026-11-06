@@ -22,8 +22,21 @@ std::span<const PermissionItem> PermissionItems(Section section)
         { 1 << 5, QObject::tr("Unsettle") },
     };
 
+    static const PermissionItem finance[] = {
+        { 0b01, QObject::tr("Read Only") },
+        { 0b11, QObject::tr("Read Write") },
+        { 1 << 2, QObject::tr("Lock") },
+        { 1 << 3, QObject::tr("Unlock") },
+        { 1 << 4, QObject::tr("Approve") },
+        { 1 << 5, QObject::tr("Unapprove") },
+        { 1 << 6, QObject::tr("Post") },
+        { 1 << 7, QObject::tr("Unpost") },
+    };
+
     switch (section) {
     case Section::kFinance:
+        return finance;
+
     case Section::kTask:
     case Section::kInventory:
     case Section::kPartner:

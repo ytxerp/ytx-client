@@ -236,6 +236,11 @@ void MainWindow::InitContextFinance()
     info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
     info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
 
+    // Reimbursement Status
+    finance_info_.reimbursement_status_map.insert(std::to_underlying(reimbursement::Status::kDraft), QObject::tr("Draft"));
+    finance_info_.reimbursement_status_map.insert(std::to_underlying(reimbursement::Status::kApproved), QObject::tr("Approved"));
+    finance_info_.reimbursement_status_map.insert(std::to_underlying(reimbursement::Status::kPosted), QObject::tr("Posted"));
+
     info.cash_kind_model = new UnitModel(this);
     info.cash_kind_model->Rebuild(info.cash_kind_map);
 

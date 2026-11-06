@@ -2,6 +2,24 @@
 
 void MainWindow::InitHeader()
 {
+    header_info_.reimbursement_primary = {
+        tr("Username"),
+        tr("Issued Time"),
+        tr("Description"),
+        tr("Status"),
+        QString(),
+        tr("Amount Total"),
+    };
+
+    header_info_.reimbursement_secondary = {
+        tr("Description"),
+        tr("Debit Node"),
+        tr("Credit Node"),
+        tr("Document"),
+        QString(),
+        tr("Amount"),
+    };
+
     header_info_.order_overview = {
         tr("Issued Time"),
         tr("Partner"),
@@ -15,7 +33,6 @@ void MainWindow::InitHeader()
         tr("Measure"),
         tr("Unit Price"),
         tr("Amount"),
-
     };
 
     header_info_.audit = {

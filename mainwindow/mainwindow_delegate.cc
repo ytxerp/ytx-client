@@ -19,6 +19,7 @@
 #include "delegate/financeroledelegate.h"
 #include "delegate/intstring.h"
 #include "delegate/issuedtime.h"
+#include "delegate/leafnode.h"
 #include "delegate/line.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
@@ -749,6 +750,31 @@ void MainWindow::DelegateStatementFilterView(QTableView* view) const
     view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCount), number);
     view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kMeasure), number);
     view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), number);
+}
+
+void MainWindow::DelegateReimbursementPrimary(QTableView* table_view, CSectionConfig& config) const
+{
+    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kIssuedTime), issued_time);
+
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kInitialTotal), amount);
+
+    auto* status { new IntStringR(finance_info_.reimbursement_status_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kStatus), status);
+}
+
+void MainWindow::DelegateReimbursementSecondary(QTableView* table_view, CSectionConfig& config) const
+{
+    auto* line { new Line(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDescription), line);
+
+    auto* value { new Double(config.amount_decimal, kDoubleLowest, kDoubleMax, string_const::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kInitial), value);
+
+    auto* node { new LeafNode(sc_f_.tree_model->LeafPath(), sc_f_.tree_model->LeafModel(), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDebitNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kCreditNode), node);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

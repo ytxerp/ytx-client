@@ -38,4 +38,6 @@ struct HeaderInfo {
     QStringList cash_flow_statement_wrong {};
     QStringList audit {};
     QStringList order_overview {};
+    QStringList reimbursement_primary {};
+    QStringList reimbursement_secondary {};
 };

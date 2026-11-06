@@ -140,6 +140,7 @@ set(HEADERS
     delegate/financeroledelegate.h
     delegate/intstring.h
     delegate/issuedtime.h
+    delegate/leafnode.h
     delegate/line.h
     delegate/readonly/amountr.h
     delegate/readonly/boolcolorstringr.h
@@ -197,6 +198,11 @@ set(HEADERS
     finance/finance_role.h
     finance/period_close/periodclosedialog.h
     finance/period_close/periodclosemodel.h
+    finance/reimbursement/reimbursementprimarymodel.h
+    finance/reimbursement/reimbursementprimarywidget.h
+    finance/reimbursement/reimbursementrow.h
+    finance/reimbursement/reimbursementsecondarymodel.h
+    finance/reimbursement/reimbursementsecondarywidget.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
@@ -342,6 +348,7 @@ set(SOURCES
     delegate/financeroledelegate.cc
     delegate/intstring.cc
     delegate/issuedtime.cc
+    delegate/leafnode.cc
     delegate/line.cc
     delegate/readonly/amountr.cc
     delegate/readonly/boolcolorstringr.cc
@@ -392,6 +399,11 @@ set(SOURCES
     finance/finance_role.cc
     finance/period_close/periodclosedialog.cc
     finance/period_close/periodclosemodel.cc
+    finance/reimbursement/reimbursementprimarymodel.cc
+    finance/reimbursement/reimbursementprimarywidget.cc
+    finance/reimbursement/reimbursementrow.cc
+    finance/reimbursement/reimbursementsecondarymodel.cc
+    finance/reimbursement/reimbursementsecondarywidget.cc
     global/dailylogger.cc
     global/exporthub.cc
     global/logininfo.cc
@@ -423,6 +435,7 @@ set(SOURCES
     mainwindow/mainwindow_order_overview.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
+    mainwindow/mainwindow_reimbursement.cc
     mainwindow/mainwindow_search.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_settlement_view.cc
@@ -528,6 +541,8 @@ set(UIS
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui
+    finance/reimbursement/reimbursementprimarywidget.ui
+    finance/reimbursement/reimbursementsecondarywidget.ui
     mainwindow/mainwindow.ui
     order/settlement/settlementprimarywidget.ui
     order/settlement/settlementsecondarywidget.ui
