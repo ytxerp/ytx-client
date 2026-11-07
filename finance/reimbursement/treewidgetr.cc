@@ -1,18 +1,18 @@
-#include "reimbursementprimarywidget.h"
+#include "treewidgetr.h"
 
 #include <QTimer>
 
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "ui_reimbursementprimarywidget.h"
+#include "ui_treewidgetr.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-ReimbursementPrimaryWidget::ReimbursementPrimaryWidget(QUuid widget_id, const QStringList& header, QWidget* parent)
+TreeWidgetR::TreeWidgetR(QUuid widget_id, const QStringList& header, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::ReimbursementPrimaryWidget)
+    , ui(new Ui::TreeWidgetR)
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
 {
@@ -23,14 +23,14 @@ ReimbursementPrimaryWidget::ReimbursementPrimaryWidget(QUuid widget_id, const QS
     InitTimer();
     InitModel(header);
 
-    QTimer::singleShot(0, this, &ReimbursementPrimaryWidget::on_pushButtonFetch_clicked);
+    QTimer::singleShot(0, this, &TreeWidgetR::on_pushButtonFetch_clicked);
 }
 
-ReimbursementPrimaryWidget::~ReimbursementPrimaryWidget() { delete ui; }
+TreeWidgetR::~TreeWidgetR() { delete ui; }
 
-QTableView* ReimbursementPrimaryWidget::View() const { return ui->tableView; }
+QTableView* TreeWidgetR::View() const { return ui->tableView; }
 
-void ReimbursementPrimaryWidget::InitWidget()
+void TreeWidgetR::InitWidget()
 {
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
@@ -43,20 +43,20 @@ void ReimbursementPrimaryWidget::InitWidget()
     utils::SetPushButton(ui->pushButtonFetch, QKeySequence(Qt::CTRL | Qt::Key_R));
 }
 
-void ReimbursementPrimaryWidget::InitTimer()
+void TreeWidgetR::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
 }
 
-void ReimbursementPrimaryWidget::InitModel(const QStringList& header)
+void TreeWidgetR::InitModel(const QStringList& header)
 {
-    model_ = new reimbursement::PrimaryModel(header, this);
+    model_ = new reimbursement::TreeModelR(header, this);
     ui->tableView->setModel(model_);
 }
 
-void ReimbursementPrimaryWidget::on_pushButtonFetch_clicked()
+void TreeWidgetR::on_pushButtonFetch_clicked()
 {
     if (!ui->pushButtonFetch->isEnabled()) {
         return;
@@ -80,7 +80,7 @@ void ReimbursementPrimaryWidget::on_pushButtonFetch_clicked()
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void ReimbursementPrimaryWidget::on_start_dateChanged(const QDate& date)
+void TreeWidgetR::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= range_.end };
     range_.start = date;
@@ -89,7 +89,7 @@ void ReimbursementPrimaryWidget::on_start_dateChanged(const QDate& date)
     ui->pushButtonFetch->setEnabled(valid);
 }
 
-void ReimbursementPrimaryWidget::on_end_dateChanged(const QDate& date)
+void TreeWidgetR::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= range_.start };
     range_.end = date;
@@ -98,7 +98,7 @@ void ReimbursementPrimaryWidget::on_end_dateChanged(const QDate& date)
     ui->pushButtonFetch->setEnabled(valid);
 }
 
-void ReimbursementPrimaryWidget::on_pushButtonDelete_clicked()
+void TreeWidgetR::on_pushButtonDelete_clicked()
 {
     auto* view { ui->tableView };
     Q_ASSERT(view != nullptr);
@@ -120,4 +120,4 @@ void ReimbursementPrimaryWidget::on_pushButtonDelete_clicked()
     model_->removeRows(index.row(), 1);
 }
 
-void ReimbursementPrimaryWidget::on_pushButtonInsert_clicked() { emit SCreateReimbursementSecondaryWidget(model_); }
+void TreeWidgetR::on_pushButtonInsert_clicked() { emit SCreateReimbursementSecondaryWidget(model_); }

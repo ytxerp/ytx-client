@@ -198,11 +198,11 @@ set(HEADERS
     finance/finance_role.h
     finance/period_close/periodclosedialog.h
     finance/period_close/periodclosemodel.h
-    finance/reimbursement/reimbursementprimarymodel.h
-    finance/reimbursement/reimbursementprimarywidget.h
     finance/reimbursement/reimbursementrow.h
-    finance/reimbursement/reimbursementsecondarymodel.h
-    finance/reimbursement/reimbursementsecondarywidget.h
+    finance/reimbursement/tablemodelr.h
+    finance/reimbursement/tablewidgetr.h
+    finance/reimbursement/treemodelr.h
+    finance/reimbursement/treewidgetr.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
@@ -399,11 +399,11 @@ set(SOURCES
     finance/finance_role.cc
     finance/period_close/periodclosedialog.cc
     finance/period_close/periodclosemodel.cc
-    finance/reimbursement/reimbursementprimarymodel.cc
-    finance/reimbursement/reimbursementprimarywidget.cc
     finance/reimbursement/reimbursementrow.cc
-    finance/reimbursement/reimbursementsecondarymodel.cc
-    finance/reimbursement/reimbursementsecondarywidget.cc
+    finance/reimbursement/tablemodelr.cc
+    finance/reimbursement/tablewidgetr.cc
+    finance/reimbursement/treemodelr.cc
+    finance/reimbursement/treewidgetr.cc
     global/dailylogger.cc
     global/exporthub.cc
     global/logininfo.cc
@@ -541,8 +541,8 @@ set(UIS
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui
-    finance/reimbursement/reimbursementprimarywidget.ui
-    finance/reimbursement/reimbursementsecondarywidget.ui
+    finance/reimbursement/tablewidgetr.ui
+    finance/reimbursement/treewidgetr.ui
     mainwindow/mainwindow.ui
     order/settlement/settlementprimarywidget.ui
     order/settlement/settlementsecondarywidget.ui

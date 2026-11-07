@@ -115,6 +115,51 @@ QJsonObject EntryP::WriteJson() const
     return obj;
 }
 
+void EntryR::Reset() { *this = EntryR {}; }
+
+void EntryR::ReadJson(const QJsonObject& object)
+{
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kLhsNode); val.isString())
+        lhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kDebitNode); val.isString())
+        debit_node = QUuid(val.toString());
+    if (const auto val = object.value(kCreditNode); val.isString())
+        credit_node = QUuid(val.toString());
+    if (const auto val = object.value(kInitial); val.isString())
+        initial = val.toString().toDouble();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+
+    if (object.value(kTag).isArray())
+        tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
+}
+
+QJsonObject EntryR::WriteJson() const
+{
+    QJsonObject obj {};
+
+    obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
+    obj.insert(kDebitNode, debit_node.toString(QUuid::WithoutBraces));
+    obj.insert(kCreditNode, credit_node.toString(QUuid::WithoutBraces));
+    obj.insert(kInitial, QString::number(initial, 'f', numeric_const::kDecimalPlaces4));
+    obj.insert(kDescription, description);
+    obj.insert(kTag, QJsonArray::fromStringList(tag));
+    obj.insert(kDocument, QJsonArray::fromStringList(document));
+    obj.insert(kVersion, version);
+
+    return obj;
+}
+
 void EntryO::Reset() { *this = EntryO {}; }
 
 // Note: Fields like issued_time, document, code and status are ignored for Order entries

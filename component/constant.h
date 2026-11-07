@@ -259,3 +259,4 @@ inline const QString kPurchase = QStringLiteral("purchase");
 inline const QString kSale = QStringLiteral("sale");
 inline const QString kPartner = QStringLiteral("partner");
 inline const QString kTask = QStringLiteral("task");
+inline const QString kReimbursement = QStringLiteral("reimbursement");

@@ -36,6 +36,7 @@
  *  - kPartner   (3) : Partner / stakeholder information (single-entry)
  *  - kSale      (4) : Sales order module (single-entry)
  *  - kPurchase  (5) : Purchase order module (single-entry)
+ *  - kReimbursement  (6) : Reimbursement module (single-entry)
  *
  * Abbreviations:
  *  - Finance (F)
@@ -43,22 +44,42 @@
  *  - Inventory (I)
  *  - Partner (P)
  *  - Order (O)
+ *  - Reimbursement (R)
  *
  * Notes:
  *  - Double-entry modules always involve both LHS / RHS or dual nodes.
  *  - Single-entry modules store only one-sided entries.
  */
-enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
+enum class Section {
+    kFinance = 0,
+    kTask,
+    kInventory,
+    kPartner,
+    kSale,
+    kPurchase,
+    kReimbursement,
+};
 
 /**
  * @brief Constant array containing all defined sections in proper order.
  *
  * This array is used for iteration and must match the enum order exactly.
  */
-inline constexpr std::array<Section, 6> kSectionArray
-    = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
+inline constexpr std::array<Section, 7> kSectionArray = {
+    Section::kFinance,
+    Section::kTask,
+    Section::kInventory,
+    Section::kPartner,
+    Section::kSale,
+    Section::kPurchase,
+    Section::kReimbursement,
+};
 
-inline constexpr std::array<Section, 3> kDoubleSectionArray = { Section::kFinance, Section::kTask, Section::kInventory };
+inline constexpr std::array<Section, 3> kDoubleSectionArray = {
+    Section::kFinance,
+    Section::kTask,
+    Section::kInventory,
+};
 
 /**
  * @brief Whether the given section belongs to a single-entry module.
@@ -70,7 +91,7 @@ inline constexpr std::array<Section, 3> kDoubleSectionArray = { Section::kFinanc
  *   This is the complement of IsDoubleEntry(), but is explicitly defined
  *   for clarity and readability.
  */
-inline bool IsSingleEntry(Section s) { return s == Section::kPartner || s == Section::kSale || s == Section::kPurchase; }
+inline bool IsSingleEntry(Section s) { return s == Section::kPartner || s == Section::kSale || s == Section::kPurchase || s == Section::kReimbursement; }
 
 /**
  * @brief Whether the given section belongs to a double-entry module.
@@ -111,6 +132,7 @@ inline const QHash<Section, QString> kSectionString {
     { Section::kTask, kTask },
     { Section::kSale, kSale },
     { Section::kPurchase, kPurchase },
+    { Section::kReimbursement, kReimbursement },
 };
 
 /**
@@ -126,4 +148,5 @@ inline const QHash<QString, Section> kStringSection {
     { kTask, Section::kTask },
     { kSale, Section::kSale },
     { kPurchase, Section::kPurchase },
+    { kReimbursement, Section::kReimbursement },
 };

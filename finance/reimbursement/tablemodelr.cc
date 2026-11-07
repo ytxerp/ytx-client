@@ -1,4 +1,4 @@
-#include "reimbursementsecondarymodel.h"
+#include "tablemodelr.h"
 
 #include <QJsonArray>
 
@@ -8,7 +8,7 @@
 
 namespace reimbursement {
 
-SecondaryModel::SecondaryModel(const QStringList& header, Status status, QUuid primary_id, int finance_permission, QObject* parent)
+TableModelR::TableModelR(const QStringList& header, Status status, QUuid primary_id, int finance_permission, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , primary_id_ { primary_id }
@@ -17,9 +17,9 @@ SecondaryModel::SecondaryModel(const QStringList& header, Status status, QUuid p
 {
 }
 
-SecondaryModel::~SecondaryModel() { ResourcePool<SecondaryRow>::Instance().Recycle(list_); }
+TableModelR::~TableModelR() { ResourcePool<SecondaryRow>::Instance().Recycle(list_); }
 
-QModelIndex SecondaryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TableModelR::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -27,7 +27,7 @@ QModelIndex SecondaryModel::index(int row, int column, const QModelIndex& parent
     return createIndex(row, column, list_.at(row));
 }
 
-QVariant SecondaryModel::data(const QModelIndex& index, int role) const
+QVariant TableModelR::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -55,7 +55,7 @@ QVariant SecondaryModel::data(const QModelIndex& index, int role) const
     }
 }
 
-bool SecondaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -100,7 +100,7 @@ bool SecondaryModel::setData(const QModelIndex& index, const QVariant& value, in
     return true;
 }
 
-bool SecondaryModel::UpdateDescription(SecondaryRow* row, const QString& value)
+bool TableModelR::UpdateDescription(SecondaryRow* row, const QString& value)
 {
     if (row->description == value)
         return false;
@@ -113,7 +113,7 @@ bool SecondaryModel::UpdateDescription(SecondaryRow* row, const QString& value)
     return true;
 }
 
-bool SecondaryModel::UpdateDocument(SecondaryRow* row, const QStringList& value)
+bool TableModelR::UpdateDocument(SecondaryRow* row, const QStringList& value)
 {
     if (row->document == value)
         return false;
@@ -126,7 +126,7 @@ bool SecondaryModel::UpdateDocument(SecondaryRow* row, const QStringList& value)
     return true;
 }
 
-bool SecondaryModel::UpdateInitial(SecondaryRow* row, double value)
+bool TableModelR::UpdateInitial(SecondaryRow* row, double value)
 {
     if (qFuzzyCompare(row->initial, value))
         return false;
@@ -139,7 +139,7 @@ bool SecondaryModel::UpdateInitial(SecondaryRow* row, double value)
     return true;
 }
 
-bool SecondaryModel::UpdateDebit(SecondaryRow* row, QUuid value)
+bool TableModelR::UpdateDebit(SecondaryRow* row, QUuid value)
 {
     if (row->debit_node == value)
         return false;
@@ -152,7 +152,7 @@ bool SecondaryModel::UpdateDebit(SecondaryRow* row, QUuid value)
     return true;
 }
 
-bool SecondaryModel::UpdateCredit(SecondaryRow* row, QUuid value)
+bool TableModelR::UpdateCredit(SecondaryRow* row, QUuid value)
 {
     if (row->credit_node == value)
         return false;
@@ -165,7 +165,7 @@ bool SecondaryModel::UpdateCredit(SecondaryRow* row, QUuid value)
     return true;
 }
 
-QVariant SecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TableModelR::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return {};
@@ -176,7 +176,7 @@ QVariant SecondaryModel::headerData(int section, Qt::Orientation orientation, in
     return header_.at(section);
 }
 
-void SecondaryModel::sort(int column, Qt::SortOrder order)
+void TableModelR::sort(int column, Qt::SortOrder order)
 {
     const SecondaryField e_column { column };
     if (e_column == SecondaryField::kPlaceholder)
@@ -204,7 +204,7 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SecondaryModel::Rebuild(const QJsonArray& array)
+void TableModelR::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Received empty array";
@@ -233,7 +233,7 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
     endResetModel();
 }
 
-void SecondaryModel::UpdateStatus(Status status)
+void TableModelR::UpdateStatus(Status status)
 {
     if (status_ == status)
         return;
@@ -241,7 +241,7 @@ void SecondaryModel::UpdateStatus(Status status)
     status_ = status;
 }
 
-void SecondaryModel::Finalize(QJsonObject& message)
+void TableModelR::Finalize(QJsonObject& message)
 {
     // deleted
     {
@@ -277,7 +277,7 @@ void SecondaryModel::Finalize(QJsonObject& message)
     }
 }
 
-void SecondaryModel::Purify()
+void TableModelR::Purify()
 {
     for (auto i = list_.size() - 1; i >= 0; --i) {
         auto* row { list_[i] };
@@ -291,7 +291,7 @@ void SecondaryModel::Purify()
     }
 }
 
-void SecondaryModel::SyncSucceeded()
+void TableModelR::SyncSucceeded()
 {
     for (auto* entry : std::as_const(list_)) {
         switch (entry->sync_state) {
@@ -310,7 +310,7 @@ void SecondaryModel::SyncSucceeded()
     pending_delete_.clear();
 }
 
-bool SecondaryModel::HasPendingUpdate() const
+bool TableModelR::HasPendingUpdate() const
 {
     if (!pending_delete_.isEmpty())
         return true;
@@ -323,7 +323,7 @@ bool SecondaryModel::HasPendingUpdate() const
     return false;
 }
 
-Qt::ItemFlags SecondaryModel::flags(const QModelIndex& index) const
+Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -338,14 +338,15 @@ Qt::ItemFlags SecondaryModel::flags(const QModelIndex& index) const
     switch (column) {
     case SecondaryField::kDebitNode:
     case SecondaryField::kCreditNode:
-        if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
-            flags |= Qt::ItemIsEditable;
-        break;
+        // if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
+        //     flags |= Qt::ItemIsEditable;
+        // break;
     case SecondaryField::kDescription:
-    case SecondaryField::kDocument:
     case SecondaryField::kInitial:
         flags |= Qt::ItemIsEditable;
         break;
+    case SecondaryField::kDocument:
+        flags &= ~Qt::ItemIsEditable;
     case SecondaryField::kPlaceholder:
         break;
     }
@@ -353,7 +354,7 @@ Qt::ItemFlags SecondaryModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool SecondaryModel::insertRows(int row, int count, const QModelIndex& parent)
+bool TableModelR::insertRows(int row, int count, const QModelIndex& parent)
 {
     if (parent.isValid() || count != 1)
         return false;
@@ -377,7 +378,7 @@ bool SecondaryModel::insertRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-bool SecondaryModel::removeRows(int row, int count, const QModelIndex& parent)
+bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
 {
     if (parent.isValid() || count != 1)
         return false;

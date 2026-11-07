@@ -73,7 +73,7 @@ private:
     static void Expand(std::deque<Node*>& pool, Section section, qsizetype count);
 
 private:
-    std::array<std::deque<Node*>, 6> pools_ {}; // Pools for each Section
+    std::array<std::deque<Node*>, 7> pools_ {}; // Pools for each Section
     QMutex mutex_ {}; // Mutex protecting all pools
 };
 
@@ -114,6 +114,8 @@ inline Node* NodePool::NewResource(Section section)
         return new NodeO();
     case Section::kPurchase:
         return new NodeO();
+    case Section::kReimbursement:
+        return new NodeR();
     default:
         Q_UNREACHABLE();
     }

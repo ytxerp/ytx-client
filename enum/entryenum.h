@@ -96,6 +96,19 @@ enum class EntryEnumO {
     kExternalSku,
 };
 
+// FullEntryEnumR is same as EntryEnumR
+enum class EntryEnumR {
+    // --- Hidden ---
+    kLhsNode,
+    // --- Visible ---
+    kDebitNode,
+    kCreditNode,
+    kInitial,
+    kDescription,
+    kTag,
+    kDocument,
+};
+
 enum class FullEntryEnum {
     kIssuedTime,
     kCode,

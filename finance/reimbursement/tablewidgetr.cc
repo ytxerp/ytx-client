@@ -1,17 +1,17 @@
-#include "reimbursementsecondarywidget.h"
+#include "tablewidgetr.h"
 
 #include <QTimer>
 
 #include "component/signalblocker.h"
-#include "ui_reimbursementsecondarywidget.h"
+#include "ui_tablewidgetr.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-ReimbursementSecondaryWidget::ReimbursementSecondaryWidget(reimbursement::SecondaryModel* model, CSectionConfig& config, const reimbursement::PrimaryRow& row,
-    QUuid widget_id, int finance_permission, QWidget* parent)
+TableWidgetR::TableWidgetR(
+    reimbursement::TableModelR* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id, int finance_permission, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::ReimbursementSecondaryWidget)
+    , ui(new Ui::TableWidgetR)
     , model_ { model }
     , primary_row_ { row }
     , widget_id_ { widget_id }
@@ -26,15 +26,26 @@ ReimbursementSecondaryWidget::ReimbursementSecondaryWidget(reimbursement::Second
 
     InitWidget();
     InitData();
+    UpdateButtons();
 
     QTimer::singleShot(0, this, [this]() { FetchNode(); });
 }
 
-ReimbursementSecondaryWidget::~ReimbursementSecondaryWidget() { delete ui; }
+TableWidgetR::~TableWidgetR() { delete ui; }
 
-QTableView* ReimbursementSecondaryWidget::View() const { return ui->tableView; }
+QTableView* TableWidgetR::View() const { return ui->tableView; }
 
-void ReimbursementSecondaryWidget::InitWidget()
+void TableWidgetR::ApproveSucceeded(int version) { }
+
+void TableWidgetR::UnapproveSucceeded(int version) { }
+
+void TableWidgetR::SaveSucceeded(int version) { }
+
+void TableWidgetR::PostSucceeded(int version) { }
+
+void TableWidgetR::UnpostSucceeded(int version) { }
+
+void TableWidgetR::InitWidget()
 {
     ui->dateTimeEdit->setDisplayFormat(datetime_format::kDateTime);
     ui->dSpinInitialTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
@@ -45,14 +56,14 @@ void ReimbursementSecondaryWidget::InitWidget()
     utils::SetPushButton(ui->pushButtonUnapprove, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
 }
 
-void ReimbursementSecondaryWidget::InitData()
+void TableWidgetR::InitData()
 {
     ui->lineEditDescription->setText(primary_row_.description);
     ui->dateTimeEdit->setDateTime(primary_row_.issued_time);
     ui->dSpinInitialTotal->setValue(primary_row_.initial_total);
 }
 
-void ReimbursementSecondaryWidget::FetchNode()
+void TableWidgetR::FetchNode()
 {
     if (primary_row_.sync_state != SyncState::kSynced)
         return;
@@ -61,7 +72,7 @@ void ReimbursementSecondaryWidget::FetchNode()
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementSecondary, message);
 }
 
-void ReimbursementSecondaryWidget::UpdateButtons()
+void TableWidgetR::UpdateButtons()
 {
     using reimbursement::Status;
 
@@ -76,7 +87,7 @@ void ReimbursementSecondaryWidget::UpdateButtons()
     ui->pushButtonUnpost->setEnabled(ready && primary_row_.status == Status::kPosted && (finance_permission_ & finance_permission::kUnpost));
 }
 
-void ReimbursementSecondaryWidget::on_pushButtonDelete_clicked()
+void TableWidgetR::on_pushButtonDelete_clicked()
 {
     auto* view { ui->tableView };
 
@@ -91,7 +102,7 @@ void ReimbursementSecondaryWidget::on_pushButtonDelete_clicked()
         UpdateButtons();
 }
 
-void ReimbursementSecondaryWidget::on_pushButtonInsert_clicked()
+void TableWidgetR::on_pushButtonInsert_clicked()
 {
     const int row { model_->rowCount() };
 
@@ -99,7 +110,7 @@ void ReimbursementSecondaryWidget::on_pushButtonInsert_clicked()
         UpdateButtons();
 }
 
-void ReimbursementSecondaryWidget::on_pushButtonSave_clicked()
+void TableWidgetR::on_pushButtonSave_clicked()
 {
     if (primary_row_.sync_state == SyncState::kUpdating) {
         utils::ShowMessage(
@@ -133,15 +144,15 @@ void ReimbursementSecondaryWidget::on_pushButtonSave_clicked()
     primary_row_.sync_state = SyncState::kUpdating;
 }
 
-void ReimbursementSecondaryWidget::on_pushButtonApprove_clicked() { }
+void TableWidgetR::on_pushButtonApprove_clicked() { }
 
-void ReimbursementSecondaryWidget::on_pushButtonPost_clicked() { }
+void TableWidgetR::on_pushButtonPost_clicked() { }
 
-void ReimbursementSecondaryWidget::on_pushButtonUnapprove_clicked() { }
+void TableWidgetR::on_pushButtonUnapprove_clicked() { }
 
-void ReimbursementSecondaryWidget::on_pushButtonUnpost_clicked() { }
+void TableWidgetR::on_pushButtonUnpost_clicked() { }
 
-void ReimbursementSecondaryWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
+void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {
     if (primary_row_.issued_time == dateTime)
         return;
@@ -154,7 +165,7 @@ void ReimbursementSecondaryWidget::on_dateTimeEdit_dateTimeChanged(const QDateTi
     UpdateButtons();
 }
 
-void ReimbursementSecondaryWidget::on_lineEditDescription_textEdited(const QString& arg1)
+void TableWidgetR::on_lineEditDescription_textEdited(const QString& arg1)
 {
     if (primary_row_.description == arg1)
         return;

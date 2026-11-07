@@ -70,6 +70,9 @@ enum class NodeUnit : int {
     OImmediate = 800, // Order Immediate
     OMonthly = 810, // Order Monthly
     OPending = 820, // Order Pending
+
+    // Reimbursement units, 900–999
+    RReimbursement = 900, // Reimbursement
 };
 
 inline const char* kUnitCode(NodeUnit c)
@@ -138,6 +141,10 @@ inline const char* kUnitCode(NodeUnit c)
         return "MON";
     case NodeUnit::OPending:
         return "PEN";
+
+    // Reimbursement units
+    case NodeUnit::RReimbursement:
+        return "";
     }
 }
 
@@ -207,6 +214,10 @@ inline const char* kUnitSymbol(NodeUnit c)
         return "◷";
     case NodeUnit::OPending:
         return "…";
+
+    // Reimbursement units
+    case NodeUnit::RReimbursement:
+        return "";
     }
 }
 
@@ -288,5 +299,17 @@ enum class NodeEnumO {
     kUnit,
     kCountTotal,
     kMeasureTotal,
+    kInitialTotal,
+};
+
+enum class NodeEnumR {
+    kName = 0,
+    kIssuedTime,
+    kStatus,
+    kCode,
+    kDescription,
+    kTag,
+    kColor,
+    kDocument,
     kInitialTotal,
 };

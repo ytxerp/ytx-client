@@ -91,6 +91,16 @@ struct NodeP final : Node {
     QJsonObject WriteJson() const override;
 };
 
+struct NodeR final : Node {
+    ReimbursementStatus reimbursement_status {};
+    QDateTime issued_time {};
+
+    void Reset() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
 struct NodeO final : Node {
     QUuid employee_id {};
     QUuid partner_id {};

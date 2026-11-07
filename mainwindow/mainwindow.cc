@@ -236,6 +236,7 @@ void MainWindow::IniSectionGroup()
         { Qt::ALT | Qt::Key_4, std::to_underlying(Section::kPartner) },
         { Qt::ALT | Qt::Key_5, std::to_underlying(Section::kSale) },
         { Qt::ALT | Qt::Key_6, std::to_underlying(Section::kPurchase) },
+        { Qt::ALT | Qt::Key_7, std::to_underlying(Section::kReimbursement) },
     };
 
     for (auto& [key, id] : shortcuts) {

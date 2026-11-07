@@ -160,6 +160,58 @@ QJsonObject NodeP::WriteJson() const
     return obj;
 }
 
+void NodeR::Reset() { *this = NodeR {}; }
+
+void NodeR::ReadJson(const QJsonObject& object)
+{
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kName); val.isString())
+        name = val.toString();
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kInitialTotal); val.isString())
+        initial_total = val.toString().toDouble();
+    if (const auto val = object.value(kColor); val.isString())
+        color = val.toString();
+    if (const auto val = object.value(kStatus); val.isDouble())
+        reimbursement_status = static_cast<ReimbursementStatus>(val.toInt());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
+
+    if (object.value(kTag).isArray())
+        tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
+}
+
+QJsonObject NodeR::WriteJson() const
+{
+    QJsonObject object;
+
+    object.insert(kId, id.toString(QUuid::WithoutBraces));
+    object.insert(kName, name);
+    object.insert(kCode, code);
+    object.insert(kDescription, description);
+    object.insert(kInitialTotal, QString::number(initial_total, 'f', numeric_const::kDecimalPlaces4));
+    object.insert(kColor, color);
+    object.insert(kStatus, std::to_underlying(reimbursement_status));
+    object.insert(kVersion, version);
+    object.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
+
+    object.insert(kTag, QJsonArray::fromStringList(tag));
+    object.insert(kDocument, QJsonArray::fromStringList(document));
+
+    return object;
+}
+
 void NodeO::Reset() { *this = NodeO {}; }
 
 void NodeO::InvertTotal()

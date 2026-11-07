@@ -24,22 +24,28 @@
 
 #include "component/config.h"
 #include "finance/reimbursement/reimbursementrow.h"
-#include "finance/reimbursement/reimbursementsecondarymodel.h"
+#include "finance/reimbursement/tablemodelr.h"
 
 namespace Ui {
-class ReimbursementSecondaryWidget;
+class TableWidgetR;
 }
 
-class ReimbursementSecondaryWidget final : public QWidget {
+class TableWidgetR final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit ReimbursementSecondaryWidget(reimbursement::SecondaryModel* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id,
+    explicit TableWidgetR(reimbursement::TableModelR* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id,
         int finance_permission, QWidget* parent = nullptr);
-    ~ReimbursementSecondaryWidget() override;
+    ~TableWidgetR() override;
 
     QTableView* View() const;
-    reimbursement::SecondaryModel* Model() const { return model_; }
+    reimbursement::TableModelR* Model() const { return model_; }
+
+    void ApproveSucceeded(int version);
+    void UnapproveSucceeded(int version);
+    void SaveSucceeded(int version);
+    void PostSucceeded(int version);
+    void UnpostSucceeded(int version);
 
 signals:
     void SInsertPrimaryRow(const reimbursement::PrimaryRow& row);
@@ -63,8 +69,8 @@ private:
     void UpdateButtons();
 
 private:
-    Ui::ReimbursementSecondaryWidget* ui;
-    reimbursement::SecondaryModel* model_ {};
+    Ui::TableWidgetR* ui;
+    reimbursement::TableModelR* model_ {};
 
     reimbursement::PrimaryRow primary_row_ {};
     QJsonObject pending_update_ {};

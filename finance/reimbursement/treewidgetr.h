@@ -23,25 +23,25 @@
 #include <QTableView>
 #include <QWidget>
 
-#include "finance/reimbursement/reimbursementprimarymodel.h"
+#include "finance/reimbursement/treemodelr.h"
 #include "utils/daterange.h"
 
 namespace Ui {
-class ReimbursementPrimaryWidget;
+class TreeWidgetR;
 }
 
-class ReimbursementPrimaryWidget final : public QWidget {
+class TreeWidgetR final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit ReimbursementPrimaryWidget(QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
-    ~ReimbursementPrimaryWidget() override;
+    explicit TreeWidgetR(QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
+    ~TreeWidgetR() override;
 
     QTableView* View() const;
-    reimbursement::PrimaryModel* Model() { return model_; }
+    reimbursement::TreeModelR* Model() { return model_; }
 
 signals:
-    void SCreateReimbursementSecondaryWidget(reimbursement::PrimaryModel* model);
+    void SCreateReimbursementSecondaryWidget(reimbursement::TreeModelR* model);
 
 private slots:
     void on_pushButtonFetch_clicked();
@@ -64,9 +64,9 @@ private:
     }
 
 private:
-    Ui::ReimbursementPrimaryWidget* ui;
+    Ui::TreeWidgetR* ui;
 
-    reimbursement::PrimaryModel* model_ {};
+    reimbursement::TreeModelR* model_ {};
     utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
 

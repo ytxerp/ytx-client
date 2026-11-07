@@ -1,4 +1,4 @@
-#include "reimbursementprimarymodel.h"
+#include "treemodelr.h"
 
 #include <QJsonArray>
 
@@ -9,15 +9,15 @@
 
 namespace reimbursement {
 
-PrimaryModel::PrimaryModel(const QStringList& header, QObject* parent)
+TreeModelR::TreeModelR(const QStringList& header, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
 {
 }
 
-PrimaryModel::~PrimaryModel() { ResourcePool<PrimaryRow>::Instance().Recycle(list_); }
+TreeModelR::~TreeModelR() { ResourcePool<PrimaryRow>::Instance().Recycle(list_); }
 
-void PrimaryModel::RInsertePrimaryRow(const reimbursement::PrimaryRow& row)
+void TreeModelR::RInsertePrimaryRow(const reimbursement::PrimaryRow& row)
 {
     auto* reimbursement { ResourcePool<PrimaryRow>::Instance().Allocate() };
     *reimbursement = row;
@@ -29,7 +29,7 @@ void PrimaryModel::RInsertePrimaryRow(const reimbursement::PrimaryRow& row)
     endInsertRows();
 }
 
-void PrimaryModel::RUpdatePrimaryRow(const reimbursement::PrimaryRow& row)
+void TreeModelR::RUpdatePrimaryRow(const reimbursement::PrimaryRow& row)
 {
     const auto row_index { FindRow(row.id) };
 
@@ -45,7 +45,7 @@ void PrimaryModel::RUpdatePrimaryRow(const reimbursement::PrimaryRow& row)
     emit dataChanged(index(*row_index, std::to_underlying(PrimaryField::kIssuedTime)), index(*row_index, std::to_underlying(PrimaryField::kInitialTotal)));
 }
 
-QModelIndex PrimaryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TreeModelR::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -53,7 +53,7 @@ QModelIndex PrimaryModel::index(int row, int column, const QModelIndex& parent) 
     return createIndex(row, column, list_.at(row));
 }
 
-QVariant PrimaryModel::data(const QModelIndex& index, int role) const
+QVariant TreeModelR::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -78,7 +78,7 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
     }
 }
 
-QVariant PrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TreeModelR::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return {};
@@ -89,7 +89,7 @@ QVariant PrimaryModel::headerData(int section, Qt::Orientation orientation, int 
     return header_.at(section);
 }
 
-void PrimaryModel::sort(int column, Qt::SortOrder order)
+void TreeModelR::sort(int column, Qt::SortOrder order)
 {
     const PrimaryField e_column { column };
     if (e_column == PrimaryField::kPlaceholder)
@@ -117,7 +117,7 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-bool PrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool TreeModelR::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     beginRemoveRows(parent, row, row);
     auto* reimbursement { list_.takeAt(row) };
@@ -130,7 +130,7 @@ bool PrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-void PrimaryModel::Rebuild(const QJsonArray& array)
+void TreeModelR::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Received empty array";

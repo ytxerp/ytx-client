@@ -1,6 +1,6 @@
-#include "finance/reimbursement/reimbursementprimarywidget.h"
-#include "finance/reimbursement/reimbursementsecondarymodel.h"
-#include "finance/reimbursement/reimbursementsecondarywidget.h"
+#include "finance/reimbursement/tablemodelr.h"
+#include "finance/reimbursement/tablewidgetr.h"
+#include "finance/reimbursement/treewidgetr.h"
 #include "global/userprofile.h"
 #include "mainwindow.h"
 
@@ -10,7 +10,7 @@ void MainWindow::on_actionReimbursement_triggered()
 
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new ReimbursementPrimaryWidget(widget_id, header_info_.reimbursement_primary, this) };
+    auto* widget { new TreeWidgetR(widget_id, header_info_.reimbursement_primary, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Reimbursement")) };
@@ -23,7 +23,7 @@ void MainWindow::on_actionReimbursement_triggered()
         auto* view { widget->View() };
 
         connect(view, &QTableView::doubleClicked, this, &MainWindow::ROpenReimbursementSecondaryWidget);
-        connect(widget, &ReimbursementPrimaryWidget::SCreateReimbursementSecondaryWidget, this, &MainWindow::RCreateReimbursementSecondaryWidget);
+        connect(widget, &TreeWidgetR::SCreateReimbursementSecondaryWidget, this, &MainWindow::RCreateReimbursementSecondaryWidget);
 
         InitTableView(view, std::to_underlying(reimbursement::PrimaryField::kPlaceholder));
         DelegateReimbursementPrimary(view, sc_f_.section_config);
@@ -32,7 +32,7 @@ void MainWindow::on_actionReimbursement_triggered()
     RegisterWidget(sc_, widget, widget_id, WidgetRole::kReimbursement);
 }
 
-void MainWindow::RCreateReimbursementSecondaryWidget(reimbursement::PrimaryModel* model)
+void MainWindow::RCreateReimbursementSecondaryWidget(reimbursement::TreeModelR* model)
 {
     reimbursement::PrimaryRow primary_row {};
 
@@ -49,8 +49,8 @@ void MainWindow::ROpenReimbursementSecondaryWidget(const QModelIndex& index)
 
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
-    Q_ASSERT(qobject_cast<ReimbursementPrimaryWidget*>(current_widget));
-    auto* widget { static_cast<ReimbursementPrimaryWidget*>(current_widget) };
+    Q_ASSERT(qobject_cast<TreeWidgetR*>(current_widget));
+    auto* widget { static_cast<TreeWidgetR*>(current_widget) };
 
     if (index.column() != std::to_underlying(reimbursement::PrimaryField::kUsername))
         return;
@@ -61,16 +61,16 @@ void MainWindow::ROpenReimbursementSecondaryWidget(const QModelIndex& index)
     CreateReimbursementSecondary(*primary_row, primary_model);
 }
 
-void MainWindow::CreateReimbursementSecondary(const reimbursement::PrimaryRow& primary_row, reimbursement::PrimaryModel* primary_model)
+void MainWindow::CreateReimbursementSecondary(const reimbursement::PrimaryRow& primary_row, reimbursement::TreeModelR* primary_model)
 {
     const QUuid widget_id { QUuid::createUuidV7() };
     const int finance_permission { UserProfile::Instance().SectionPermissions(Section::kFinance) };
 
-    auto* model { new reimbursement::SecondaryModel(header_info_.reimbursement_secondary, primary_row.status, primary_row.id, finance_permission, this) };
-    auto* widget { new ReimbursementSecondaryWidget(model, sc_f_.section_config, primary_row, widget_id, finance_permission, this) };
+    auto* model { new reimbursement::TableModelR(header_info_.reimbursement_secondary, primary_row.status, primary_row.id, finance_permission, this) };
+    auto* widget { new TableWidgetR(model, sc_f_.section_config, primary_row, widget_id, finance_permission, this) };
 
-    connect(widget, &ReimbursementSecondaryWidget::SInsertPrimaryRow, primary_model, &reimbursement::PrimaryModel::RInsertePrimaryRow);
-    connect(widget, &ReimbursementSecondaryWidget::SUpdatePrimaryRow, primary_model, &reimbursement::PrimaryModel::RUpdatePrimaryRow);
+    connect(widget, &TableWidgetR::SInsertPrimaryRow, primary_model, &reimbursement::TreeModelR::RInsertePrimaryRow);
+    connect(widget, &TableWidgetR::SUpdatePrimaryRow, primary_model, &reimbursement::TreeModelR::RUpdatePrimaryRow);
 
     {
         const QString username { primary_row.sync_state == SyncState::kSynced ? primary_row.username : UserProfile::Instance().Username() };

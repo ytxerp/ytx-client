@@ -74,6 +74,16 @@ struct EntryP final : Entry {
     QJsonObject WriteJson() const override;
 };
 
+struct EntryR final : Entry {
+    QUuid debit_node {};
+    QUuid credit_node {};
+    double initial {};
+
+    void Reset() override;
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
 struct EntryO final : Entry {
     double unit_price {};
     double count {};
