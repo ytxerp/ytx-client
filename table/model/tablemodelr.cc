@@ -3,28 +3,24 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
-#include "global/resourcepool.h"
+#include "global/entrypool.h"
 #include "utils/templateutils.h"
 
-namespace reimbursement {
-
-TableModelR::TableModelR(const QStringList& header, Status status, QUuid primary_id, int finance_permission, QObject* parent)
-    : QAbstractItemModel { parent }
-    , header_ { header }
-    , primary_id_ { primary_id }
+TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, int finance_permission, QObject* parent)
+    : TableModel { arg, parent }
+    , d_node_ { node }
     , finance_permission_ { finance_permission }
-    , status_ { status }
 {
 }
 
-TableModelR::~TableModelR() { ResourcePool<SecondaryRow>::Instance().Recycle(list_); }
+TableModelR::~TableModelR() { EntryPool::Instance().Recycle(entry_list_, section_); }
 
 QModelIndex TableModelR::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, list_.at(row));
+    return createIndex(row, column, entry_list_.at(row));
 }
 
 QVariant TableModelR::data(const QModelIndex& index, int role) const
@@ -35,23 +31,24 @@ QVariant TableModelR::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    const SecondaryField column { index.column() };
-    auto* reimbursement { static_cast<SecondaryRow*>(index.internalPointer()) };
+    const EntryEnumR column { index.column() };
+    auto* entry { static_cast<EntryR*>(index.internalPointer()) };
 
     switch (column) {
-    case SecondaryField::kDescription:
-        return reimbursement->description;
-    case SecondaryField::kDebitNode:
-        return reimbursement->debit_node;
-    case SecondaryField::kCreditNode:
-        return reimbursement->credit_node;
-    case SecondaryField::kDocument:
-        return reimbursement->document;
-    case SecondaryField::kPlaceholder:
-        return QVariant();
-    case SecondaryField::kInitial:
-        return reimbursement->initial;
-        break;
+    case EntryEnumR::kDescription:
+        return entry->description;
+    case EntryEnumR::kDebitNode:
+        return entry->debit_node;
+    case EntryEnumR::kCreditNode:
+        return entry->credit_node;
+    case EntryEnumR::kDocument:
+        return entry->document;
+    case EntryEnumR::kInitial:
+        return entry->initial;
+    case EntryEnumR::kLhsNode:
+        return entry->lhs_node;
+    case EntryEnumR::kTag:
+        return entry->tag;
     }
 }
 
@@ -66,28 +63,30 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     if (data(index, role) == value)
         return false;
 
-    const SecondaryField column { index.column() };
-    auto* row { static_cast<SecondaryRow*>(index.internalPointer()) };
+    const EntryEnumR column { index.column() };
+    auto* row { static_cast<EntryR*>(index.internalPointer()) };
 
     const double old_initial { row->initial };
 
     switch (column) {
-    case SecondaryField::kDescription:
+    case EntryEnumR::kDescription:
         UpdateDescription(row, value.toString());
         break;
-    case SecondaryField::kDebitNode:
+    case EntryEnumR::kDebitNode:
         UpdateDebit(row, value.toUuid());
         break;
-    case SecondaryField::kCreditNode:
+    case EntryEnumR::kCreditNode:
         UpdateCredit(row, value.toUuid());
         break;
-    case SecondaryField::kDocument:
+    case EntryEnumR::kDocument:
         UpdateDocument(row, value.toStringList());
         break;
-    case SecondaryField::kPlaceholder:
-        return true;
-    case SecondaryField::kInitial:
+    case EntryEnumR::kInitial:
         UpdateInitial(row, value.toDouble());
+        break;
+    case EntryEnumR::kLhsNode:
+        break;
+    case EntryEnumR::kTag:
         break;
     }
 
@@ -100,67 +99,67 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     return true;
 }
 
-bool TableModelR::UpdateDescription(SecondaryRow* row, const QString& value)
+bool TableModelR::UpdateDescription(EntryR* entry, const QString& value)
 {
-    if (row->description == value)
+    if (entry->description == value)
         return false;
 
-    row->description = value;
+    entry->description = value;
 
-    if (row->sync_state == SyncState::kSynced)
-        row->sync_state = SyncState::kUpdating;
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelR::UpdateDocument(SecondaryRow* row, const QStringList& value)
+bool TableModelR::UpdateDocument(EntryR* entry, const QStringList& value)
 {
-    if (row->document == value)
+    if (entry->document == value)
         return false;
 
-    row->document = value;
+    entry->document = value;
 
-    if (row->sync_state == SyncState::kSynced)
-        row->sync_state = SyncState::kUpdating;
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelR::UpdateInitial(SecondaryRow* row, double value)
+bool TableModelR::UpdateInitial(EntryR* entry, double value)
 {
-    if (qFuzzyCompare(row->initial, value))
+    if (qFuzzyCompare(entry->initial, value))
         return false;
 
-    row->initial = value;
+    entry->initial = value;
 
-    if (row->sync_state == SyncState::kSynced)
-        row->sync_state = SyncState::kUpdating;
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelR::UpdateDebit(SecondaryRow* row, QUuid value)
+bool TableModelR::UpdateDebit(EntryR* entry, QUuid value)
 {
-    if (row->debit_node == value)
+    if (entry->debit_node == value)
         return false;
 
-    row->debit_node = value;
+    entry->debit_node = value;
 
-    if (row->sync_state == SyncState::kSynced)
-        row->sync_state = SyncState::kUpdating;
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelR::UpdateCredit(SecondaryRow* row, QUuid value)
+bool TableModelR::UpdateCredit(EntryR* entry, QUuid value)
 {
-    if (row->credit_node == value)
+    if (entry->credit_node == value)
         return false;
 
-    row->credit_node = value;
+    entry->credit_node = value;
 
-    if (row->sync_state == SyncState::kSynced)
-        row->sync_state = SyncState::kUpdating;
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
@@ -178,67 +177,33 @@ QVariant TableModelR::headerData(int section, Qt::Orientation orientation, int r
 
 void TableModelR::sort(int column, Qt::SortOrder order)
 {
-    const SecondaryField e_column { column };
-    if (e_column == SecondaryField::kPlaceholder)
-        return;
+    const EntryEnumR e_column { column };
 
-    auto Compare = [e_column, order](const SecondaryRow* lhs, const SecondaryRow* rhs) -> bool {
+    auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<EntryR>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryR>(rhs) };
+
         switch (e_column) {
-        case SecondaryField::kDescription:
-            return utils::CompareMember(lhs, rhs, &SecondaryRow::description, order);
-        case SecondaryField::kDebitNode:
-            return utils::CompareMember(lhs, rhs, &SecondaryRow::debit_node, order);
-        case SecondaryField::kCreditNode:
-            return utils::CompareMember(lhs, rhs, &SecondaryRow::credit_node, order);
-        case SecondaryField::kDocument:
-            return utils::CompareMember(lhs, rhs, &SecondaryRow::document, order);
-        case SecondaryField::kPlaceholder:
+        case EntryEnumR::kDescription:
+            return utils::CompareMember(lhs, rhs, &Entry::description, order);
+        case EntryEnumR::kDebitNode:
+            return utils::CompareMember(d_lhs, d_rhs, &EntryR::debit_node, order);
+        case EntryEnumR::kCreditNode:
+            return utils::CompareMember(d_lhs, d_rhs, &EntryR::credit_node, order);
+        case EntryEnumR::kDocument:
+            return utils::CompareMember(lhs, rhs, &Entry::document, order);
+        case EntryEnumR::kInitial:
+            return utils::CompareMember(d_lhs, d_rhs, &EntryR::initial, order);
+        case EntryEnumR::kLhsNode:
             return false;
-        case SecondaryField::kInitial:
-            return utils::CompareMember(lhs, rhs, &SecondaryRow::initial, order);
+        case EntryEnumR::kTag:
+            return utils::CompareMember(lhs, rhs, &EntryR::tag, order);
         }
     };
 
     emit layoutAboutToBeChanged();
-    std::ranges::sort(list_, Compare);
+    std::ranges::sort(entry_list_, Compare);
     emit layoutChanged();
-}
-
-void TableModelR::Rebuild(const QJsonArray& array)
-{
-    if (array.isEmpty()) {
-        qDebug() << Q_FUNC_INFO << "Received empty array";
-    }
-
-    QList<SecondaryRow*> new_list {};
-    new_list.reserve(array.size());
-
-    for (const auto& value : array) {
-        Q_ASSERT(value.isObject());
-
-        auto* row { ResourcePool<SecondaryRow>::Instance().Allocate() };
-        row->ReadJson(value.toObject());
-
-        new_list.emplaceBack(row);
-    }
-
-    std::ranges::sort(
-        new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &SecondaryRow::description, Qt::AscendingOrder); });
-
-    beginResetModel();
-
-    ResourcePool<SecondaryRow>::Instance().Recycle(list_);
-    list_ = std::move(new_list);
-
-    endResetModel();
-}
-
-void TableModelR::UpdateStatus(Status status)
-{
-    if (status_ == status)
-        return;
-
-    status_ = status;
 }
 
 void TableModelR::Finalize(QJsonObject& message)
@@ -257,7 +222,7 @@ void TableModelR::Finalize(QJsonObject& message)
         QJsonArray inserted_entry_array {};
         QJsonArray updated_entry_array {};
 
-        for (auto* entry : std::as_const(list_)) {
+        for (auto* entry : std::as_const(entry_list_)) {
             switch (entry->sync_state) {
             case SyncState::kCreating:
                 inserted_entry_array.append(entry->WriteJson());
@@ -279,21 +244,21 @@ void TableModelR::Finalize(QJsonObject& message)
 
 void TableModelR::Purify()
 {
-    for (auto i = list_.size() - 1; i >= 0; --i) {
-        auto* row { list_[i] };
+    for (auto i = entry_list_.size() - 1; i >= 0; --i) {
+        auto* row { entry_list_[i] };
 
         if (!row->description.isEmpty())
             continue;
 
         beginRemoveRows(QModelIndex(), i, i);
-        ResourcePool<SecondaryRow>::Instance().Recycle(list_.takeAt(i));
+        EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
 }
 
 void TableModelR::SyncSucceeded()
 {
-    for (auto* entry : std::as_const(list_)) {
+    for (auto* entry : std::as_const(entry_list_)) {
         switch (entry->sync_state) {
         case SyncState::kCreating:
         case SyncState::kUpdating:
@@ -315,7 +280,7 @@ bool TableModelR::HasPendingUpdate() const
     if (!pending_delete_.isEmpty())
         return true;
 
-    for (auto* row : std::as_const(list_)) {
+    for (auto* row : std::as_const(entry_list_)) {
         if (row->sync_state == SyncState::kCreating || row->sync_state == SyncState::kUpdating)
             return true;
     }
@@ -330,24 +295,25 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 
     auto flags { QAbstractItemModel::flags(index) };
 
-    if (status_ != Status::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
         return flags;
 
-    const SecondaryField column { index.column() };
+    const EntryEnumR column { index.column() };
 
     switch (column) {
-    case SecondaryField::kDebitNode:
-    case SecondaryField::kCreditNode:
+    case EntryEnumR::kDebitNode:
+    case EntryEnumR::kCreditNode:
         // if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
         //     flags |= Qt::ItemIsEditable;
         // break;
-    case SecondaryField::kDescription:
-    case SecondaryField::kInitial:
+    case EntryEnumR::kDescription:
+    case EntryEnumR::kInitial:
         flags |= Qt::ItemIsEditable;
         break;
-    case SecondaryField::kDocument:
+    case EntryEnumR::kDocument:
+    case EntryEnumR::kTag:
+    case EntryEnumR::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
-    case SecondaryField::kPlaceholder:
         break;
     }
 
@@ -359,20 +325,20 @@ bool TableModelR::insertRows(int row, int count, const QModelIndex& parent)
     if (parent.isValid() || count != 1)
         return false;
 
-    if (row < 0 || row > list_.size())
+    if (row < 0 || row > entry_list_.size())
         return false;
 
-    if (status_ != Status::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
         return false;
 
-    auto* entry { ResourcePool<SecondaryRow>::Instance().Allocate() };
+    auto* entry { EntryPool::Instance().Allocate(section_) };
 
     entry->id = QUuid::createUuidV7();
-    entry->lhs_node = primary_id_;
+    entry->lhs_node = node_id_;
     entry->sync_state = SyncState::kCreating;
 
     beginInsertRows(parent, row, row);
-    list_.insert(row, entry);
+    entry_list_.insert(row, entry);
     endInsertRows();
 
     return true;
@@ -383,18 +349,18 @@ bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
     if (parent.isValid() || count != 1)
         return false;
 
-    if (row < 0 || row >= list_.size())
+    if (row < 0 || row >= entry_list_.size())
         return false;
 
-    if (status_ != Status::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
         return false;
 
-    auto* entry = list_.at(row);
+    auto* entry = static_cast<EntryR*>(entry_list_.at(row));
     const QUuid entry_id { entry->id };
     const double initial_delta { -entry->initial };
 
     beginRemoveRows(parent, row, row);
-    list_.removeAt(row);
+    entry_list_.removeAt(row);
     endRemoveRows();
 
     if (!qFuzzyIsNull(initial_delta))
@@ -403,8 +369,6 @@ bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
     if (entry->sync_state != SyncState::kCreating)
         pending_delete_.insert(entry_id);
 
-    ResourcePool<SecondaryRow>::Instance().Recycle(entry);
+    EntryPool::Instance().Recycle(entry, section_);
     return true;
-}
-
 }

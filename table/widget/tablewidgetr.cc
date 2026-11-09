@@ -5,18 +5,15 @@
 #include "component/signalblocker.h"
 #include "ui_tablewidgetr.h"
 #include "utils/mainwindowutils.h"
-#include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetR::TableWidgetR(
-    reimbursement::TableModelR* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id, int finance_permission, QWidget* parent)
-    : QWidget(parent)
+TableWidgetR::TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int finance_permission, QWidget* parent)
+    : TableWidget(parent)
     , ui(new Ui::TableWidgetR)
-    , model_ { model }
-    , primary_row_ { row }
-    , widget_id_ { widget_id }
+    , node_ { node }
+    , model_ { qobject_cast<TableModelR*>(model) }
     , finance_permission_ { finance_permission }
-    , config_ { config }
+    , config_ { section_config }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -27,13 +24,9 @@ TableWidgetR::TableWidgetR(
     InitWidget();
     InitData();
     UpdateButtons();
-
-    QTimer::singleShot(0, this, [this]() { FetchNode(); });
 }
 
 TableWidgetR::~TableWidgetR() { delete ui; }
-
-QTableView* TableWidgetR::View() const { return ui->tableView; }
 
 void TableWidgetR::ApproveSucceeded(int version) { }
 
@@ -44,6 +37,8 @@ void TableWidgetR::SaveSucceeded(int version) { }
 void TableWidgetR::PostSucceeded(int version) { }
 
 void TableWidgetR::UnpostSucceeded(int version) { }
+
+QTableView* TableWidgetR::View() const { return ui->tableView; }
 
 void TableWidgetR::InitWidget()
 {
@@ -58,33 +53,25 @@ void TableWidgetR::InitWidget()
 
 void TableWidgetR::InitData()
 {
-    ui->lineEditDescription->setText(primary_row_.description);
-    ui->dateTimeEdit->setDateTime(primary_row_.issued_time);
-    ui->dSpinInitialTotal->setValue(primary_row_.initial_total);
-}
-
-void TableWidgetR::FetchNode()
-{
-    if (primary_row_.sync_state != SyncState::kSynced)
-        return;
-
-    const auto message { JsonGen::ReimbursementSecondary(widget_id_, primary_row_.id) };
-    WebSocket::Instance()->SendMessage(WsKey::kReimbursementSecondary, message);
+    ui->lineEditDescription->setText(node_->description);
+    ui->dateTimeEdit->setDateTime(node_->issued_time);
+    ui->dSpinInitialTotal->setValue(node_->initial_total);
 }
 
 void TableWidgetR::UpdateButtons()
 {
-    using reimbursement::Status;
+    const bool ready { node_->sync_state == SyncState::kSynced && !model_->HasPendingUpdate() && pending_update_.isEmpty() };
 
-    const bool ready { primary_row_.sync_state == SyncState::kSynced && !model_->HasPendingUpdate() && pending_update_.isEmpty() };
+    ui->pushButtonApprove->setEnabled(
+        ready && node_->reimbursement_status == ReimbursementStatus::kDraft && (finance_permission_ & finance_permission::kApprove));
 
-    ui->pushButtonApprove->setEnabled(ready && primary_row_.status == Status::kDraft && (finance_permission_ & finance_permission::kApprove));
+    ui->pushButtonUnapprove->setEnabled(
+        ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (finance_permission_ & finance_permission::kUnapprove));
 
-    ui->pushButtonUnapprove->setEnabled(ready && primary_row_.status == Status::kApproved && (finance_permission_ & finance_permission::kUnapprove));
+    ui->pushButtonPost->setEnabled(ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (finance_permission_ & finance_permission::kPost));
 
-    ui->pushButtonPost->setEnabled(ready && primary_row_.status == Status::kApproved && (finance_permission_ & finance_permission::kPost));
-
-    ui->pushButtonUnpost->setEnabled(ready && primary_row_.status == Status::kPosted && (finance_permission_ & finance_permission::kUnpost));
+    ui->pushButtonUnpost->setEnabled(
+        ready && node_->reimbursement_status == ReimbursementStatus::kPosted && (finance_permission_ & finance_permission::kUnpost));
 }
 
 void TableWidgetR::on_pushButtonDelete_clicked()
@@ -112,7 +99,7 @@ void TableWidgetR::on_pushButtonInsert_clicked()
 
 void TableWidgetR::on_pushButtonSave_clicked()
 {
-    if (primary_row_.sync_state == SyncState::kUpdating) {
+    if (node_->sync_state == SyncState::kUpdating) {
         utils::ShowMessage(
             QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
         return;
@@ -127,21 +114,21 @@ void TableWidgetR::on_pushButtonSave_clicked()
 
     model_->Finalize(message);
 
-    if (primary_row_.sync_state == SyncState::kSynced) {
-        message.insert(kNodeId, primary_row_.id.toString(QUuid::WithoutBraces));
-        message.insert(kVersion, primary_row_.version);
+    if (node_->sync_state == SyncState::kSynced) {
+        message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
+        message.insert(kVersion, node_->version);
         message.insert(kNodeUpdate, pending_update_);
         WebSocket::Instance()->SendMessage(WsKey::kReimbursementUpdate, message);
     }
 
-    if (primary_row_.sync_state == SyncState::kCreating) {
-        message.insert(kNode, primary_row_.WriteJson());
+    if (node_->sync_state == SyncState::kCreating) {
+        message.insert(kNode, node_->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kReimbursementInsert, message);
     }
 
-    qInfo() << Q_FUNC_INFO << primary_row_.version;
+    qInfo() << Q_FUNC_INFO << node_->version;
 
-    primary_row_.sync_state = SyncState::kUpdating;
+    node_->sync_state = SyncState::kUpdating;
 }
 
 void TableWidgetR::on_pushButtonApprove_clicked() { }
@@ -154,12 +141,12 @@ void TableWidgetR::on_pushButtonUnpost_clicked() { }
 
 void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {
-    if (primary_row_.issued_time == dateTime)
+    if (node_->issued_time == dateTime)
         return;
 
-    primary_row_.issued_time = dateTime;
+    node_->issued_time = dateTime;
 
-    if (primary_row_.sync_state == SyncState::kSynced)
+    if (node_->sync_state == SyncState::kSynced)
         pending_update_.insert(kIssuedTime, dateTime.toUTC().toString(Qt::ISODate));
 
     UpdateButtons();
@@ -167,12 +154,12 @@ void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 
 void TableWidgetR::on_lineEditDescription_textEdited(const QString& arg1)
 {
-    if (primary_row_.description == arg1)
+    if (node_->description == arg1)
         return;
 
-    primary_row_.description = arg1;
+    node_->description = arg1;
 
-    if (primary_row_.sync_state == SyncState::kSynced)
+    if (node_->sync_state == SyncState::kSynced)
         pending_update_.insert(kDescription, arg1);
 
     UpdateButtons();

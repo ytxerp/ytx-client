@@ -36,7 +36,6 @@
 #include "component/sectioncontex.h"
 #include "component/sectioninfo.h"
 #include "entryhub/entryhub.h"
-#include "finance/reimbursement/treemodelr.h"
 #include "order/settlement/settlement.h"
 #include "order/settlement/settlementprimarymodel.h"
 #include "order/statement/statementtertiarywidget.h"
@@ -172,9 +171,6 @@ private slots:
     void ROpenSettlementSecondaryWidget(const QModelIndex& index);
     void RCreateSettlementSecondaryWidget(settlement::PrimaryModel* model);
 
-    void ROpenReimbursementSecondaryWidget(const QModelIndex& index);
-    void RCreateReimbursementSecondaryWidget(reimbursement::TreeModelR* model);
-
     void RSectionGroup(int id);
 
     void RShowSecondaryStatement(QUuid partner_id, utils::DateRange range, int unit);
@@ -223,8 +219,6 @@ private slots:
     void RDenyDefaultUnit();
     void REntryLocked();
 
-    void on_actionReimbursement_triggered();
-
 private:
     void SetTabWidget(QTabWidget* tab_widget);
     void ResetMainwindow();
@@ -246,7 +240,6 @@ private:
     void LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid entry_id = {}) const;
 
     void CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model);
-    void CreateReimbursementSecondary(const reimbursement::PrimaryRow& primary_row, reimbursement::TreeModelR* primary_model);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;

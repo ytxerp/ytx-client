@@ -755,29 +755,29 @@ void MainWindow::DelegateStatementFilterView(QTableView* view) const
 void MainWindow::DelegateReimbursementPrimary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kIssuedTime), issued_time);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kInitialTotal), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kInitialTotal), amount);
 
     auto* status { new IntStringR(finance_info_.reimbursement_status_map, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::PrimaryField::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kStatus), status);
 }
 
 void MainWindow::DelegateReimbursementSecondary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDescription), line);
 
     auto* value { new Double(config.amount_decimal, kDoubleLowest, kDoubleMax, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kInitial), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kInitial), value);
 
     auto* node { new LeafNode(sc_f_.tree_model->LeafPath(), sc_f_.tree_model->LeafModel(), table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDebitNode), node);
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kCreditNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDebitNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kCreditNode), node);
 
     auto* document { new Document(sc_f_.shared_config.document_dir, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(reimbursement::SecondaryField::kDocument), document);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDocument), document);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

@@ -198,11 +198,6 @@ set(HEADERS
     finance/finance_role.h
     finance/period_close/periodclosedialog.h
     finance/period_close/periodclosemodel.h
-    finance/reimbursement/reimbursementrow.h
-    finance/reimbursement/tablemodelr.h
-    finance/reimbursement/tablewidgetr.h
-    finance/reimbursement/treemodelr.h
-    finance/reimbursement/treewidgetr.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
@@ -264,12 +259,14 @@ set(HEADERS
     table/model/tablemodeli.h
     table/model/tablemodelo.h
     table/model/tablemodelp.h
+    table/model/tablemodelr.h
     table/model/tablemodelt.h
     table/tablesummarymodel.h
     table/unitmodel.h
     table/widget/tablewidget.h
     table/widget/tablewidgetfipt.h
     table/widget/tablewidgeto.h
+    table/widget/tablewidgetr.h
     tag/tagdialog.h
     tag/tagenum.h
     tag/tagicon.h
@@ -283,6 +280,7 @@ set(HEADERS
     tree/model/treemodeli.h
     tree/model/treemodelo.h
     tree/model/treemodelp.h
+    tree/model/treemodelr.h
     tree/model/treemodelt.h
     tree/node.h
     tree/widget/treewidget.h
@@ -290,6 +288,7 @@ set(HEADERS
     tree/widget/treewidgetit.h
     tree/widget/treewidgeto.h
     tree/widget/treewidgetp.h
+    tree/widget/treewidgetr.h
     utils/daterange.h
     utils/delta.h
     utils/entryutils.h
@@ -399,11 +398,6 @@ set(SOURCES
     finance/finance_role.cc
     finance/period_close/periodclosedialog.cc
     finance/period_close/periodclosemodel.cc
-    finance/reimbursement/reimbursementrow.cc
-    finance/reimbursement/tablemodelr.cc
-    finance/reimbursement/tablewidgetr.cc
-    finance/reimbursement/treemodelr.cc
-    finance/reimbursement/treewidgetr.cc
     global/dailylogger.cc
     global/exporthub.cc
     global/logininfo.cc
@@ -435,7 +429,6 @@ set(SOURCES
     mainwindow/mainwindow_order_overview.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
-    mainwindow/mainwindow_reimbursement.cc
     mainwindow/mainwindow_search.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_settlement_view.cc
@@ -484,11 +477,13 @@ set(SOURCES
     table/model/tablemodeli.cc
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
+    table/model/tablemodelr.cc
     table/model/tablemodelt.cc
     table/tablesummarymodel.cc
     table/unitmodel.cc
     table/widget/tablewidgetfipt.cc
     table/widget/tablewidgeto.cc
+    table/widget/tablewidgetr.cc
     tag/tagdialog.cc
     tag/tagmodel.cc
     tree/itemmodel.cc
@@ -497,12 +492,14 @@ set(SOURCES
     tree/model/treemodeli.cc
     tree/model/treemodelo.cc
     tree/model/treemodelp.cc
+    tree/model/treemodelr.cc
     tree/model/treemodelt.cc
     tree/node.cc
     tree/widget/treewidgetf.cc
     tree/widget/treewidgetit.cc
     tree/widget/treewidgeto.cc
     tree/widget/treewidgetp.cc
+    tree/widget/treewidgetr.cc
     utils/mainwindowutils.cc
     utils/nodeutils.cc
     utils/pathutils.cc
@@ -541,8 +538,6 @@ set(UIS
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui
-    finance/reimbursement/tablewidgetr.ui
-    finance/reimbursement/treewidgetr.ui
     mainwindow/mainwindow.ui
     order/settlement/settlementprimarywidget.ui
     order/settlement/settlementsecondarywidget.ui
@@ -553,11 +548,13 @@ set(UIS
     search/dialog/searchdialog.ui
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui
+    table/widget/tablewidgetr.ui
     tag/tagdialog.ui
     tree/widget/treewidgetf.ui
     tree/widget/treewidgetit.ui
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
+    tree/widget/treewidgetr.ui
     workspace/workspacedialog.ui
 )
 

@@ -10,25 +10,31 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeWidgetR::TreeWidgetR(QUuid widget_id, const QStringList& header, QWidget* parent)
-    : QWidget(parent)
+TreeWidgetR::TreeWidgetR(Section section, TreeModel* model, QWidget* parent)
+    : TreeWidget(parent)
     , ui(new Ui::TreeWidgetR)
+    , section_ { section }
+    , model_ { model }
     , range_ { DefaultRange() }
-    , widget_id_ { widget_id }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
     InitWidget();
     InitTimer();
-    InitModel(header);
-
-    QTimer::singleShot(0, this, &TreeWidgetR::on_pushButtonFetch_clicked);
 }
 
 TreeWidgetR::~TreeWidgetR() { delete ui; }
 
-QTableView* TreeWidgetR::View() const { return ui->tableView; }
+QTreeView* TreeWidgetR::View() const { return ui->treeViewR; }
+
+void TreeWidgetR::Reset()
+{
+    range_ = DefaultRange();
+
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
+}
 
 void TreeWidgetR::InitWidget()
 {
@@ -50,12 +56,6 @@ void TreeWidgetR::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
 }
 
-void TreeWidgetR::InitModel(const QStringList& header)
-{
-    model_ = new reimbursement::TreeModelR(header, this);
-    ui->tableView->setModel(model_);
-}
-
 void TreeWidgetR::on_pushButtonFetch_clicked()
 {
     if (!ui->pushButtonFetch->isEnabled()) {
@@ -74,8 +74,8 @@ void TreeWidgetR::on_pushButtonFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::ReimbursementPrimary(widget_id_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kReimbursementPrimary, message);
+    const auto message { JsonGen::TreeAck(section_, query_range) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderTreeAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
@@ -97,27 +97,3 @@ void TreeWidgetR::on_end_dateChanged(const QDate& date)
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
 }
-
-void TreeWidgetR::on_pushButtonDelete_clicked()
-{
-    auto* view { ui->tableView };
-    Q_ASSERT(view != nullptr);
-
-    if (!utils::HasSelection(view))
-        return;
-
-    const QModelIndex index { view->currentIndex() };
-    if (!index.isValid())
-        return;
-
-    auto* row { static_cast<reimbursement::PrimaryRow*>(index.internalPointer()) };
-
-    if (row->status != reimbursement::Status::kDraft) {
-        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"), tr("Only draft reimbursements can be deleted."), time_const::kAutoCloseMs);
-        return;
-    }
-
-    model_->removeRows(index.row(), 1);
-}
-
-void TreeWidgetR::on_pushButtonInsert_clicked() { emit SCreateReimbursementSecondaryWidget(model_); }

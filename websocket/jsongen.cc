@@ -535,17 +535,6 @@ QJsonObject LockEntries(Section section, QUuid node_id, bool is_locked)
     return message;
 }
 
-QJsonObject ReimbursementPrimary(QUuid widget_id, const utils::DateTimeRange& range)
-{
-    QJsonObject message {};
-
-    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kStart, range.start.toString(Qt::ISODate));
-    message.insert(kEnd, range.end.toString(Qt::ISODate));
-
-    return message;
-}
-
 QJsonObject ReimbursementSecondary(QUuid widget_id, QUuid reimbursement_id)
 {
     QJsonObject message {};

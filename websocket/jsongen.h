@@ -69,7 +69,6 @@ QJsonObject SettlementSecondary(Section section, QUuid widget_id, QUuid partner_
 QJsonObject SettlementDelete(Section section, QUuid settlement_id, int version);
 QJsonObject SettlementView(Section section, QUuid widget_id, const utils::DateTimeRange& range);
 
-QJsonObject ReimbursementPrimary(QUuid widget_id, const utils::DateTimeRange& range);
 QJsonObject ReimbursementSecondary(QUuid widget_id, QUuid reimbursement_id);
 QJsonObject ReimbursementDelete(QUuid reimbursement_id, int version);
 

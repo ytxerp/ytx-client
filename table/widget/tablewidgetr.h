@@ -19,27 +19,20 @@
 
 #pragma once
 
-#include <QTableView>
-#include <QWidget>
-
 #include "component/config.h"
-#include "finance/reimbursement/reimbursementrow.h"
-#include "finance/reimbursement/tablemodelr.h"
+#include "table/model/tablemodelr.h"
+#include "tablewidget.h"
 
 namespace Ui {
 class TableWidgetR;
 }
 
-class TableWidgetR final : public QWidget {
+class TableWidgetR final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetR(reimbursement::TableModelR* model, CSectionConfig& config, const reimbursement::PrimaryRow& row, QUuid widget_id,
-        int finance_permission, QWidget* parent = nullptr);
+    explicit TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int finance_permission, QWidget* parent = nullptr);
     ~TableWidgetR() override;
-
-    QTableView* View() const;
-    reimbursement::TableModelR* Model() const { return model_; }
 
     void ApproveSucceeded(int version);
     void UnapproveSucceeded(int version);
@@ -47,9 +40,8 @@ public:
     void PostSucceeded(int version);
     void UnpostSucceeded(int version);
 
-signals:
-    void SInsertPrimaryRow(const reimbursement::PrimaryRow& row);
-    void SUpdatePrimaryRow(const reimbursement::PrimaryRow& row);
+    TableModel* Model() const override { return model_; }
+    QTableView* View() const override;
 
 private slots:
     void on_pushButtonDelete_clicked();
@@ -65,17 +57,16 @@ private slots:
 private:
     void InitWidget();
     void InitData();
-    void FetchNode();
     void UpdateButtons();
 
 private:
     Ui::TableWidgetR* ui;
-    reimbursement::TableModelR* model_ {};
 
-    reimbursement::PrimaryRow primary_row_ {};
+    NodeR* node_ {};
+    TableModelR* model_ {};
+
     QJsonObject pending_update_ {};
 
-    const QUuid widget_id_ {};
     const int finance_permission_ {};
 
     CSectionConfig& config_ {};

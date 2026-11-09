@@ -19,41 +19,32 @@
 
 #pragma once
 
-#include <QDateTime>
-#include <QTableView>
-#include <QWidget>
-
-#include "finance/reimbursement/treemodelr.h"
+#include "tree/model/treemodel.h"
+#include "treewidget.h"
 #include "utils/daterange.h"
 
 namespace Ui {
 class TreeWidgetR;
 }
 
-class TreeWidgetR final : public QWidget {
+class TreeWidgetR final : public TreeWidget {
     Q_OBJECT
 
 public:
-    explicit TreeWidgetR(QUuid widget_id, const QStringList& header, QWidget* parent = nullptr);
+    explicit TreeWidgetR(Section section, TreeModel* model, QWidget* parent = nullptr);
     ~TreeWidgetR() override;
 
-    QTableView* View() const;
-    reimbursement::TreeModelR* Model() { return model_; }
-
-signals:
-    void SCreateReimbursementSecondaryWidget(reimbursement::TreeModelR* model);
+    QTreeView* View() const override;
+    void Reset() override;
 
 private slots:
-    void on_pushButtonFetch_clicked();
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
-    void on_pushButtonDelete_clicked();
-    void on_pushButtonInsert_clicked();
+    void on_pushButtonFetch_clicked();
 
 private:
     void InitWidget();
     void InitTimer();
-    void InitModel(const QStringList& header);
 
     static utils::DateRange DefaultRange()
     {
@@ -65,10 +56,11 @@ private:
 
 private:
     Ui::TreeWidgetR* ui;
+    Section section_ {};
+    TreeModel* model_ {};
 
-    reimbursement::TreeModelR* model_ {};
     utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
-
-    const QUuid widget_id_ {};
 };
+
+inline const char* kTreeWidgetR = "TreeWidgetR";

@@ -19,52 +19,52 @@
 
 #pragma once
 
-#include <QAbstractItemModel>
-#include <QJsonObject>
+#include "tablemodel.h"
+#include "tree/node.h"
 
-#include "reimbursementrow.h"
-
-namespace reimbursement {
-
-class TreeModelR final : public QAbstractItemModel {
+class TableModelR final : public TableModel {
     Q_OBJECT
-
 public:
-    explicit TreeModelR(const QStringList& header, QObject* parent = nullptr);
-    ~TreeModelR() override;
+    explicit TableModelR(CTableModelArg& arg, const NodeR* node, int finance_permission, QObject* parent = nullptr);
+    ~TableModelR() override;
 
-public slots:
-    void RInsertePrimaryRow(const reimbursement::PrimaryRow& row);
-    void RUpdatePrimaryRow(const reimbursement::PrimaryRow& row);
+signals:
+    void SSyncInitial(double amount);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : entry_list_.size(); }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : header_.size(); }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void sort(int column, Qt::SortOrder order) override;
-    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    void Rebuild(const QJsonArray& array);
+    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
+    bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
-private:
-    std::optional<int> FindRow(QUuid id)
-    {
-        for (int i = 0; i != list_.size(); ++i) {
-            if (auto* s = list_[i]; s && s->id == id)
-                return i;
-        }
-
-        return std::nullopt;
-    }
+    void Purify();
+    void Finalize(QJsonObject& message);
+    void SyncSucceeded();
+    bool HasPendingUpdate() const;
 
 private:
-    const QStringList header_ {};
-    QList<PrimaryRow*> list_ {};
+    bool UpdateDescription(EntryR* entry, const QString& value);
+    bool UpdateDocument(EntryR* entry, const QStringList& value);
+    bool UpdateInitial(EntryR* entry, double value);
+    bool UpdateDebit(EntryR* entry, QUuid value);
+    bool UpdateCredit(EntryR* entry, QUuid value);
+
+private:
+    const NodeR* d_node_ {};
+
+    QList<Entry*> entry_list_ {};
+    QSet<QUuid> pending_delete_ {};
+
+    const int finance_permission_ {};
 };
-
-}
