@@ -43,10 +43,15 @@ public:
     TableModel* Model() const override { return model_; }
     QTableView* View() const override;
 
+    bool HasPendingUpdate() const;
+
+public slots:
+    void RSyncInitial(QUuid node_id, double initial_delta);
+    void on_pushButtonSave_clicked();
+
 private slots:
     void on_pushButtonDelete_clicked();
     void on_pushButtonInsert_clicked();
-    void on_pushButtonSave_clicked();
     void on_pushButtonApprove_clicked();
     void on_pushButtonPost_clicked();
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
@@ -68,6 +73,7 @@ private:
     QJsonObject pending_update_ {};
 
     const int finance_permission_ {};
+    const QUuid node_id_ {};
 
     CSectionConfig& config_ {};
 };

@@ -24,15 +24,13 @@
 #include <QWidget>
 
 enum class WidgetRole {
-    kNodeTabFIT,
-    kNodeTabO,
-    kNodeTabP,
+    kNodeTabFIPT,
+    kNodeTabOR,
     kDialog,
     kSettlement,
     kSettlementView,
     kStatement,
     kOrderOverview,
-    kReimbursement,
 };
 
 struct WidgetContext {

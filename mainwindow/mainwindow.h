@@ -43,6 +43,7 @@
 #include "table/model/tablemodelo.h"
 #include "table/widget/tablewidgetfipt.h"
 #include "table/widget/tablewidgeto.h"
+#include "table/widget/tablewidgetr.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
 
@@ -111,6 +112,7 @@ private slots:
     void tabWidget_tabBarDoubleClicked(int index);
     void tabWidget_tabCloseRequestedFIPT(int index);
     void tabWidget_tabCloseRequestedO(int index);
+    void tabWidget_tabCloseRequestedR(int index);
 
     // Locate a node that is already in the local tree: switch to the tree tab,
     // activate the window, then select and focus the node right away.
@@ -256,6 +258,7 @@ private:
     void TableConnectT(TableModel* table_model) const;
     void TableConnectP(TableModel* table_model) const;
     void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
+    void TableConnectR(TableModelR* table_model_r, TableWidgetR* widget) const;
 
     void DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const;
@@ -318,6 +321,7 @@ private:
     // Table
     void CreateLeafFIPT(SectionContext* sc, QUuid node_id);
     void CreateLeafO(SectionContext* sc, QUuid node_id);
+    void CreateLeafR(SectionContext* sc, QUuid node_id);
 
     // Widget
     void RegisterWidget(SectionContext* sc, QWidget* widget, QUuid widget_id, WidgetRole role);
@@ -374,6 +378,8 @@ private:
     // create the tab, and send a TableAck carrying entry_id; the entry is
     // selected once the data arrives (asynchronous, see RSelectEntry).
     void EntryLocateO(Section section, QUuid entry_id, QUuid lhs_node_id);
+
+    void EntryLocateR(Section section, QUuid entry_id, QUuid lhs_node_id);
 
     void InitSystemTray();
     void InitStatusLabel();

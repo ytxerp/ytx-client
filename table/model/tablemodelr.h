@@ -29,7 +29,7 @@ public:
     ~TableModelR() override;
 
 signals:
-    void SSyncInitial(double amount);
+    void SSyncInitial(QUuid node_id, double initial_delta);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

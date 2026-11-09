@@ -48,6 +48,7 @@ void MainWindow::InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_in
         break;
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return;
     }
 

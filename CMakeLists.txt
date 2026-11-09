@@ -431,6 +431,7 @@ set(SOURCES
     mainwindow/mainwindow_order_overview.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
+    mainwindow/mainwindow_reimbursement.cc
     mainwindow/mainwindow_search.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_settlement_view.cc

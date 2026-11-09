@@ -64,6 +64,7 @@ QAbstractItemView QComboBox,
 QAbstractItemView QSpinBox,
 QAbstractItemView QDoubleSpinBox,
 QWidget#TableWidgetO QDoubleSpinBox,
+QWidget#TableWidgetR QDoubleSpinBox,
 QWidget#SettlementSecondaryWidget QDoubleSpinBox,
 QDoubleSpinBox#dspin_box_dynamic_,
 QDoubleSpinBox#dspin_box_static_ {
@@ -84,6 +85,7 @@ QGroupBox#groupBoxUnderView, QTableView#tableViewData, QTableView#tableViewSumma
 /* Specific border adds */
 QDialog > QDateTimeEdit,
 QWidget#TableWidgetO QDateTimeEdit,
+QWidget#TableWidgetR QDateTimeEdit,
 QWidget#SettlementSecondaryWidget QDateTimeEdit
 {
     border: 1px solid #657B83;

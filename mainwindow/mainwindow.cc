@@ -288,7 +288,7 @@ void MainWindow::FlushCaches(const SectionContext* sc) const
             continue;
 
         // Only process specific NodeTab types
-        if (wc.role != WidgetRole::kNodeTabFIT && wc.role != WidgetRole::kNodeTabP)
+        if (wc.role != WidgetRole::kNodeTabFIPT)
             continue;
 
         // Safely cast the widget to TableWidget

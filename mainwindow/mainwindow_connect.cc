@@ -123,7 +123,7 @@ void MainWindow::TreeConnectR(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(ui->tabWidgetR, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetR, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
-    connect(ui->tabWidgetR, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedO, Qt::UniqueConnection);
+    connect(ui->tabWidgetR, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedR, Qt::UniqueConnection);
 }
 
 void MainWindow::TableConnectF(TableModel* table_model) const
@@ -174,6 +174,10 @@ void MainWindow::TableConnectP(TableModel* table_model) const
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const
 {
     connect(table_model_o, &TableModelO::SSyncDeltaO, widget, &TableWidgetO::RSyncDeltaO);
-
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
+}
+
+void MainWindow::TableConnectR(TableModelR* table_model_r, TableWidgetR* widget) const
+{
+    connect(table_model_r, &TableModelR::SSyncInitial, widget, &TableWidgetR::RSyncInitial);
 }

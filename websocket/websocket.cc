@@ -388,6 +388,7 @@ void WebSocket::NotifyLoginOutcome(const QJsonObject& obj)
             .partner = obj[kPartnerPermissions].toInt(),
             .sale = obj[kSalePermissions].toInt(),
             .purchase = obj[kPurchasePermissions].toInt(),
+            .reimbursement = obj[kReimbursementPermissions].toInt(),
         };
 
         UserProfile& profile { UserProfile::Instance() };

@@ -89,6 +89,9 @@ void MainWindow::REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id
     case Section::kPurchase:
         EntryLocateO(section, entry_id, lhs_node_id);
         break;
+    case Section::kReimbursement:
+        EntryLocateP(section, entry_id, lhs_node_id);
+        break;
     }
 }
 
@@ -158,12 +161,12 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
             break;
         case Section::kSale:
         case Section::kPurchase:
+        case Section::kReimbursement:
             Q_UNREACHABLE();
         }
     }
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
-    const WidgetRole role { section == Section::kPartner ? WidgetRole::kNodeTabP : WidgetRole::kNodeTabFIT };
 
     {
         CString name { tree_model->Name(node_id) };
@@ -200,11 +203,12 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
             break;
         case Section::kSale:
         case Section::kPurchase:
+        case Section::kReimbursement:
             Q_UNREACHABLE();
         }
     }
 
-    RegisterWidget(sc, widget, node_id, role);
+    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabFIPT);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 

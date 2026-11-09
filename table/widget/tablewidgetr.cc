@@ -13,6 +13,7 @@ TableWidgetR::TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& secti
     , node_ { node }
     , model_ { qobject_cast<TableModelR*>(model) }
     , finance_permission_ { finance_permission }
+    , node_id_ { node->id }
     , config_ { section_config }
 {
     ui->setupUi(this);
@@ -39,6 +40,24 @@ void TableWidgetR::PostSucceeded(int version) { }
 void TableWidgetR::UnpostSucceeded(int version) { }
 
 QTableView* TableWidgetR::View() const { return ui->tableView; }
+
+bool TableWidgetR::HasPendingUpdate() const
+{
+    const bool node_pending { !pending_update_.isEmpty() };
+    const bool entry_pending { model_->HasPendingUpdate() };
+
+    qDebug() << "[HasPendingUpdate]"
+             << "node_pending =" << node_pending << ", entry_pending =" << entry_pending << ", result =" << (node_pending || entry_pending);
+
+    return node_pending || entry_pending;
+}
+
+void TableWidgetR::RSyncInitial(QUuid node_id, double initial_delta)
+{
+    Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
+    node_->initial_total += initial_delta;
+    ui->dSpinInitialTotal->setValue(node_->initial_total);
+}
 
 void TableWidgetR::InitWidget()
 {

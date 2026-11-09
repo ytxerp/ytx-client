@@ -173,6 +173,7 @@ inline const QString kInventoryPermissions = QStringLiteral("inventory_permissio
 inline const QString kPartnerPermissions = QStringLiteral("partner_permissions");
 inline const QString kSalePermissions = QStringLiteral("sale_permissions");
 inline const QString kPurchasePermissions = QStringLiteral("purchase_permissions");
+inline const QString kReimbursementPermissions = QStringLiteral("reimbursement_permissions");
 inline const QString kRoles = QStringLiteral("roles");
 inline const QString kCashKind = QStringLiteral("cash_kind");
 

@@ -213,13 +213,8 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
-    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabO);
+    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabOR);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
-}
-
-void MainWindow::InsertNodeR(SectionContext *sc, const QModelIndex &parent_index)
-{
-
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
@@ -288,7 +283,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
-    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabO);
+    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabOR);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 

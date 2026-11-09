@@ -33,6 +33,7 @@ struct Permissions {
     int partner {};
     int sale {};
     int purchase {};
+    int reimbursement {};
 };
 
 struct PermissionItem {

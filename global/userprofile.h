@@ -51,6 +51,8 @@ public:
             return permissions_.sale;
         case Section::kPurchase:
             return permissions_.purchase;
+        case Section::kReimbursement:
+            return permissions_.reimbursement;
         }
 
         std::unreachable();

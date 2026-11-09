@@ -63,10 +63,22 @@ void MainWindow::ShowLeafWidget(QUuid node_id, QUuid entry_id)
         return;
     }
 
-    if (IsOrderSection(section)) {
+    switch (section) {
+    case Section::kSale:
+    case Section::kPurchase:
         CreateLeafO(sc_, node_id);
-    } else {
+        break;
+
+    case Section::kReimbursement:
+        CreateLeafR(sc_, node_id);
+        break;
+
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+    case Section::kPartner:
         CreateLeafFIPT(sc_, node_id);
+        break;
     }
 
     if (section == Section::kPartner) {
@@ -180,6 +192,38 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
 
         if (ret == QMessageBox::Save)
             widget->SaveOrder();
+    }
+
+    utils::DeleteWidget(sc_->widget_hash, node_id);
+    TableSStation::Instance()->DeregisterModel(node_id);
+}
+
+void MainWindow::tabWidget_tabCloseRequestedR(int index)
+{
+    qInfo() << Q_FUNC_INFO;
+
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
+
+    auto* widget { qobject_cast<TableWidgetR*>(sc_->widget_hash.value(node_id).widget.data()) };
+    if (!widget) {
+        qWarning() << Q_FUNC_INFO << "Invalid widget:" << node_id;
+        return;
+    }
+
+    if (widget->HasPendingUpdate()) {
+        auto* dlg = utils::CreateMessage(QMessageBox::Warning, tr("Unsaved Changes"),
+            tr("This page contains unsaved changes.\n\nDo you want to save them before closing?"), true,
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+
+        dlg->setDefaultButton(QMessageBox::Cancel);
+
+        const int ret { dlg->exec() };
+
+        if (ret == QMessageBox::Cancel)
+            return;
+
+        if (ret == QMessageBox::Save)
+            widget->on_pushButtonSave_clicked();
     }
 
     utils::DeleteWidget(sc_->widget_hash, node_id);
