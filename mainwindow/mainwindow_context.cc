@@ -5,6 +5,7 @@
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
+#include "entryhub/entryhubr.h"
 #include "entryhub/entryhubt.h"
 #include "global/masterdataregistry.h"
 #include "global/printhub.h"
@@ -12,11 +13,13 @@
 #include "tree/model/treemodelf.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
+#include "tree/model/treemodelr.h"
 #include "tree/model/treemodelt.h"
 #include "tree/widget/treewidgetf.h"
 #include "tree/widget/treewidgetit.h"
 #include "tree/widget/treewidgeto.h"
 #include "tree/widget/treewidgetp.h"
+#include "tree/widget/treewidgetr.h"
 #include "ui_mainwindow.h"
 #include "websocket/websocket.h"
 
@@ -100,7 +103,8 @@ void MainWindow::CreateSection(const SectionContext* sc, CString& name) const
     case Section::kPurchase:
         TreeConnectO(view, tree_model, entry_hub, section);
         break;
-    default:
+    case Section::kReimbursement:
+        TreeConnectR(view, tree_model, entry_hub);
         break;
     }
 }
@@ -119,6 +123,7 @@ void MainWindow::InitilizeContext()
         InitContextPartner();
         InitContextSale();
         InitContextPurchase();
+        InitContextReimbursement();
     }
 
     {
@@ -128,6 +133,7 @@ void MainWindow::InitilizeContext()
         CreateSection(&sc_t_, tr("Task"));
         CreateSection(&sc_sale_, tr("Sale"));
         CreateSection(&sc_purchase_, tr("Purchase"));
+        CreateSection(&sc_r_, tr("Reimbursement"));
     }
 
     {
@@ -235,11 +241,6 @@ void MainWindow::InitContextFinance()
 
     info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
     info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
-
-    // Reimbursement Status
-    finance_info_.reimbursement_status_map.insert(std::to_underlying(ReimbursementStatus::kDraft), QObject::tr("Draft"));
-    finance_info_.reimbursement_status_map.insert(std::to_underlying(ReimbursementStatus::kApproved), QObject::tr("Approved"));
-    finance_info_.reimbursement_status_map.insert(std::to_underlying(ReimbursementStatus::kPosted), QObject::tr("Posted"));
 
     info.cash_kind_model = new UnitModel(this);
     info.cash_kind_model->Rebuild(info.cash_kind_map);
@@ -461,4 +462,36 @@ void MainWindow::InitContextPurchase()
     tree_view = tree_widget->View();
 
     sc_purchase_.tab_widget = ui->tabWidgetPurchase;
+}
+
+void MainWindow::InitContextReimbursement()
+{
+    auto& info { sc_r_.info };
+    auto& entry_hub { sc_r_.entry_hub };
+    auto& tree_model { sc_r_.tree_model };
+    auto& tree_view { sc_r_.tree_view };
+    auto& tree_widget { sc_r_.tree_widget };
+
+    sc_r_.section = Section::kReimbursement;
+
+    info.unit_map.insert(std::to_underlying(NodeUnit::RDefault), QString());
+
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
+
+    // Reimbursement Status
+    info.status_map.insert(std::to_underlying(ReimbursementStatus::kDraft), tr("Draft"));
+    info.status_map.insert(std::to_underlying(ReimbursementStatus::kApproved), tr("Approved"));
+    info.status_map.insert(std::to_underlying(ReimbursementStatus::kPosted), tr("Posted"));
+
+    entry_hub = new EntryHubR(Section::kReimbursement, this);
+    tree_model = new TreeModelR(Section::kReimbursement, info.node_header, app_config_.separator, this);
+
+    WebSocket::Instance()->RegisterTreeModel(Section::kReimbursement, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kReimbursement, entry_hub);
+
+    tree_widget = new TreeWidgetR(Section::kReimbursement, tree_model, this);
+    tree_view = tree_widget->View();
+
+    sc_r_.tab_widget = ui->tabWidgetR;
 }

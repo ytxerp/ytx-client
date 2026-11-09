@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget* parent)
     SetTabWidget(ui->tabWidgetP);
     SetTabWidget(ui->tabWidgetSale);
     SetTabWidget(ui->tabWidgetPurchase);
+    SetTabWidget(ui->tabWidgetR);
 
     SetIcon();
     SetUniqueConnection();
@@ -146,6 +147,9 @@ void MainWindow::InsertNodeFunction(SectionContext* sc, const QModelIndex& paren
     case Section::kPurchase:
         InsertNodeO(sc, parent_index);
         return;
+    case Section::kReimbursement:
+        InsertNodeR(sc, parent_index);
+        return;
     case Section::kFinance:
     case Section::kTask:
     case Section::kPartner:
@@ -190,6 +194,7 @@ void MainWindow::ResetMainwindow()
         utils::ResetSectionContext(sc_p_);
         utils::ResetSectionContext(sc_sale_);
         utils::ResetSectionContext(sc_purchase_);
+        utils::ResetSectionContext(sc_r_);
     }
 
     {
@@ -210,6 +215,7 @@ void MainWindow::RCleanUp()
     utils::DeleteWidgets(widget_hash_);
     utils::DeleteWidgets(sc_f_.widget_hash);
     utils::DeleteWidgets(sc_i_.widget_hash);
+    utils::DeleteWidgets(sc_r_.widget_hash);
     utils::DeleteWidgets(sc_p_.widget_hash);
     utils::DeleteWidgets(sc_t_.widget_hash);
     utils::DeleteWidgets(sc_sale_.widget_hash);
@@ -228,6 +234,7 @@ void MainWindow::IniSectionGroup()
     section_group_->addButton(ui->rBtnPartner, std::to_underlying(Section::kPartner));
     section_group_->addButton(ui->rBtnSale, std::to_underlying(Section::kSale));
     section_group_->addButton(ui->rBtnPurchase, std::to_underlying(Section::kPurchase));
+    section_group_->addButton(ui->rBtnReimbursement, std::to_underlying(Section::kReimbursement));
 
     const QList<QPair<QKeySequence, int>> shortcuts = {
         { Qt::ALT | Qt::Key_1, std::to_underlying(Section::kFinance) },
@@ -329,6 +336,8 @@ SectionContext* MainWindow::GetSectionContext(Section section)
         return &sc_sale_;
     case Section::kPurchase:
         return &sc_purchase_;
+    case Section::kReimbursement:
+        return &sc_r_;
     }
 
     Q_UNREACHABLE();
@@ -543,7 +552,8 @@ void MainWindow::on_actionRename_triggered()
     switch (sc_->section) {
     case Section::kSale:
     case Section::kPurchase:
-        EditNameO();
+    case Section::kReimbursement:
+        EditNameOR();
         return;
     case Section::kFinance:
     case Section::kTask:

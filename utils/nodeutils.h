@@ -54,6 +54,8 @@ constexpr int DirectionRuleColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kDirectionRule);
+    case Section::kReimbursement:
+        return -1;
     }
 
     Q_UNREACHABLE();
@@ -67,6 +69,7 @@ constexpr int StatusColumn(Section section)
     case Section::kInventory:
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return -1;
     case Section::kPartner:
         return std::to_underlying(NodeEnumP::kStatus);
@@ -86,6 +89,8 @@ constexpr int DescriptionColumn(Section section)
         return std::to_underlying(NodeEnumP::kDescription);
     case Section::kInventory:
         return std::to_underlying(NodeEnumI::kDescription);
+    case Section::kReimbursement:
+        return std::to_underlying(NodeEnumR::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kDescription);
@@ -105,6 +110,8 @@ constexpr int ColorColumn(Section section)
         return std::to_underlying(NodeEnumP::kColor);
     case Section::kInventory:
         return std::to_underlying(NodeEnumI::kColor);
+    case Section::kReimbursement:
+        return std::to_underlying(NodeEnumR::kColor);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kColor);
@@ -124,6 +131,8 @@ constexpr int TagColumn(Section section)
         return std::to_underlying(NodeEnumI::kTag);
     case Section::kPartner:
         return std::to_underlying(NodeEnumP::kTag);
+    case Section::kReimbursement:
+        return std::to_underlying(NodeEnumR::kTag);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kTag);
@@ -143,6 +152,8 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
         return { std::to_underlying(NodeEnumP::kInitialTotal), std::to_underlying(NodeEnumP::kInitialTotal) };
     case Section::kInventory:
         return { std::to_underlying(NodeEnumI::kInitialTotal), std::to_underlying(NodeEnumI::kFinalTotal) };
+    case Section::kReimbursement:
+        return { std::to_underlying(NodeEnumR::kInitialTotal), std::to_underlying(NodeEnumR::kInitialTotal) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(NodeEnumO::kCountTotal), std::to_underlying(NodeEnumO::kInitialTotal) };
@@ -162,6 +173,8 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
         return { std::to_underlying(NodeEnumP::kCode), std::to_underlying(NodeEnumP::kStatus) };
     case Section::kInventory:
         return { std::to_underlying(NodeEnumI::kCode), std::to_underlying(NodeEnumI::kCommission) };
+    case Section::kReimbursement:
+        return { std::to_underlying(NodeEnumR::kIssuedTime), std::to_underlying(NodeEnumR::kInitialTotal) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(NodeEnumO::kIssuedTime), std::to_underlying(NodeEnumO::kInitialTotal) };

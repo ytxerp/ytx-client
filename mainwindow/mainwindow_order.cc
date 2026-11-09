@@ -8,7 +8,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::EditNameO()
+void MainWindow::EditNameOR()
 {
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
@@ -215,6 +215,11 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
 
     RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabO);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
+}
+
+void MainWindow::InsertNodeR(SectionContext *sc, const QModelIndex &parent_index)
+{
+
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)

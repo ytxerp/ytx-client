@@ -72,7 +72,7 @@ enum class NodeUnit : int {
     OPending = 820, // Order Pending
 
     // Reimbursement units, 900–999
-    RReimbursement = 900, // Reimbursement
+    RDefault = 900, // Reimbursement
 };
 
 inline const char* kUnitCode(NodeUnit c)
@@ -143,7 +143,7 @@ inline const char* kUnitCode(NodeUnit c)
         return "PEN";
 
     // Reimbursement units
-    case NodeUnit::RReimbursement:
+    case NodeUnit::RDefault:
         return "";
     }
 }
@@ -216,7 +216,7 @@ inline const char* kUnitSymbol(NodeUnit c)
         return "…";
 
     // Reimbursement units
-    case NodeUnit::RReimbursement:
+    case NodeUnit::RDefault:
         return "";
     }
 }

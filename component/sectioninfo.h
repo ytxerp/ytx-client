@@ -43,8 +43,6 @@ struct SectionInfo {
 
 struct FinanceInfo {
     QMap<int, QString> cash_kind_map {};
-    QMap<int, QString> reimbursement_status_map {};
-
     QPointer<UnitModel> cash_kind_model {};
 };
 

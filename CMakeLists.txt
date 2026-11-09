@@ -187,6 +187,7 @@ set(HEADERS
     entryhub/entryhubi.h
     entryhub/entryhubo.h
     entryhub/entryhubp.h
+    entryhub/entryhubr.h
     entryhub/entryhubt.h
     enum/authenum.h
     enum/bindingmode.h
@@ -394,6 +395,7 @@ set(SOURCES
     entryhub/entryhubi.cc
     entryhub/entryhubo.cc
     entryhub/entryhubp.cc
+    entryhub/entryhubr.cc
     entryhub/entryhubt.cc
     finance/finance_role.cc
     finance/period_close/periodclosedialog.cc

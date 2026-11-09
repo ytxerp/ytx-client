@@ -752,19 +752,22 @@ void MainWindow::DelegateStatementFilterView(QTableView* view) const
     view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), number);
 }
 
-void MainWindow::DelegateReimbursementPrimary(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::TreeDelegateR(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kIssuedTime), issued_time);
+    auto* issued_time { new IssuedTimeR(section.date_format, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kIssuedTime), issued_time);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kInitialTotal), amount);
+    auto* amount { new DoubleNoneZeroR(section.amount_decimal, string_const::kEightDigits, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kInitialTotal), amount);
 
-    auto* status { new IntStringR(finance_info_.reimbursement_status_map, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kStatus), status);
+    auto* status { new IntStringR(info.status_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kStatus), status);
+
+    auto* kind { new IntStringR(info.kind_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind);
 }
 
-void MainWindow::DelegateReimbursementSecondary(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::TableDelegateR(QTableView* table_view, CSectionConfig& config) const
 {
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDescription), line);

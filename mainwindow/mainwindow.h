@@ -235,6 +235,7 @@ private:
     void InitContextTask();
     void InitContextSale();
     void InitContextPurchase();
+    void InitContextReimbursement();
 
     void ShowLeafWidget(QUuid node_id, QUuid entry_id = {});
     void LocateLeafWidget(const SectionContext* sc, QUuid node_id, QUuid entry_id = {}) const;
@@ -246,6 +247,7 @@ private:
     void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, QUuid node_id) const;
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionConfig& config, Section section) const;
+    void TableDelegateR(QTableView* table_view, CSectionConfig& config) const;
 
     void SetTableView(QTableView* view, Section section, int stretch_column) const;
 
@@ -277,8 +279,6 @@ private:
     void DelegateOrderOverview(QTableView* view) const;
     void DelegateAuditFilterView(QTableView* view) const;
     void DelegateStatementFilterView(QTableView* view) const;
-    void DelegateReimbursementPrimary(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateReimbursementSecondary(QTableView* table_view, CSectionConfig& config) const;
 
     void InitTableView(QTableView* view, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;
@@ -286,7 +286,7 @@ private:
     void InitSummaryView(QTableView* summary_view, QTableView* data_view) const;
 
     void EditNameFIPT();
-    void EditNameO();
+    void EditNameOR();
 
     void SetTreeView(QTreeView* view, Section section) const;
     void SetTreeHeader(QTreeView* view, Section section);
@@ -296,12 +296,14 @@ private:
     void TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section_config, Section section) const;
+    void TreeDelegateR(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
 
     void TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const;
+    void TreeConnectR(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
 
     // Section
     SectionContext* GetSectionContext(Section section);
@@ -311,6 +313,7 @@ private:
     void InsertNodeFunction(SectionContext* sc, const QModelIndex& parent_index);
     void InsertNodeFIPT(SectionContext* sc, const QModelIndex& parent_index);
     void InsertNodeO(SectionContext* sc, const QModelIndex& parent_index);
+    void InsertNodeR(SectionContext* sc, const QModelIndex& parent_index);
 
     // Table
     void CreateLeafFIPT(SectionContext* sc, QUuid node_id);
@@ -431,6 +434,7 @@ private:
     SectionContext sc_p_ {};
     SectionContext sc_sale_ {};
     SectionContext sc_purchase_ {};
+    SectionContext sc_r_ {};
 
     FinanceInfo finance_info_ {};
 };

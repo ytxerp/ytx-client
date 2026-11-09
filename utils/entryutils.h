@@ -54,6 +54,8 @@ constexpr int LinkedNodeColumn(Section section)
         return std::to_underlying(EntryEnum::kRhsNode);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kRhsNode);
+    case Section::kReimbursement:
+        return -1;
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kRhsNode);
@@ -74,6 +76,7 @@ constexpr int IsLockedColumn(Section section)
         return std::to_underlying(EntryEnumP::kIsLocked);
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return -1;
     }
 
@@ -90,6 +93,8 @@ constexpr int TagColumn(Section section)
         return std::to_underlying(EntryEnum::kTag);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kTag);
+    case Section::kReimbursement:
+        return std::to_underlying(EntryEnumR::kTag);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kTag);
@@ -108,6 +113,8 @@ constexpr int DescriptionColumn(Section section)
         return std::to_underlying(EntryEnum::kDescription);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kDescription);
+    case Section::kReimbursement:
+        return std::to_underlying(EntryEnumR::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kDescription);
@@ -126,6 +133,8 @@ constexpr int IssuedTimeColumn(Section section)
         return std::to_underlying(EntryEnum::kIssuedTime);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kIssuedTime);
+    case Section::kReimbursement:
+        return std::to_underlying(EntryEnumR::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         // Sale/Purchase entries do not display issued_time column;
@@ -146,6 +155,8 @@ constexpr int SearchDescriptionColumn(Section section)
         return std::to_underlying(FullEntryEnum::kDescription);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kDescription);
+    case Section::kReimbursement:
+        return std::to_underlying(EntryEnumR::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kDescription);
@@ -165,6 +176,7 @@ constexpr int BalanceColumn(Section section)
     case Section::kPartner:
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return -1;
     }
 
@@ -183,6 +195,7 @@ constexpr int StatusColumn(Section section)
         return std::to_underlying(EntryEnumP::kStatus);
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return -1;
     }
 
@@ -201,6 +214,7 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
         return { std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kExternalSku) };
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         return { -1, -1 };
     }
 
@@ -217,6 +231,8 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
         return { std::to_underlying(EntryEnum::kDebit), std::to_underlying(EntryEnum::kCredit) };
     case Section::kPartner:
         return { -1, -1 };
+    case Section::kReimbursement:
+        return { std::to_underlying(EntryEnumR::kInitial), std::to_underlying(EntryEnumR::kInitial) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kInitial) };

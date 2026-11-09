@@ -114,6 +114,18 @@ void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tab_widget, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedO, Qt::UniqueConnection);
 }
 
+void MainWindow::TreeConnectR(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
+{
+    connect(tree_view, &QTreeView::doubleClicked, this, &MainWindow::RTreeViewDoubleClicked, Qt::UniqueConnection);
+    connect(tree_view, &QTreeView::customContextMenuRequested, this, &MainWindow::RTreeViewCustomContextMenuRequested, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
+
+    connect(ui->tabWidgetR, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(ui->tabWidgetR, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(ui->tabWidgetR, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedO, Qt::UniqueConnection);
+}
+
 void MainWindow::TableConnectF(TableModel* table_model) const
 {
     auto tree_model { sc_f_.tree_model };
