@@ -24,4 +24,7 @@
 class EntryHubR final : public EntryHub {
 public:
     explicit EntryHubR(Section section, QObject* parent = nullptr);
+
+protected:
+    EntryList ProcessEntryArray(const QJsonArray& array) override;
 };

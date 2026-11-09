@@ -48,10 +48,8 @@ private:
 
     static utils::DateRange DefaultRange()
     {
-        const QDate today { QDate::currentDate() };
-        const QDate start { today.addMonths(-3) };
-
-        return { QDate(start.year(), start.month(), 1), QDate(today.year(), today.month(), today.daysInMonth()) };
+        const auto today { QDate::currentDate() };
+        return { today, today };
     }
 
 private:

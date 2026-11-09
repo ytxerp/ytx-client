@@ -90,13 +90,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Orientation::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pushButtonFetch">
         <property name="text">
          <string>Fetch</string>
