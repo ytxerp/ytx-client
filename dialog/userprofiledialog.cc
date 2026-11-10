@@ -37,6 +37,7 @@ void UserProfileDialog::InitDialog()
     ui->lineEditPartnerPermissions->setText(section::PermissionsDisplay(Section::kPartner, profile.SectionPermissions(Section::kPartner)));
     ui->lineEditSalePermissions->setText(section::PermissionsDisplay(Section::kSale, profile.SectionPermissions(Section::kSale)));
     ui->lineEditPurchasePermissions->setText(section::PermissionsDisplay(Section::kPurchase, profile.SectionPermissions(Section::kPurchase)));
+    ui->lineEditReimbursementPermissions->setText(section::PermissionsDisplay(Section::kReimbursement, profile.SectionPermissions(Section::kReimbursement)));
 
     ui->pushButtonSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 }
