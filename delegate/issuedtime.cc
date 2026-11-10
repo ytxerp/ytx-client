@@ -25,8 +25,12 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 
     auto issued_time { index.data().toDateTime() };
 
-    if (!issued_time.isValid())
-        issued_time = (remember_last_ && last_issued_.isValid()) ? last_issued_ : QDateTime::currentDateTime();
+    if (!issued_time.isValid()) {
+        issued_time = QDateTime::currentDateTime();
+
+        if (remember_last_ && last_issued_.isValid())
+            issued_time.setDate(last_issued_.date());
+    }
 
     cast_editor->setDateTime(issued_time);
 }
@@ -36,10 +40,8 @@ void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const 
     auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
     auto issued_time { cast_editor->dateTime() };
 
-    if (remember_last_)
+    if (model->setData(index, issued_time) && remember_last_)
         last_issued_ = issued_time;
-
-    model->setData(index, issued_time);
 }
 
 void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
