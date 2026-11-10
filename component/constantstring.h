@@ -109,4 +109,7 @@ inline const QString kCompactDate = QStringLiteral("yyyyMMdd");
 inline const QString kDashedDate = QStringLiteral("yyyy-MM-dd");
 inline const QString kSlashedDate = QStringLiteral("yyyy/MM/dd");
 inline const QString kDottedDate = QStringLiteral("yyyy.MM.dd");
+
+inline const QString kTime = QStringLiteral("HH:mm");
+inline const QString kDateTimeSeconds = QStringLiteral("yyyy-MM-dd HH:mm:ss");
 }

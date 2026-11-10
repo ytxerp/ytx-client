@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "component/constantstring.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
 #include "global/masterdataregistry.h"
@@ -108,11 +109,14 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole && role != Qt::EditRole)
-        return QVariant();
-
     const EntryEnumO column { index.column() };
     auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
+
+    if (role == Qt::ToolTipRole && column == EntryEnumO::kIssuedTime)
+        return d_entry->issued_time.toString(datetime_format::kDateTime);
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
+        return QVariant();
 
     switch (column) {
     case EntryEnumO::kLhsNode:
@@ -137,6 +141,8 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
         return d_entry->status;
     case EntryEnumO::kDocument:
         return d_entry->document;
+    case EntryEnumO::kIssuedTime:
+        return d_entry->issued_time;
     }
 }
 
@@ -190,6 +196,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumO::kDocument:
         UpdateDocument(d_entry, value.toStringList());
         break;
+    case EntryEnumO::kIssuedTime:
     case EntryEnumO::kStatus:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kExternalSku:
@@ -240,6 +247,8 @@ void TableModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &EntryO::document, order);
         case EntryEnumO::kStatus:
             return utils::CompareMember(lhs, rhs, &EntryO::status, order);
+        case EntryEnumO::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &EntryO::issued_time, order);
         case EntryEnumO::kLhsNode:
         case EntryEnumO::kExternalSku:
             return false;
@@ -266,6 +275,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kDocument:
     case EntryEnumO::kExternalSku:
     case EntryEnumO::kStatus:
+    case EntryEnumO::kIssuedTime:
         flags &= ~Qt::ItemIsEditable;
         break;
     case EntryEnumO::kRhsNode:

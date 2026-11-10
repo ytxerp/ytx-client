@@ -39,6 +39,8 @@ QVariant EntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->status;
     case EntryEnumO::kDocument:
         return d_entry->document;
+    case EntryEnumO::kIssuedTime:
+        return d_entry->issued_time;
     }
 }
 
@@ -69,6 +71,8 @@ void EntryModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &EntryO::tag, order);
         case EntryEnumO::kDocument:
             return utils::CompareMember(lhs, rhs, &EntryO::document, order);
+        case EntryEnumO::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &EntryO::issued_time, order);
         case EntryEnumO::kExternalSku:
         case EntryEnumO::kStatus:
             return false;

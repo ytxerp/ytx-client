@@ -345,6 +345,7 @@ void MainWindow::InitHeader(SectionInfo& f, SectionInfo& i, SectionInfo& t, Sect
 
     sale.entry_header = {
         tr("LHS Node"),
+        tr("Issued Time"),
         tr("Internal SKU"),
         tr("Count"),
         tr("Measure"),

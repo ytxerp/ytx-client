@@ -41,6 +41,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), rate_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDocument), document_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kIssuedTime), issued_time_);
 
     auto* item_name { new SearchPathTableR(inventory_->LeafPath(), view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), item_name);

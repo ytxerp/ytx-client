@@ -375,6 +375,9 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config, 
     auto tree_model_i { sc_i_.tree_model };
     auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem) };
 
+    auto* issued_time { new IssuedTimeR(datetime_format::kTime, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kIssuedTime), issued_time);
+
     auto* internal_sku { new FilterUnit(tree_model_i->LeafPath(), itm_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), internal_sku);
 

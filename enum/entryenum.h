@@ -84,6 +84,7 @@ enum class EntryEnumO {
     // --- Hidden ---
     kLhsNode,
     // --- Visible ---
+    kIssuedTime,
     kRhsNode,
     kCount,
     kMeasure,
