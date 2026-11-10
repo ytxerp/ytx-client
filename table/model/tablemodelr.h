@@ -54,6 +54,7 @@ private:
     bool UpdateInitial(EntryR* entry, double value);
     bool UpdateDebit(EntryR* entry, QUuid value);
     bool UpdateCredit(EntryR* entry, QUuid value);
+    bool UpdateTag(EntryR* entry, const QStringList& value);
 
 private:
     const NodeR* d_node_ {};

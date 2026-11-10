@@ -784,6 +784,9 @@ void MainWindow::TableDelegateR(QTableView* table_view, CSectionConfig& config) 
 
     auto* document { new Document(sc_f_.shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDocument), document);
+
+    auto* issued_time { new IssuedTimeR(datetime_format::kTime, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

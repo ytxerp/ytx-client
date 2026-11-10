@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "global/entrypool.h"
 #include "utils/templateutils.h"
 
@@ -28,11 +29,14 @@ QVariant TableModelR::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole && role != Qt::EditRole)
-        return QVariant();
-
     const EntryEnumR column { index.column() };
     auto* entry { static_cast<EntryR*>(index.internalPointer()) };
+
+    if (role == Qt::ToolTipRole && column == EntryEnumR::kIssuedTime)
+        return entry->issued_time.toString(datetime_format::kDateTime);
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
+        return QVariant();
 
     switch (column) {
     case EntryEnumR::kDescription:
@@ -49,6 +53,8 @@ QVariant TableModelR::data(const QModelIndex& index, int role) const
         return entry->lhs_node;
     case EntryEnumR::kTag:
         return entry->tag;
+    case EntryEnumR::kIssuedTime:
+        return entry->issued_time;
     }
 }
 
@@ -84,9 +90,11 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumR::kInitial:
         UpdateInitial(row, value.toDouble());
         break;
-    case EntryEnumR::kLhsNode:
-        break;
     case EntryEnumR::kTag:
+        UpdateTag(row, value.toStringList());
+        break;
+    case EntryEnumR::kLhsNode:
+    case EntryEnumR::kIssuedTime:
         break;
     }
 
@@ -164,6 +172,19 @@ bool TableModelR::UpdateCredit(EntryR* entry, QUuid value)
     return true;
 }
 
+bool TableModelR::UpdateTag(EntryR* entry, const QStringList& value)
+{
+    if (entry->tag == value)
+        return false;
+
+    entry->tag = value;
+
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
+
+    return true;
+}
+
 void TableModelR::sort(int column, Qt::SortOrder order)
 {
     const EntryEnumR e_column { column };
@@ -183,10 +204,12 @@ void TableModelR::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Entry::document, order);
         case EntryEnumR::kInitial:
             return utils::CompareMember(d_lhs, d_rhs, &EntryR::initial, order);
-        case EntryEnumR::kLhsNode:
-            return false;
         case EntryEnumR::kTag:
             return utils::CompareMember(lhs, rhs, &EntryR::tag, order);
+        case EntryEnumR::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &EntryR::issued_time, order);
+        case EntryEnumR::kLhsNode:
+            return false;
         }
     };
 
@@ -292,9 +315,9 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
     switch (column) {
     case EntryEnumR::kDebitNode:
     case EntryEnumR::kCreditNode:
-        // if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
-        //     flags |= Qt::ItemIsEditable;
-        // break;
+        if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
+            flags |= Qt::ItemIsEditable;
+        break;
     case EntryEnumR::kDescription:
     case EntryEnumR::kInitial:
         flags |= Qt::ItemIsEditable;
@@ -302,6 +325,7 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
     case EntryEnumR::kDocument:
     case EntryEnumR::kTag:
     case EntryEnumR::kLhsNode:
+    case EntryEnumR::kIssuedTime:
         flags &= ~Qt::ItemIsEditable;
         break;
     }
@@ -325,6 +349,7 @@ bool TableModelR::insertRows(int row, int count, const QModelIndex& parent)
     entry->id = QUuid::createUuidV7();
     entry->lhs_node = node_id_;
     entry->sync_state = SyncState::kCreating;
+    entry->issued_time = QDateTime::currentDateTime();
 
     beginInsertRows(parent, row, row);
     entry_list_.insert(row, entry);
