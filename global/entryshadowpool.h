@@ -101,7 +101,9 @@ inline EntryShadow* EntryShadowPool::NewResource(Section section)
     case Section::kPartner:
     case Section::kSale:
     case Section::kPurchase:
+    case Section::kReimbursement:
         Q_UNREACHABLE();
+        break;
     }
 }
 

@@ -113,6 +113,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         ReadSectionConfig(sc_p_.section_config, kPartner);
         ReadSectionConfig(sc_sale_.section_config, kSale);
         ReadSectionConfig(sc_purchase_.section_config, kPurchase);
+        ReadSectionConfig(sc_r_.section_config, kReimbursement);
     }
 
     {
@@ -122,6 +123,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         TreeDelegateT(sc_t_.tree_view, sc_t_.info, sc_t_.section_config);
         TreeDelegateO(sc_sale_.tree_view, sc_sale_.info, sc_sale_.section_config, Section::kSale);
         TreeDelegateO(sc_purchase_.tree_view, sc_purchase_.info, sc_purchase_.section_config, Section::kPurchase);
+        TreeDelegateT(sc_r_.tree_view, sc_r_.info, sc_r_.section_config);
     }
 
     {
@@ -131,6 +133,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         SetTreeHeader(sc_t_.tree_view, Section::kTask);
         SetTreeHeader(sc_sale_.tree_view, Section::kSale);
         SetTreeHeader(sc_purchase_.tree_view, Section::kPurchase);
+        SetTreeHeader(sc_r_.tree_view, Section::kReimbursement);
     }
 
     {
