@@ -101,10 +101,11 @@ enum class EntryEnumR {
     // --- Hidden ---
     kLhsNode,
     // --- Visible ---
+    kIssuedTime,
+    kDescription,
+    kInitial,
     kDebitNode,
     kCreditNode,
-    kInitial,
-    kDescription,
     kTag,
     kDocument,
 };

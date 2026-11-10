@@ -1,5 +1,6 @@
 #include "treewidgetp.h"
 
+#include "component/signalblocker.h"
 #include "ui_treewidgetp.h"
 
 TreeWidgetP::TreeWidgetP(TreeModel* model, CSectionConfig& config, QWidget* parent)
@@ -9,6 +10,8 @@ TreeWidgetP::TreeWidgetP(TreeModel* model, CSectionConfig& config, QWidget* pare
     , config_ { config }
 {
     ui->setupUi(this);
+    SignalBlocker blocker(this);
+
     ui->treeView->setModel(model);
     model->setParent(ui->treeView);
 

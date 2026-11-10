@@ -103,16 +103,16 @@ void MainWindow::tabWidget_currentChanged()
     const Section section { sc_->section };
 
     const bool is_tree { IsTreeWidget(widget) };
-    const bool is_tree_o { IsTreeWidgetO(widget) };
+    const bool is_tree_or { IsTreeWidgetO(widget) || IsTreeWidgetR(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_statement_tertiary { IsStatementTertiaryWidget(widget) };
-    const bool is_table_o { IsTableWidgetO(widget) };
+    const bool is_table_or { IsTableWidgetO(widget) || IsTableWidgetR(widget) };
     const bool is_order_section { IsOrderSection(section) };
     const bool is_finance_section { section == Section::kFinance };
     const bool is_inventory_section { section == Section::kInventory };
 
     ui->actionAppendNode->setEnabled(is_tree);
-    ui->actionInsertNode->setEnabled(is_tree || is_table_o);
+    ui->actionInsertNode->setEnabled(is_tree || is_table_or);
 
     ui->actionRename->setEnabled(is_tree);
     ui->actionClearColor->setEnabled(is_tree);
@@ -124,16 +124,16 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionLockAll->setEnabled(is_table_fipt);
     ui->actionUnlockAll->setEnabled(is_table_fipt);
 
-    ui->actionJumpEntry->setEnabled(is_table_fipt || is_table_o);
+    ui->actionJumpEntry->setEnabled(is_table_fipt || is_table_or);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
     ui->actionSettlementView->setEnabled(is_order_section);
     ui->actionOrderOverview->setEnabled(is_order_section);
-    ui->actionNewBranch->setEnabled(is_tree_o);
+    ui->actionNewBranch->setEnabled(is_tree_or);
 
-    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
-    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o);
+    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_or);
+    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_or);
 
     ui->actionBalanceSheet->setEnabled(is_finance_section);
     ui->actionCashFlowStatement->setEnabled(is_finance_section);

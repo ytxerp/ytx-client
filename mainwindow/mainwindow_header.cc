@@ -188,10 +188,10 @@ void MainWindow::InitHeader()
     };
 }
 
-void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase)
+void MainWindow::InitHeader(SectionInfo& f, SectionInfo& i, SectionInfo& t, SectionInfo& p, SectionInfo& sale, SectionInfo& purchase, SectionInfo& r)
 {
     // Node
-    finance.node_header = {
+    f.node_header = {
         tr("Name"),
         tr("Code"),
         tr("Description"),
@@ -206,7 +206,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Local Total"),
     };
 
-    inventory.node_header = {
+    i.node_header = {
         tr("Name"),
         tr("Code"),
         tr("Description"),
@@ -222,7 +222,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Amount Total"),
     };
 
-    task.node_header = {
+    t.node_header = {
         tr("Name"),
         tr("Code"),
         tr("Description"),
@@ -236,7 +236,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Amount Total"),
     };
 
-    partner.node_header = {
+    p.node_header = {
         tr("Name"),
         tr("Code"),
         tr("Description"),
@@ -267,8 +267,20 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Amount Total"),
     };
 
+    r.node_header = {
+        tr("Name"),
+        tr("Issued Time"),
+        tr("Status"),
+        tr("Code"),
+        tr("Description"),
+        tr("Tag"),
+        tr("Color"),
+        tr("Document"),
+        tr("Initial Total"),
+    };
+
     // Entry
-    finance.entry_header = {
+    f.entry_header = {
         tr("LHS Node"),
         tr("Issued Time"),
         tr("FX Rate"),
@@ -285,7 +297,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Balance"),
     };
 
-    inventory.entry_header = {
+    i.entry_header = {
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -301,7 +313,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Balance", "Inventory"),
     };
 
-    task.entry_header = {
+    t.entry_header = {
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -317,7 +329,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Balance", "Task"),
     };
 
-    partner.entry_header = {
+    p.entry_header = {
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Code"),
@@ -345,8 +357,19 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("External SKU"),
     };
 
+    r.entry_header = {
+        tr("Lhs Node"),
+        tr("Issued Time"),
+        tr("Description"),
+        tr("Initial"),
+        tr("Debit"),
+        tr("Credit"),
+        tr("Tag"),
+        tr("Document"),
+    };
+
     // Full Entry
-    finance.full_entry_header = {
+    f.full_entry_header = {
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -365,7 +388,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("RHS Node"),
     };
 
-    inventory.full_entry_header = {
+    i.full_entry_header = {
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -383,7 +406,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("RHS Node"),
     };
 
-    task.full_entry_header = {
+    t.full_entry_header = {
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -401,7 +424,8 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("RHS Node"),
     };
 
-    partner.full_entry_header = partner.entry_header;
+    p.full_entry_header = p.entry_header;
+    r.full_entry_header = r.entry_header;
     sale.full_entry_header = sale.entry_header;
 
     purchase.node_header = sale.node_header;

@@ -113,7 +113,7 @@ void MainWindow::InitilizeContext()
 {
     {
         InitHeader();
-        InitHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
+        InitHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info, sc_r_.info);
     }
 
     {

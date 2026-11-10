@@ -22,6 +22,9 @@ TreeWidgetR::TreeWidgetR(Section section, TreeModel* model, QWidget* parent)
 
     InitWidget();
     InitTimer();
+
+    ui->treeViewR->setModel(model);
+    model->setParent(ui->treeViewR);
 }
 
 TreeWidgetR::~TreeWidgetR() { delete ui; }

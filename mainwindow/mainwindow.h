@@ -46,6 +46,7 @@
 #include "table/widget/tablewidgetr.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
+#include "tree/widget/treewidgetr.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -384,7 +385,7 @@ private:
     void InitSystemTray();
     void InitStatusLabel();
     void InitHeader();
-    void InitHeader(SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase);
+    void InitHeader(SectionInfo& f, SectionInfo& i, SectionInfo& t, SectionInfo& p, SectionInfo& sale, SectionInfo& purchase, SectionInfo& r);
     void InitAuditInfo();
 
     QSet<QString> ChildrenName(const Node* node) const;
@@ -398,8 +399,10 @@ private:
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
+    inline bool IsTreeWidgetR(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetR); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
+    inline bool IsTableWidgetR(const QWidget* widget) { return widget && widget->inherits(kTableWidgetR); }
     inline bool IsStatementTertiaryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementTertiaryWidget); }
 
 private:

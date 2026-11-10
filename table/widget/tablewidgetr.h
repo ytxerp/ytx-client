@@ -77,3 +77,5 @@ private:
 
     CSectionConfig& config_ {};
 };
+
+inline const char* kTableWidgetR = "TableWidgetR";

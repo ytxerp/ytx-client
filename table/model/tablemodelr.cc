@@ -164,17 +164,6 @@ bool TableModelR::UpdateCredit(EntryR* entry, QUuid value)
     return true;
 }
 
-QVariant TableModelR::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
-        return {};
-
-    if (section < 0 || section >= header_.size())
-        return {};
-
-    return header_.at(section);
-}
-
 void TableModelR::sort(int column, Qt::SortOrder order)
 {
     const EntryEnumR e_column { column };

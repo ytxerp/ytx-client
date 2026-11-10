@@ -136,6 +136,8 @@ void EntryR::ReadJson(const QJsonObject& object)
         description = val.toString();
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
 
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
@@ -156,6 +158,7 @@ QJsonObject EntryR::WriteJson() const
     obj.insert(kTag, QJsonArray::fromStringList(tag));
     obj.insert(kDocument, QJsonArray::fromStringList(document));
     obj.insert(kVersion, version);
+    obj.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
 
     return obj;
 }

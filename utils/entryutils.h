@@ -55,7 +55,7 @@ constexpr int LinkedNodeColumn(Section section)
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kRhsNode);
     case Section::kReimbursement:
-        return -1;
+        return std::to_underlying(EntryEnumR::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kRhsNode);
