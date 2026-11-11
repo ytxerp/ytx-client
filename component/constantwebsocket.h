@@ -91,6 +91,8 @@ enum class WsKey : uint16_t {
 
     kTreeSync = 1430,
     kTreeSyncFinish = 1431,
+    kTreeFetch = 1432,
+    kNodeFetch = 1433,
 
     // --- Tag (1500-1599) ---
     kTagSync = 1500,
@@ -119,6 +121,8 @@ enum class WsKey : uint16_t {
     // Search
     kEntryDescriptionSearch = 1650,
     kEntryTagSearch = 1651,
+    kNodeTagSearch = 1652,
+    kNodeNameSearch = 1653,
 
     // --- Misc (1700-1799) ---
     kOperationDeny = 1700,
@@ -242,6 +246,15 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kSettlementDelete";
     case WsKey::kSettlementViewFetch:
         return "kSettlementViewFetch";
+
+    case WsKey::kTreeFetch:
+        return "kTreeFetch";
+    case WsKey::kNodeFetch:
+        return "kNodeFetch";
+    case WsKey::kNodeTagSearch:
+        return "kNodeTagSearch";
+    case WsKey::kNodeNameSearch:
+        return "kNodeNameSearch";
 
     case WsKey::kTreeSync:
         return "kTreeSync";
