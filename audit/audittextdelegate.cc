@@ -13,7 +13,8 @@ AuditTextDelegate::AuditTextDelegate(QObject* parent)
 bool AuditTextDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
-        const QString text { index.data().toString() };
+        const QJsonValue value { index.data(audit::kRawJsonRole).toJsonValue() };
+        const QString text { audit::JsonValueToString(value, QJsonDocument::Indented) };
 
         if (!text.isEmpty()) {
             const QString title { index.column() == std::to_underlying(audit::RowField::kBefore) ? QObject::tr("Before Change") : QObject::tr("After Change") };

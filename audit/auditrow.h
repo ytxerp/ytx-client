@@ -19,9 +19,27 @@
 
 #pragma once
 
+#include <QJsonArray>
 #include <QJsonObject>
 
 namespace audit {
+
+inline QString JsonValueToString(const QJsonValue& value, QJsonDocument::JsonFormat format)
+{
+    if (value.isObject()) {
+        const QJsonObject obj { value.toObject() };
+        return obj.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(obj).toJson(format));
+    }
+
+    if (value.isArray()) {
+        const QJsonArray arr { value.toArray() };
+        return arr.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(arr).toJson(format));
+    }
+
+    return {};
+}
+
+constexpr int kRawJsonRole = Qt::UserRole + 1;
 
 enum class RowField {
     kTargetId,
@@ -54,8 +72,10 @@ struct Row {
 
     // -- 4. Variable-length -----------------------------------------------------
     QString target_code {}; // Default: ""
-    QString before {}; // State before the action — maps to JSONB
-    QString after {}; // State after the action  — maps to JSONB
+    QString before_compact {};
+    QString after_compact {};
+    QJsonValue before {};
+    QJsonValue after {};
 
     void Reset();
     void ReadJson(const QJsonObject& object);

@@ -32,11 +32,22 @@ QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 
 QVariant Model::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
         return QVariant();
 
-    const RowField column { index.column() };
     const auto* row { static_cast<Row*>(index.internalPointer()) };
+    const RowField column { index.column() };
+
+    if (role == kRawJsonRole) {
+        if (column == RowField::kBefore)
+            return row->before;
+
+        if (column == RowField::kAfter)
+            return row->after;
+    }
+
+    if (role != Qt::DisplayRole)
+        return QVariant();
 
     switch (column) {
     case RowField::kTargetId:
@@ -48,9 +59,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kTargetCode:
         return row->target_code;
     case RowField::kBefore:
-        return row->before;
+        return row->before_compact;
     case RowField::kAfter:
-        return row->after;
+        return row->after_compact;
     case RowField::kTargetOperation:
         return row->target_operation;
     case RowField::kTargetType:

@@ -1,26 +1,7 @@
 #include "auditrow.h"
 
-#include <QJsonArray>
-
 #include "component/constant.h"
 #include "component/constantstring.h"
-
-namespace {
-QString JsonValueToString(const QJsonValue& value)
-{
-    if (value.isObject()) {
-        const QJsonObject obj { value.toObject() };
-        return obj.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact));
-    }
-
-    if (value.isArray()) {
-        const QJsonArray arr { value.toArray() };
-        return arr.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(arr).toJson(QJsonDocument::Compact));
-    }
-
-    return {};
-}
-} // namespace
 
 void audit::Row::Reset() { *this = Row {}; }
 
@@ -42,10 +23,14 @@ void audit::Row::ReadJson(const QJsonObject& object)
         target_type = val.toInt();
     if (const auto val = object.value(kTargetCode); val.isString())
         target_code = val.toString();
-    if (const auto val = object.value(kBefore); !val.isUndefined())
-        before = JsonValueToString(val);
-    if (const auto val = object.value(kAfter); !val.isUndefined())
-        after = JsonValueToString(val);
+    if (const auto val = object.value(kBefore); !val.isUndefined()) {
+        before = val;
+        before_compact = JsonValueToString(val, QJsonDocument::Compact);
+    }
+    if (const auto val = object.value(kAfter); !val.isUndefined()) {
+        after = val;
+        after_compact = JsonValueToString(val, QJsonDocument::Compact);
+    }
     if (const auto val = object.value(kTargetField); val.isDouble())
         target_field = val.toInt();
 }
