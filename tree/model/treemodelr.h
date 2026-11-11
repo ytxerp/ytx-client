@@ -40,7 +40,7 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void SyncTree(const QJsonObject& data) override;
-    void ApplyName(QUuid node_id, const QString& name, int version) override;
+    void UpdateName(QUuid node_id, const QString& name, int version) override;
     void HandleStatusChanged(QUuid node_id, ReimbursementStatus value);
 
 protected:

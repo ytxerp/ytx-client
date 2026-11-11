@@ -96,19 +96,19 @@ public:
 
     // WebSocket's
     virtual void SyncTree(const QJsonObject& data);
-    void ApplyNode(QUuid ancestor, const QJsonObject& data);
+    void SyncNode(QUuid ancestor, const QJsonObject& data);
 
     void SyncTotalArray(const QJsonArray& total_array);
     void UpdateVersion(QUuid node_id, int version);
 
-    void ApplyMerge(QUuid source_id, QUuid target_id);
+    void MergeNode(QUuid source_id, QUuid target_id);
     void MoveNode(QUuid ancestor, QUuid descendant);
-    void ApplyDirectionRule(QUuid node_id, bool direction_rule, int version);
+    void UpdateDirectionRule(QUuid node_id, bool direction_rule, int version);
     void UpdateStatus(QUuid node_id, int status, int version);
-    void ApplyDelete(QUuid node_id);
-    void ApplyUpdate(QUuid node_id, const QJsonObject& update, int version);
+    void DeleteNode(QUuid node_id);
+    void UpdateNode(QUuid node_id, const QJsonObject& update, int version);
 
-    virtual void ApplyName(QUuid node_id, const QString& name, int version);
+    virtual void UpdateName(QUuid node_id, const QString& name, int version);
 
     // Ytx's
     double InitialTotal(QUuid node_id) const { return Value(node_id, &Node::initial_total); }

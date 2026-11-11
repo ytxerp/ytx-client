@@ -167,9 +167,9 @@ private:
     void OnRegisterOutcome(const QJsonObject& obj);
     void OnLoginOutcome(const QJsonObject& obj);
 
-    void AckOrderTree(const QJsonObject& obj);
+    void FetchTree(const QJsonObject& obj);
     void FetchTable(const QJsonObject& obj);
-    void AckOrderNode(const QJsonObject& obj);
+    void FetchNode(const QJsonObject& obj);
     void FetchOrderOverview(const QJsonObject& obj);
     void FetchStatementPrimary(const QJsonObject& obj);
     void FetchStatementSecondary(const QJsonObject& obj);

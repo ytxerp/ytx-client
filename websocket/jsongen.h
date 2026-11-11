@@ -34,7 +34,7 @@ namespace JsonGen {
 QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range, int utc_offset);
 QJsonObject Register(CString& email, CString& password);
 
-QJsonObject NodeInsert(Section section, const struct Node* node, QUuid parent_id);
+QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id);
 QJsonObject NodeMove(Section section, QUuid node_id, QUuid parent_id);
 
 QJsonObject LeafDelete(Section section, QUuid node_id, int version);
@@ -58,9 +58,9 @@ QJsonObject WorkspaceMemberDelete(QUuid id);
 QJsonObject WorkspaceMember(QUuid widget_id, CString& workspace);
 QJsonObject AuditLog(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section);
 
-QJsonObject Tree(Section section, const utils::DateTimeRange& range);
-QJsonObject Table(Section section, QUuid node_id, QUuid entry_id = {});
-QJsonObject Node(Section section, QUuid node_id);
+QJsonObject TreeFetch(Section section, const utils::DateTimeRange& range);
+QJsonObject TableFetch(Section section, QUuid node_id, QUuid entry_id = {});
+QJsonObject NodeFetch(Section section, QUuid node_id);
 QJsonObject StatementPrimary(Section section, QUuid widget_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementSecondary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementTertiary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);

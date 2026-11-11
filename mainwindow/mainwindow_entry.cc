@@ -265,7 +265,7 @@ void MainWindow::EntryLocateFIT(Section section, QUuid entry_id, QUuid lhs_node_
 
     CreateLeafFIPT(sc, node_id);
 
-    const auto message { JsonGen::Table(section, node_id, entry_id) };
+    const auto message { JsonGen::TableFetch(section, node_id, entry_id) };
     WebSocket::Instance()->SendMessage(WsKey::kTableFetch, message);
 }
 

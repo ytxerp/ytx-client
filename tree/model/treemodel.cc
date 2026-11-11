@@ -27,7 +27,7 @@ TreeModel::~TreeModel()
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
-void TreeModel::ApplyDelete(QUuid node_id)
+void TreeModel::DeleteNode(QUuid node_id)
 {
     auto* node { node_hash_.value(node_id, nullptr) };
     if (!node)
@@ -79,7 +79,7 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
     EmitNumericChanged(affected_ids);
 }
 
-void TreeModel::ApplyNode(QUuid ancestor, const QJsonObject& data)
+void TreeModel::SyncNode(QUuid ancestor, const QJsonObject& data)
 {
     Node* parent { node_hash_.value(ancestor) };
     if (!parent)
@@ -217,7 +217,7 @@ void TreeModel::InitLeafData()
     }
 }
 
-void TreeModel::ApplyUpdate(QUuid node_id, const QJsonObject& update, int version)
+void TreeModel::UpdateNode(QUuid node_id, const QJsonObject& update, int version)
 {
     if (update.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Update is empty";
@@ -262,7 +262,7 @@ void TreeModel::RequestStatus(Node* node, int value)
     WebSocket::Instance()->SendMessage(WsKey::kNodeStatusUpdate, message);
 }
 
-void TreeModel::ApplyDirectionRule(QUuid node_id, bool direction_rule, int version)
+void TreeModel::UpdateDirectionRule(QUuid node_id, bool direction_rule, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -340,7 +340,7 @@ void TreeModel::UpdateVersion(QUuid node_id, int version)
     node->version = version;
 }
 
-void TreeModel::ApplyMerge(QUuid source_id, QUuid target_id)
+void TreeModel::MergeNode(QUuid source_id, QUuid target_id)
 {
     auto* source { GetNode(source_id) };
     auto* target { GetNode(target_id) };
@@ -361,10 +361,10 @@ void TreeModel::ApplyMerge(QUuid source_id, QUuid target_id)
 
     EmitNumericChanged(ids);
 
-    ApplyDelete(source_id);
+    DeleteNode(source_id);
 }
 
-void TreeModel::ApplyName(QUuid node_id, const QString& name, int version)
+void TreeModel::UpdateName(QUuid node_id, const QString& name, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -766,8 +766,8 @@ void TreeModel::AckNode(QUuid node_id) const
     if (node_hash_.contains(node_id))
         return;
 
-    const auto message { JsonGen::Node(section_, node_id) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderNodeAck, message);
+    const auto message { JsonGen::NodeFetch(section_, node_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderNodeFetch, message);
 }
 
 void TreeModel::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)

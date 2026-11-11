@@ -7,7 +7,7 @@
 
 namespace JsonGen {
 
-QJsonObject NodeInsert(Section section, const struct Node* node, QUuid parent_id)
+QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id)
 {
     Q_ASSERT(node != nullptr);
 
@@ -87,7 +87,7 @@ QJsonObject LeafMerge(Section section, QUuid source_id, QUuid target_id, int ver
     return message;
 }
 
-QJsonObject Table(Section section, QUuid node_id, QUuid entry_id)
+QJsonObject TableFetch(Section section, QUuid node_id, QUuid entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -105,7 +105,7 @@ QJsonObject MarkEntries(Section section, QUuid node_id, int operation)
     return message;
 }
 
-QJsonObject Tree(Section section, const utils::DateTimeRange& range)
+QJsonObject TreeFetch(Section section, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -177,7 +177,7 @@ QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>
     return message;
 }
 
-QJsonObject Node(Section section, QUuid node_id)
+QJsonObject NodeFetch(Section section, QUuid node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

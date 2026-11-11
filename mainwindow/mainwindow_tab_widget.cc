@@ -84,7 +84,7 @@ void MainWindow::ShowLeafWidget(QUuid node_id, QUuid entry_id)
     if (section == Section::kPartner) {
         static_cast<EntryHubP*>(sc_p_.entry_hub.data())->PushEntry(node_id);
     } else {
-        const auto message { JsonGen::Table(section, node_id, entry_id) };
+        const auto message { JsonGen::TableFetch(section, node_id, entry_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTableFetch, message);
     }
 }

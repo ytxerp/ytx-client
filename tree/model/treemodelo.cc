@@ -31,7 +31,7 @@ void TreeModelO::HandleStatusChanged(QUuid node_id, OrderStatus value)
     EmitNumericChanged(ids);
 }
 
-void TreeModelO::ApplyName(QUuid node_id, const QString& name, int version)
+void TreeModelO::UpdateName(QUuid node_id, const QString& name, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())

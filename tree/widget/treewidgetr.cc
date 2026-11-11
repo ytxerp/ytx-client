@@ -77,8 +77,8 @@ void TreeWidgetR::on_pushButtonFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::Tree(section_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderTreeAck, message);
+    const auto message { JsonGen::TreeFetch(section_, query_range) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderTreeFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

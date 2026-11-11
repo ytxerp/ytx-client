@@ -118,6 +118,6 @@ void MainWindow::EntryLocateR(Section section, QUuid entry_id, QUuid lhs_node_id
 
     CreateLeafR(sc, lhs_node_id);
 
-    const auto message { JsonGen::Table(section, lhs_node_id, entry_id) };
+    const auto message { JsonGen::TableFetch(section, lhs_node_id, entry_id) };
     WebSocket::Instance()->SendMessage(WsKey::kTableFetch, message);
 }

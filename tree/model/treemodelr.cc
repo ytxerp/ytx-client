@@ -227,7 +227,7 @@ void TreeModelR::SyncTree(const QJsonObject& data)
     endResetModel();
 }
 
-void TreeModelR::ApplyName(QUuid node_id, const QString& name, int version)
+void TreeModelR::UpdateName(QUuid node_id, const QString& name, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
