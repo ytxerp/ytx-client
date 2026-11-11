@@ -58,6 +58,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(Section::kPartner), tr("Partner") },
         { std::to_underlying(Section::kSale), tr("Sale") },
         { std::to_underlying(Section::kPurchase), tr("Purchase") },
+        { std::to_underlying(Section::kReimbursement), tr("Reimbursement") },
     };
 
     audit_info_.target_type_map = {

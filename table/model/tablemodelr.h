@@ -31,6 +31,9 @@ public:
 signals:
     void SSyncInitial(QUuid node_id, double initial_delta);
 
+public slots:
+    void RAppendEntries(const EntryList& entry_list) override;
+
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : entry_list_.size(); }

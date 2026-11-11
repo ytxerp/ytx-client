@@ -16,6 +16,20 @@ TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, int finance_per
 
 TableModelR::~TableModelR() { EntryPool::Instance().Recycle(entry_list_, section_); }
 
+void TableModelR::RAppendEntries(const EntryList& entry_list)
+{
+    if (entry_list.isEmpty())
+        return;
+
+    const auto row { entry_list_.size() };
+
+    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
+    entry_list_.append(entry_list);
+    endInsertRows();
+
+    sort(std::to_underlying(EntryEnumR::kDescription), Qt::AscendingOrder);
+}
+
 QModelIndex TableModelR::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
