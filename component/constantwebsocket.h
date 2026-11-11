@@ -21,34 +21,27 @@
 
 #include <cstdint>
 
-// ================= WS Key Naming Convention =================
+// ================= Naming Rules =================
 //
-// Format:
-//   <subject>_<verb>
-//   <subject>_<qualifier>_<verb>
+// 1. Data transfer:
+//    Fetch -> Client-initiated data retrieval
+//    Sync  -> Server-initiated data synchronization
+//    Fetch responses may reuse the same key.
 //
-// Subject:
-//   - Use singular business noun (node, entry, settlement, tag)
-//   - Lowercase snake_case
+// 2. Business operations:
+//    Key     -> <Subject><Action>
+//    Handler -> <Action><Subject>()
+//    e.g. kEntryUpdate -> UpdateEntry()
 //
-// Verb:
-//   - Always base form: insert, update, delete, search, apply, recall, ack, notify, allow, deny
-//   - Direction semantics (soft convention):
-//       • apply -> server actively pushes this message to client
-//       • ack   -> client sends request, server acknowledges
-//       • notify -> server informs client of events (similar to apply)
-//   - Other verbs follow context-dependent semantics
+// 3. Results and events:
+//    Key     -> <Subject><Outcome|Deny|Notify>
+//    Handler -> On<MessageName>()
+//    e.g. kLoginOutcome -> OnLoginOutcome()
+//         kPermissionDeny -> OnPermissionDeny()
 //
-// Note:
-//   Message direction (client/server) is context-dependent.
-//   The same key may be used in both directions.
+// 4. Keep the same key name and numeric ID on both ends.
 //
-// Notes:
-//   - Avoid tense variants (inserted / updating / deletion)
-//   - Avoid plural subjects
-//   - Key verb is suffix, handler function verb is prefix
-//     e.g. "node_insert" -> InsertNode(), "login_notify" -> NotifyLogin()
-// =============================================================
+// =================================================
 enum class WsKey : uint16_t {
     // --- Auth ---
     kLogin = 1000,
@@ -154,16 +147,13 @@ enum class WsKey : uint16_t {
     kStatementSecondary = 2001,
     kStatementTertiary = 2002,
 
-    // --- Order Delivery ---
-    kBindingRequest = 2100,
-    kBindingRequestOutcome = 2101,
-
-    kOrderDeliver = 2112,
-    kOrderDeliverOutcome = 2113,
-    kOrderNotify = 2114,
-    kOrderFetch = 2115,
-    kOrderDetail = 2116,
-    kOrderAccept = 2117,
+    // --- Reimbursement (2100-2199) ---
+    kReimbursementInsert = 2100,
+    kReimbursementUpdate = 2101,
+    kReimbursementApprove = 2102,
+    kReimbursementUnapprove = 2103,
+    kReimbursementPost = 2104,
+    kReimbursementUnpost = 2105,
 
     // --- Finance (2200-2299) ---
     kBalanceSheetAck = 2200,
@@ -172,19 +162,7 @@ enum class WsKey : uint16_t {
 
     kPeriodClose = 2210,
 
-    // Reimbursement
-    kReimbursementPrimary = 2220,
-    kReimbursementDelete = 2221,
-    kReimbursementInsert = 2222,
-    kReimbursementSecondary = 2223,
-    kReimbursementUpdate = 2224,
-    kReimbursementApprove = 2225,
-    kReimbursementUnapprove = 2226,
-    kReimbursementPost = 2227,
-    kReimbursementUnpost = 2228,
-
     // --- Task (2300-2399) ---
-    // reserved
 
     // --- Inventory ---
     kInventoryHeatAck = 2400,
@@ -414,38 +392,14 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kPartnerEntryInsert:
         return "kPartnerEntryInsert";
 
-        // --- Order delivery binding ---
-    case WsKey::kBindingRequest:
-        return "kBindingRequest";
-    case WsKey::kBindingRequestOutcome:
-        return "kBindingRequestOutcome";
-        // --- Order delivery ---
-    case WsKey::kOrderDeliver:
-        return "kOrderDeliver";
-    case WsKey::kOrderDeliverOutcome:
-        return "kOrderDeliverOutcome";
-    case WsKey::kOrderNotify:
-        return "kOrderNotify";
-    case WsKey::kOrderFetch:
-        return "kOrderFetch";
-    case WsKey::kOrderDetail:
-        return "kOrderDetail";
-    case WsKey::kOrderAccept:
-        return "kOrderAccept";
     case WsKey::kOrderOverview:
         return "kOrderOverview";
     case WsKey::kOrderNodeUpdate:
         return "kOrderNodeUpdate";
     case WsKey::kLeafDeleteLockedDeny:
         return "kLeafDeleteLockedDeny";
-    case WsKey::kReimbursementPrimary:
-        return "kReimbursementPrimary";
-    case WsKey::kReimbursementDelete:
-        return "kReimbursementDelete";
     case WsKey::kReimbursementInsert:
         return "kReimbursementInsert";
-    case WsKey::kReimbursementSecondary:
-        return "kReimbursementSecondary";
     case WsKey::kReimbursementUpdate:
         return "kReimbursementUpdate";
     case WsKey::kReimbursementApprove:
