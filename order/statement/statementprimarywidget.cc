@@ -73,7 +73,7 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
     const auto message { JsonGen::StatementPrimary(section_, widget_id_, unit_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kStatementPrimary, message);
+    WebSocket::Instance()->SendMessage(WsKey::kStatementPrimaryFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

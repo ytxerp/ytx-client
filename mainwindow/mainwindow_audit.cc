@@ -32,7 +32,7 @@ void MainWindow::on_actionAuditLog_triggered()
     dialog->show();
 }
 
-void MainWindow::RAuditLogAck(QUuid widget_id, const QJsonArray& log_array)
+void MainWindow::RAuditLog(QUuid widget_id, const QJsonArray& log_array)
 {
     auto widget { widget_hash_.value(widget_id).widget };
     if (!widget)

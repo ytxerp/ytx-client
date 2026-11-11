@@ -52,7 +52,7 @@ void EntryHubP::PushEntry(QUuid node_id)
     emit SAppendEntries(node_id, entry_list);
 }
 
-void EntryHubP::ApplyPartnerEntry(const QJsonArray& array)
+void EntryHubP::SyncPartnerEntry(const QJsonArray& array)
 {
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());

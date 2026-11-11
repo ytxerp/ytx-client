@@ -7,7 +7,7 @@
 
 namespace JsonGen {
 
-QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id)
+QJsonObject NodeInsert(Section section, const struct Node* node, QUuid parent_id)
 {
     Q_ASSERT(node != nullptr);
 
@@ -25,7 +25,7 @@ QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id)
     return message;
 }
 
-QJsonObject NodeDrag(Section section, QUuid node_id, QUuid parent_id)
+QJsonObject NodeMove(Section section, QUuid node_id, QUuid parent_id)
 {
     QJsonObject path_json {};
     path_json.insert(kAncestor, parent_id.toString(QUuid::WithoutBraces));
@@ -87,7 +87,7 @@ QJsonObject LeafMerge(Section section, QUuid source_id, QUuid target_id, int ver
     return message;
 }
 
-QJsonObject TableAck(Section section, QUuid node_id, QUuid entry_id)
+QJsonObject Table(Section section, QUuid node_id, QUuid entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -105,7 +105,7 @@ QJsonObject MarkEntries(Section section, QUuid node_id, int operation)
     return message;
 }
 
-QJsonObject TreeAck(Section section, const utils::DateTimeRange& range)
+QJsonObject Tree(Section section, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -114,7 +114,7 @@ QJsonObject TreeAck(Section section, const utils::DateTimeRange& range)
     return message;
 }
 
-QJsonObject InventoryHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam)
+QJsonObject InventoryHeat(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -177,7 +177,7 @@ QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>
     return message;
 }
 
-QJsonObject NodeAck(Section section, QUuid node_id)
+QJsonObject Node(Section section, QUuid node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -359,7 +359,7 @@ QJsonObject TagUpdate(Section section, QUuid id, CJsonObject& update, int versio
     return message;
 }
 
-QJsonObject WorkspaceMemberAck(QUuid widget_id, CString& workspace)
+QJsonObject WorkspaceMember(QUuid widget_id, CString& workspace)
 {
     QJsonObject message {};
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
@@ -422,7 +422,7 @@ QJsonObject AccountUsername(CString& email, CString& username)
     return message;
 }
 
-QJsonObject AuditLogAck(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section)
+QJsonObject AuditLog(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section)
 {
     QJsonObject message {};
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
@@ -450,7 +450,7 @@ QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>
     return message;
 }
 
-QJsonObject PartnerHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam)
+QJsonObject PartnerHead(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -463,7 +463,7 @@ QJsonObject PartnerHeadAck(Section section, QUuid widget_id, const utils::DateTi
     return message;
 }
 
-QJsonObject BalanceSheetAck(QUuid widget_id, QUuid asset, QUuid liability, QUuid equity, const utils::DateTimeRange& range, int level)
+QJsonObject BalanceSheet(QUuid widget_id, QUuid asset, QUuid liability, QUuid equity, const utils::DateTimeRange& range, int level)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
@@ -477,7 +477,7 @@ QJsonObject BalanceSheetAck(QUuid widget_id, QUuid asset, QUuid liability, QUuid
     return message;
 }
 
-QJsonObject IncomeStatementAck(QUuid widget_id, QUuid income, QUuid expense, const utils::DateTimeRange& range, int level)
+QJsonObject IncomeStatement(QUuid widget_id, QUuid income, QUuid expense, const utils::DateTimeRange& range, int level)
 {
     QJsonObject date_range {};
     date_range.insert(kStart, range.start.toUTC().toString(Qt::ISODate));
@@ -493,7 +493,7 @@ QJsonObject IncomeStatementAck(QUuid widget_id, QUuid income, QUuid expense, con
     return message;
 }
 
-QJsonObject CashFlowStatementAck(QUuid widget_id, const utils::DateTimeRange& range)
+QJsonObject CashFlowStatement(QUuid widget_id, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
@@ -516,7 +516,7 @@ QJsonObject SettlementView(Section section, QUuid widget_id, const utils::DateTi
     return message;
 }
 
-QJsonObject OrderOverviewAck(Section section, QUuid widget_id, const utils::DateTimeRange& range)
+QJsonObject OrderOverview(Section section, QUuid widget_id, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

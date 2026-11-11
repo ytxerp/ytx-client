@@ -206,7 +206,7 @@ bool TreeModelR::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     return true;
 }
 
-void TreeModelR::ApplyTree(const QJsonObject& data)
+void TreeModelR::SyncTree(const QJsonObject& data)
 {
     QHash<QUuid, Node*> new_hash {};
     QHash<QUuid, QString> new_leaf_path {};

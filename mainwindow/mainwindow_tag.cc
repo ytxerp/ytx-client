@@ -35,7 +35,7 @@ void MainWindow::on_actionTags_triggered()
     dialog->show();
 }
 
-void MainWindow::RApplyTag(const QJsonObject& obj)
+void MainWindow::RTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     auto* sc { GetSectionContext(section) };

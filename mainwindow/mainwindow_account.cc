@@ -63,8 +63,8 @@ void MainWindow::on_actionWorkspaceManager_triggered()
     const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
     dialog->setModal(true);
 
-    const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
-    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
+    const auto message { JsonGen::WorkspaceMember(widget_id, LoginInfo::Instance().Workspace()) };
+    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberFetch, message);
 
     auto* view { dialog->View() };
     InitTableView(view, std::to_underlying(workspace::RowField::kPlaceholder));
@@ -73,7 +73,7 @@ void MainWindow::on_actionWorkspaceManager_triggered()
     dialog->show();
 }
 
-void MainWindow::RWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array)
+void MainWindow::RWorkspaceMember(QUuid widget_id, const QJsonArray& array)
 {
     auto widget { widget_hash_.value(widget_id).widget };
     if (!widget)

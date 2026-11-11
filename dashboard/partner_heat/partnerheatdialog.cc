@@ -86,8 +86,8 @@ void PartnerHeatDialog::on_pushButtonFetch_clicked()
     const int mid { ui->spinBoxMinInventoryDiversity->value() };
     const int mam { ui->spinBoxMinActiveMonths->value() };
 
-    const auto message { JsonGen::PartnerHeadAck(section, widget_id_, query_range, moc, mid, mam) };
-    WebSocket::Instance()->SendMessage(WsKey::kPartnerHeatAck, message);
+    const auto message { JsonGen::PartnerHead(section, widget_id_, query_range, moc, mid, mam) };
+    WebSocket::Instance()->SendMessage(WsKey::kPartnerHeatFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

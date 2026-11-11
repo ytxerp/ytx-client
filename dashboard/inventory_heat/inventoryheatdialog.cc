@@ -84,8 +84,8 @@ void InventoryHeatDialog::on_pushButtonFetch_clicked()
     const int mpc { ui->spinBoxMinPartnerCount->value() };
     const int mam { ui->spinBoxMinActiveMonths->value() };
 
-    const auto message { JsonGen::InventoryHeadAck(section, widget_id_, query_range, moc, mpc, mam) };
-    WebSocket::Instance()->SendMessage(WsKey::kInventoryHeatAck, message);
+    const auto message { JsonGen::InventoryHeat(section, widget_id_, query_range, moc, mpc, mam) };
+    WebSocket::Instance()->SendMessage(WsKey::kInventoryHeatFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

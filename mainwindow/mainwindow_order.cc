@@ -324,6 +324,6 @@ void MainWindow::EntryLocateO(Section section, QUuid entry_id, QUuid lhs_node_id
 
     CreateLeafO(sc, lhs_node_id);
 
-    const auto message { JsonGen::TableAck(section, lhs_node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
+    const auto message { JsonGen::Table(section, lhs_node_id, entry_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kTableFetch, message);
 }

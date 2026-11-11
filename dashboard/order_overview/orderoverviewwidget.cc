@@ -87,8 +87,8 @@ void OrderOverviewWidget::on_pBtnFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::OrderOverviewAck(section_, widget_id_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderOverview, message);
+    const auto message { JsonGen::OrderOverview(section_, widget_id_, query_range) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderOverviewFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

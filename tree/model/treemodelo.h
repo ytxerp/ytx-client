@@ -37,7 +37,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
-    void ApplyTree(const QJsonObject& data) override;
+    void SyncTree(const QJsonObject& data) override;
     void ApplyName(QUuid node_id, const QString& name, int version) override;
 
     void InsertSettlement(const QSet<QUuid>& settled_set, QUuid settlement_id);

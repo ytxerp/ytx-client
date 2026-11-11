@@ -68,7 +68,7 @@ public:
     void UpdateEntryLocked(QUuid entry_id, int version, bool is_locked);
     void RestoreSyncState(QUuid entry_id);
 
-    void AckTable(QUuid node_id, const QJsonArray& array);
+    void FetchTable(QUuid node_id, const QJsonArray& array);
     void PeriodClose(const QJsonArray& array);
 
     void MarkEntries(QUuid node_id, MarkOperation operation);

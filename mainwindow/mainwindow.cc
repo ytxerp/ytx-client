@@ -419,8 +419,8 @@ void MainWindow::SetUniqueConnection() const
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDeny, this, &MainWindow::RDenyLeafDelete);
-    connect(WebSocket::Instance(), &WebSocket::SSharedConfigApply, this, &MainWindow::RApplySharedConfig);
-    connect(WebSocket::Instance(), &WebSocket::STagApply, this, &MainWindow::RApplyTag);
+    connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
+    connect(WebSocket::Instance(), &WebSocket::STag, this, &MainWindow::RTag);
     connect(WebSocket::Instance(), &WebSocket::STagInsert, this, &MainWindow::RInsertTag);
     connect(WebSocket::Instance(), &WebSocket::STagUpdate, this, &MainWindow::RUpdateTag);
     connect(WebSocket::Instance(), &WebSocket::STagDelete, this, &MainWindow::RDeleteTag);
@@ -455,14 +455,14 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
     connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
-    connect(WebSocket::Instance(), &WebSocket::SWorkspaceMemberAck, this, &MainWindow::RWorkspaceMemberAck);
+    connect(WebSocket::Instance(), &WebSocket::SWorkspaceMember, this, &MainWindow::RWorkspaceMember);
     connect(WebSocket::Instance(), &WebSocket::SAccountRoleUpdate, this, &MainWindow::RAccountRoleUpdate);
-    connect(WebSocket::Instance(), &WebSocket::SAuditLogAck, this, &MainWindow::RAuditLogAck);
-    connect(WebSocket::Instance(), &WebSocket::SInventoryHeatAck, this, &MainWindow::RInventoryHeatAck);
-    connect(WebSocket::Instance(), &WebSocket::SPartnerHeatAck, this, &MainWindow::RPartnerHeatAck);
-    connect(WebSocket::Instance(), &WebSocket::SBalanceSheetAck, this, &MainWindow::RBalanceSheetAck);
-    connect(WebSocket::Instance(), &WebSocket::SIncomeStatementAck, this, &MainWindow::RIncomeStatementAck);
-    connect(WebSocket::Instance(), &WebSocket::SCashFlowStatementAck, this, &MainWindow::RCashFlowStatementAck);
+    connect(WebSocket::Instance(), &WebSocket::SAuditLog, this, &MainWindow::RAuditLog);
+    connect(WebSocket::Instance(), &WebSocket::SInventoryHeat, this, &MainWindow::RInventoryHeat);
+    connect(WebSocket::Instance(), &WebSocket::SPartnerHeat, this, &MainWindow::RPartnerHeat);
+    connect(WebSocket::Instance(), &WebSocket::SBalanceSheet, this, &MainWindow::RBalanceSheet);
+    connect(WebSocket::Instance(), &WebSocket::SIncomeStatement, this, &MainWindow::RIncomeStatement);
+    connect(WebSocket::Instance(), &WebSocket::SCashFlowStatement, this, &MainWindow::RCashFlowStatement);
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteLockedDeny, this, &MainWindow::RLeafDeleteLockedDeny);
     connect(WebSocket::Instance(), &WebSocket::SOrderSearch, this, &MainWindow::ROrderSearch);
     connect(WebSocket::Instance(), &WebSocket::SEntrySearch, this, &MainWindow::REntrySearch);

@@ -282,7 +282,7 @@ void EntryHub::RestoreSyncState(QUuid entry_id)
 //     return sql + kWhere + condition.join(kAnd);
 // }
 
-void EntryHub::AckTable(QUuid node_id, const QJsonArray& array)
+void EntryHub::FetchTable(QUuid node_id, const QJsonArray& array)
 {
     if (array.isEmpty())
         return;

@@ -69,9 +69,9 @@ void CashFlowStatementDialog::on_pushButtonFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::CashFlowStatementAck(widget_id_, query_range) };
+    const auto message { JsonGen::CashFlowStatement(widget_id_, query_range) };
 
-    WebSocket::Instance()->SendMessage(WsKey::kCashFlowStatementAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kCashFlowStatementFetch, message);
 
     ui->pushButtonFetch->setEnabled(false);
 

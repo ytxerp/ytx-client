@@ -493,7 +493,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     return true;
 }
 
-void TreeModelO::ApplyTree(const QJsonObject& data)
+void TreeModelO::SyncTree(const QJsonObject& data)
 {
     QHash<QUuid, Node*> new_hash {};
     QHash<QUuid, QString> new_leaf_path {};

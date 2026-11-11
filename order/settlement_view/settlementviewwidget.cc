@@ -110,7 +110,7 @@ void SettlementViewWidget::on_pBtnFetch_clicked()
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
     const auto message { JsonGen::SettlementView(section_, widget_id_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kSettlementView, message);
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementViewFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

@@ -52,8 +52,8 @@ void AuditDialog::on_pBtnFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::AuditLogAck(widget_id_, LoginInfo::Instance().Workspace(), query_range, section_) };
-    WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
+    const auto message { JsonGen::AuditLog(widget_id_, LoginInfo::Instance().Workspace(), query_range, section_) };
+    WebSocket::Instance()->SendMessage(WsKey::kAuditLogFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

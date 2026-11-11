@@ -139,9 +139,9 @@ void BalanceSheetDialog::on_pushButtonFetch_clicked()
 
     const int level { ui->spinBoxLevel->value() };
 
-    const auto message { JsonGen::BalanceSheetAck(widget_id_, asset_id, liability_id, equity_id, query_range, level) };
+    const auto message { JsonGen::BalanceSheet(widget_id_, asset_id, liability_id, equity_id, query_range, level) };
 
-    WebSocket::Instance()->SendMessage(WsKey::kBalanceSheetAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kBalanceSheetFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

@@ -60,11 +60,11 @@ signals:
     void SRegisterResult(bool result, int code);
     void SMergeResult(bool result);
 
-    void SSharedConfigApply(const QJsonArray& arr);
+    void SSharedConfig(const QJsonArray& arr);
     void SDocumentDirUpdate(Section section, const QString& document_dir);
     void SDefaultUnitUpdate(Section section, int unit);
 
-    void STagApply(const QJsonObject& obj);
+    void STag(const QJsonObject& obj);
     void STagInsert(const QJsonObject& obj);
     void STagUpdate(const QJsonObject& obj);
     void STagDelete(const QJsonObject& obj);
@@ -107,18 +107,18 @@ signals:
     // These dialogs are stored in the shared MainWindow::widget_hash_ (not tied
     // to any section), so no section is carried.
     // If the dialog has already been closed, the receiver should ignore the reply.
-    void SWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array);
-    void SAuditLogAck(QUuid widget_id, const QJsonArray& array);
+    void SWorkspaceMember(QUuid widget_id, const QJsonArray& array);
+    void SAuditLog(QUuid widget_id, const QJsonArray& array);
 
     // Targeted replies, routed by widget_id to the dialog that sent the request.
     // Each dialog is stored in its own widget_hash_ and the section is implied
     // by the signal itself (Inventory / Partner / Finance), so it is not carried.
     // If the dialog has already been closed, the receiver should ignore the reply.
-    void SInventoryHeatAck(QUuid widget_id, const QJsonArray& array);
-    void SPartnerHeatAck(QUuid widget_id, const QJsonArray& array);
-    void SBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void SIncomeStatementAck(QUuid widget_id, const QJsonObject& obj);
-    void SCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj);
+    void SInventoryHeat(QUuid widget_id, const QJsonArray& array);
+    void SPartnerHeat(QUuid widget_id, const QJsonArray& array);
+    void SBalanceSheet(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
+    void SIncomeStatement(QUuid widget_id, const QJsonObject& obj);
+    void SCashFlowStatement(QUuid widget_id, const QJsonObject& obj);
 
 private slots:
     void RConnected();
@@ -164,31 +164,31 @@ private:
     QSet<QUuid> ParseLinkedEntryP(const QJsonArray& arr) const;
 
 private:
-    void NotifyRegisterOutcome(const QJsonObject& obj);
-    void NotifyLoginOutcome(const QJsonObject& obj);
+    void OnRegisterOutcome(const QJsonObject& obj);
+    void OnLoginOutcome(const QJsonObject& obj);
 
     void AckOrderTree(const QJsonObject& obj);
-    void AckTable(const QJsonObject& obj);
+    void FetchTable(const QJsonObject& obj);
     void AckOrderNode(const QJsonObject& obj);
-    void OnOrderOverview(const QJsonObject& obj);
-    void OnStatementPrimary(const QJsonObject& obj);
-    void OnStatementSecondary(const QJsonObject& obj);
-    void OnStatementTertiary(const QJsonObject& obj);
-    void OnSettlementPrimary(const QJsonObject& obj);
-    void OnSettlementSecondary(const QJsonObject& obj);
-    void AckWorkspaceMember(const QJsonObject& obj);
-    void AckAuditLog(const QJsonObject& obj);
-    void AckInventoryHeat(const QJsonObject& obj);
-    void AckPartnerHeat(const QJsonObject& obj);
-    void AckBalanceSheet(const QJsonObject& obj);
-    void AckIncomeStatement(const QJsonObject& obj);
-    void AckCashFlowStatement(const QJsonObject& obj);
+    void FetchOrderOverview(const QJsonObject& obj);
+    void FetchStatementPrimary(const QJsonObject& obj);
+    void FetchStatementSecondary(const QJsonObject& obj);
+    void FetchStatementTertiary(const QJsonObject& obj);
+    void FetchSettlementPrimary(const QJsonObject& obj);
+    void FetchSettlementSecondary(const QJsonObject& obj);
+    void FetchWorkspaceMember(const QJsonObject& obj);
+    void FetchAuditLog(const QJsonObject& obj);
+    void FetchInventoryHeat(const QJsonObject& obj);
+    void FetchPartnerHeat(const QJsonObject& obj);
+    void FetchBalanceSheet(const QJsonObject& obj);
+    void FetchIncomeStatement(const QJsonObject& obj);
+    void FetchCashFlowStatement(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchOrder(const QJsonObject& obj);
 
     void DenyLeafDelete(const QJsonObject& obj);
-    void DenyDefaultUnit(const QJsonObject& obj);
+    void OnDefaultUnitUpdateDeny(const QJsonObject& obj);
     void DenyOperation();
     void OnPermissionDeny();
     void FinishTreeSync();
@@ -197,14 +197,14 @@ private:
     void OnNodePermissionDeny(const QJsonObject& obj);
 
 private:
-    void ApplySharedConfig(const QJsonArray& arr);
-    void ApplyTree(const QJsonObject& obj);
-    void ApplyTag(const QJsonObject& obj);
-    void ApplyPartnerEntry(const QJsonArray& arr);
+    void SyncSharedConfig(const QJsonArray& arr);
+    void SyncTree(const QJsonObject& obj);
+    void SyncTag(const QJsonObject& obj);
+    void SyncPartnerEntry(const QJsonArray& arr);
 
     void InsertNode(const QJsonObject& obj);
     void UpdateNode(const QJsonObject& obj);
-    void DragNode(const QJsonObject& obj);
+    void MoveNode(const QJsonObject& obj);
     void MergeLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
     void DeleteOrderLeaf(const QJsonObject& obj);
@@ -231,7 +231,7 @@ private:
     void InsertSettlement(const QJsonObject& obj);
     void UpdateSettlement(const QJsonObject& obj);
     void RecallSettlement(const QJsonObject& obj);
-    void OnSettlementView(const QJsonObject& obj);
+    void FetchSettlementView(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);
@@ -245,7 +245,7 @@ private:
     void UpdateEntryLinkedNode(const QJsonObject& obj);
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);
-    void OnEntryLockedUpdate(const QJsonObject& obj);
+    void UpdateEntryLocked(const QJsonObject& obj);
     void OnEntryLockPermissionDeny(const QJsonObject& obj);
     void OnEntriesLock(const QJsonObject& obj);
     void OnEntriesLockPermissionDeny(const QJsonObject& obj);

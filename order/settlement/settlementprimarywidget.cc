@@ -69,7 +69,7 @@ void SettlementPrimaryWidget::on_pBtnFetch_clicked()
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
     const auto message { JsonGen::SettlementPrimary(section_, widget_id_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kSettlementPrimary, message);
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementPrimaryFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

@@ -98,8 +98,8 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, query_range, level) };
-    WebSocket::Instance()->SendMessage(WsKey::kIncomeStatementAck, message);
+    const auto message { JsonGen::IncomeStatement(widget_id_, income_id, expense_id, query_range, level) };
+    WebSocket::Instance()->SendMessage(WsKey::kIncomeStatementFetch, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

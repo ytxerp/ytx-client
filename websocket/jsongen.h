@@ -34,8 +34,8 @@ namespace JsonGen {
 QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range, int utc_offset);
 QJsonObject Register(CString& email, CString& password);
 
-QJsonObject NodeInsert(Section section, const Node* node, QUuid parent_id);
-QJsonObject NodeDrag(Section section, QUuid node_id, QUuid parent_id);
+QJsonObject NodeInsert(Section section, const struct Node* node, QUuid parent_id);
+QJsonObject NodeMove(Section section, QUuid node_id, QUuid parent_id);
 
 QJsonObject LeafDelete(Section section, QUuid node_id, int version);
 QJsonObject BranchDelete(Section section, QUuid node_id, QUuid parent_id, int version);
@@ -55,12 +55,12 @@ QJsonObject TagDelete(Section section, QUuid tag_id, int version);
 
 QJsonObject WorkspaceMemberUpdate(QUuid id, CJsonObject& update, int version);
 QJsonObject WorkspaceMemberDelete(QUuid id);
-QJsonObject WorkspaceMemberAck(QUuid widget_id, CString& workspace);
-QJsonObject AuditLogAck(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section);
+QJsonObject WorkspaceMember(QUuid widget_id, CString& workspace);
+QJsonObject AuditLog(QUuid widget_id, CString& workspace, const utils::DateTimeRange& range, Section section);
 
-QJsonObject TreeAck(Section section, const utils::DateTimeRange& range);
-QJsonObject TableAck(Section section, QUuid node_id, QUuid entry_id = {});
-QJsonObject NodeAck(Section section, QUuid node_id);
+QJsonObject Tree(Section section, const utils::DateTimeRange& range);
+QJsonObject Table(Section section, QUuid node_id, QUuid entry_id = {});
+QJsonObject Node(Section section, QUuid node_id);
 QJsonObject StatementPrimary(Section section, QUuid widget_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementSecondary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementTertiary(Section section, QUuid widget_id, QUuid partner_id, int unit, const utils::DateTimeRange& range);
@@ -88,11 +88,11 @@ QJsonObject OrderRecall(Section section, QUuid node_id, CJsonObject& update, int
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 
-QJsonObject InventoryHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam);
-QJsonObject PartnerHeadAck(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam);
-QJsonObject BalanceSheetAck(QUuid widget_id, QUuid asset, QUuid liability, QUuid equity, const utils::DateTimeRange& range, int level);
-QJsonObject IncomeStatementAck(QUuid widget_id, QUuid income, QUuid expense, const utils::DateTimeRange& range, int level);
-QJsonObject CashFlowStatementAck(QUuid widget_id, const utils::DateTimeRange& range);
-QJsonObject OrderOverviewAck(Section section, QUuid widget_id, const utils::DateTimeRange& range);
+QJsonObject InventoryHeat(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam);
+QJsonObject PartnerHead(Section section, QUuid widget_id, const utils::DateTimeRange& range, int moc, int mid, int mam);
+QJsonObject BalanceSheet(QUuid widget_id, QUuid asset, QUuid liability, QUuid equity, const utils::DateTimeRange& range, int level);
+QJsonObject IncomeStatement(QUuid widget_id, QUuid income, QUuid expense, const utils::DateTimeRange& range, int level);
+QJsonObject CashFlowStatement(QUuid widget_id, const utils::DateTimeRange& range);
+QJsonObject OrderOverview(Section section, QUuid widget_id, const utils::DateTimeRange& range);
 
 }

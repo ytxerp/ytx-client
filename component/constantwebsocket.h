@@ -43,35 +43,35 @@
 //
 // =================================================
 enum class WsKey : uint16_t {
-    // --- Auth ---
+    // --- Auth (1000-1099) ---
     kLogin = 1000,
     kLoginOutcome = 1001,
 
     kRegister = 1010,
     kRegisterOutcome = 1011,
 
-    // --- Config ---
-    kDefaultUnitDeny = 1100,
+    // --- Config (1100-1199) ---
+    kDefaultUnitUpdateDeny = 1100,
     kDefaultUnitUpdate = 1101,
 
     kDocumentDirUpdate = 1110,
 
-    kPartnerEntryApply = 1120,
-    kSharedConfigApply = 1121,
+    kPartnerEntrySync = 1120,
+    kSharedConfigSync = 1121,
 
-    // --- Audit Log ---
-    kAuditLogAck = 1200,
+    // --- Audit Log (1200-1299) ---
+    kAuditLogFetch = 1200,
 
-    // --- Settlement ---
-    kSettlementPrimary = 1300,
+    // --- Settlement (1300-1399) ---
+    kSettlementPrimaryFetch = 1300,
     kSettlementDelete = 1301,
     kSettlementInsert = 1302,
-    kSettlementSecondary = 1303,
+    kSettlementSecondaryFetch = 1303,
     kSettlementRecall = 1304,
     kSettlementUpdate = 1305,
-    kSettlementView = 1306,
+    kSettlementViewFetch = 1306,
 
-    // --- Tree ---
+    // --- Tree (1400-1499) ---
     kLeafMerge = 1400,
     kBranchDelete = 1401,
     kLeafDelete = 1402,
@@ -83,23 +83,23 @@ enum class WsKey : uint16_t {
     kLeafDeleteDeny = 1412,
 
     kNodeDirectionRuleUpdate = 1420,
-    kNodeDrag = 1421,
+    kNodeMove = 1421,
     kNodeInsert = 1422,
     kNodeNameUpdate = 1423,
     kNodeUpdate = 1424,
-    kNodeStatus = 1425,
+    kNodeStatusUpdate = 1425,
 
-    kTreeApply = 1430,
+    kTreeSync = 1430,
     kTreeSyncFinish = 1431,
 
-    // --- Tag ---
-    kTagApply = 1500,
+    // --- Tag (1500-1599) ---
+    kTagSync = 1500,
     kTagDelete = 1501,
     kTagInsert = 1502,
     kTagUpdate = 1503,
 
-    // --- Entry ---
-    kTableAck = 1600,
+    // --- Entry (1600-1699) ---
+    kTableFetch = 1600,
 
     // Entry CRUD
     kEntryInsert = 1601,
@@ -120,7 +120,7 @@ enum class WsKey : uint16_t {
     kEntryDescriptionSearch = 1650,
     kEntryTagSearch = 1651,
 
-    // --- Misc ---
+    // --- Misc (1700-1799) ---
     kOperationDeny = 1700,
     kPermissionDeny = 1710,
     kOrderPermissionDeny = 1720,
@@ -138,14 +138,14 @@ enum class WsKey : uint16_t {
     kAccountRoleDelete = 1900,
     kAccountRoleUpdate = 1901,
 
-    kWorkspaceMemberAck = 1910,
+    kWorkspaceMemberFetch = 1910,
     kWorkspaceMemberDelete = 1911,
     kWorkspaceMemberUpdate = 1912,
 
     // --- Statement ---
-    kStatementPrimary = 2000,
-    kStatementSecondary = 2001,
-    kStatementTertiary = 2002,
+    kStatementPrimaryFetch = 2000,
+    kStatementSecondaryFetch = 2001,
+    kStatementTertiaryFetch = 2002,
 
     // --- Reimbursement (2100-2199) ---
     kReimbursementInsert = 2100,
@@ -156,23 +156,23 @@ enum class WsKey : uint16_t {
     kReimbursementUnpost = 2105,
 
     // --- Finance (2200-2299) ---
-    kBalanceSheetAck = 2200,
-    kCashFlowStatementAck = 2201,
-    kIncomeStatementAck = 2202,
+    kBalanceSheetFetch = 2200,
+    kCashFlowStatementFetch = 2201,
+    kIncomeStatementFetch = 2202,
 
     kPeriodClose = 2210,
 
     // --- Task (2300-2399) ---
 
     // --- Inventory ---
-    kInventoryHeatAck = 2400,
+    kInventoryHeatFetch = 2400,
 
     // --- Partner ---
     kPartnerEntryDelete = 2500,
     kPartnerEntryInsert = 2501,
     kPartnerEntryUpdate = 2502,
 
-    kPartnerHeatAck = 2520,
+    kPartnerHeatFetch = 2520,
 
     // --- Order ---
     kOrderInsertSave = 2600,
@@ -189,13 +189,12 @@ enum class WsKey : uint16_t {
 
     kOrderNodeAck = 2620,
     kOrderTreeAck = 2621,
-    kOrderOverview = 2622,
+    kOrderOverviewFetch = 2622,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
 {
     switch (msg) {
-    // --- Auth ---
     case WsKey::kLogin:
         return "kLogin";
     case WsKey::kRegister:
@@ -205,37 +204,34 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kRegisterOutcome:
         return "kRegisterOutcome";
 
-        // --- Config ---
-    case WsKey::kSharedConfigApply:
-        return "kSharedConfigApply";
-    case WsKey::kPartnerEntryApply:
-        return "kPartnerEntryApply";
+    case WsKey::kSharedConfigSync:
+        return "kSharedConfigSync";
+    case WsKey::kPartnerEntrySync:
+        return "kPartnerEntrySync";
     case WsKey::kDefaultUnitUpdate:
         return "kDefaultUnitUpdate";
-    case WsKey::kDefaultUnitDeny:
-        return "kDefaultUnitDeny";
+    case WsKey::kDefaultUnitUpdateDeny:
+        return "kDefaultUnitUpdateDeny";
     case WsKey::kDocumentDirUpdate:
         return "kDocumentDirUpdate";
 
-        // --- Ack ---
     case WsKey::kOrderTreeAck:
         return "kOrderTreeAck";
-    case WsKey::kTableAck:
-        return "kTableAck";
-    case WsKey::kStatementPrimary:
-        return "kStatementPrimary";
-    case WsKey::kStatementSecondary:
-        return "kStatementSecondary";
-    case WsKey::kStatementTertiary:
-        return "kStatementTertiary";
-    case WsKey::kSettlementPrimary:
-        return "kSettlementPrimary";
-    case WsKey::kSettlementSecondary:
-        return "kSettlementSecondary";
+    case WsKey::kTableFetch:
+        return "kTableFetch";
+    case WsKey::kStatementPrimaryFetch:
+        return "kStatementPrimaryFetch";
+    case WsKey::kStatementSecondaryFetch:
+        return "kStatementSecondaryFetch";
+    case WsKey::kStatementTertiaryFetch:
+        return "kStatementTertiaryFetch";
+    case WsKey::kSettlementPrimaryFetch:
+        return "kSettlementPrimaryFetch";
+    case WsKey::kSettlementSecondaryFetch:
+        return "kSettlementSecondaryFetch";
     case WsKey::kOrderNodeAck:
         return "kOrderNodeAck";
 
-        // --- Settlement ---
     case WsKey::kSettlementInsert:
         return "kSettlementInsert";
     case WsKey::kSettlementUpdate:
@@ -243,27 +239,26 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kSettlementRecall:
         return "kSettlementRecall";
     case WsKey::kSettlementDelete:
-        return "kSettlementDelete"; // no handler needed
-    case WsKey::kSettlementView:
-        return "kSettlementView";
+        return "kSettlementDelete";
+    case WsKey::kSettlementViewFetch:
+        return "kSettlementViewFetch";
 
-        // --- Tree ---
-    case WsKey::kTreeApply:
-        return "kTreeApply";
+    case WsKey::kTreeSync:
+        return "kTreeSync";
     case WsKey::kTreeSyncFinish:
         return "kTreeSyncFinish";
     case WsKey::kNodeInsert:
         return "kNodeInsert";
     case WsKey::kNodeUpdate:
         return "kNodeUpdate";
-    case WsKey::kNodeStatus:
-        return "kNodeStatus";
+    case WsKey::kNodeStatusUpdate:
+        return "kNodeStatusUpdate";
     case WsKey::kOrderNameSearch:
         return "kOrderNameSearch";
     case WsKey::kNodeNameUpdate:
         return "kNodeNameUpdate";
-    case WsKey::kNodeDrag:
-        return "kNodeDrag";
+    case WsKey::kNodeMove:
+        return "kNodeMove";
     case WsKey::kLeafDelete:
         return "kLeafDelete";
     case WsKey::kPartnerLeafDelete:
@@ -277,7 +272,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kNodeDirectionRuleUpdate:
         return "kNodeDirectionRuleUpdate";
 
-        // --- Leaf delete flow ---
     case WsKey::kLeafDeleteCheck:
         return "kLeafDeleteCheck";
     case WsKey::kLeafDeleteDeny:
@@ -285,9 +279,8 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kLeafDeleteAllow:
         return "kLeafDeleteAllow";
 
-        // --- Tag ---
-    case WsKey::kTagApply:
-        return "kTagApply";
+    case WsKey::kTagSync:
+        return "kTagSync";
     case WsKey::kTagInsert:
         return "kTagInsert";
     case WsKey::kTagUpdate:
@@ -295,7 +288,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kTagDelete:
         return "kTagDelete";
 
-        // --- Entry ---
     case WsKey::kEntryInsert:
         return "kEntryInsert";
     case WsKey::kEntryUpdate:
@@ -325,7 +317,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kPartnerEntryUpdate:
         return "kPartnerEntryUpdate";
 
-        // --- Order ---
     case WsKey::kOrderInsertSave:
         return "kOrderInsertSave";
     case WsKey::kUnreleasedOrderSave:
@@ -341,7 +332,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kRecalledOrderRelease:
         return "kRecalledOrderRelease";
 
-        // --- Misc ---
     case WsKey::kOperationDeny:
         return "kOperationDeny";
     case WsKey::kPermissionDeny:
@@ -353,15 +343,13 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kNodePermissionDeny:
         return "kNodePermissionDeny";
 
-        // --- Profile ---
     case WsKey::kAccountNameUpdate:
         return "kAccountNameUpdate";
     case WsKey::kAccountUsernameUpdate:
         return "kAccountUsernameUpdate";
 
-        // --- Workspace Member ---
-    case WsKey::kWorkspaceMemberAck:
-        return "kWorkspaceMemberAck";
+    case WsKey::kWorkspaceMemberFetch:
+        return "kWorkspaceMemberFetch";
     case WsKey::kWorkspaceMemberUpdate:
         return "kWorkspaceMemberUpdate";
     case WsKey::kWorkspaceMemberDelete:
@@ -370,30 +358,30 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kAccountRoleUpdate";
     case WsKey::kAccountRoleDelete:
         return "kAccountRoleDelete";
-    case WsKey::kAuditLogAck:
-        return "kAuditLogAck";
+    case WsKey::kAuditLogFetch:
+        return "kAuditLogFetch";
     case WsKey::kOrderTagSearch:
         return "kOrderTagSearch";
     case WsKey::kPeriodClose:
         return "kPeriodClose";
-    case WsKey::kInventoryHeatAck:
-        return "kInventoryHeatAck";
-    case WsKey::kPartnerHeatAck:
-        return "kPartnerHeatAck";
-    case WsKey::kBalanceSheetAck:
-        return "kBalanceSheetAck";
-    case WsKey::kIncomeStatementAck:
-        return "kIncomeStatementAck";
-    case WsKey::kCashFlowStatementAck:
-        return "kCashFlowStatementAck";
+    case WsKey::kInventoryHeatFetch:
+        return "kInventoryHeatFetch";
+    case WsKey::kPartnerHeatFetch:
+        return "kPartnerHeatFetch";
+    case WsKey::kBalanceSheetFetch:
+        return "kBalanceSheetFetch";
+    case WsKey::kIncomeStatementFetch:
+        return "kIncomeStatementFetch";
+    case WsKey::kCashFlowStatementFetch:
+        return "kCashFlowStatementFetch";
 
     case WsKey::kPartnerEntryDelete:
         return "kPartnerEntryDelete";
     case WsKey::kPartnerEntryInsert:
         return "kPartnerEntryInsert";
 
-    case WsKey::kOrderOverview:
-        return "kOrderOverview";
+    case WsKey::kOrderOverviewFetch:
+        return "kOrderOverviewFetch";
     case WsKey::kOrderNodeUpdate:
         return "kOrderNodeUpdate";
     case WsKey::kLeafDeleteLockedDeny:

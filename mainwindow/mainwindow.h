@@ -197,17 +197,17 @@ private slots:
     void RDenyLeafDelete(const QJsonObject& obj);
     void RLeafDeleteLockedDeny(Section section, QUuid node_id);
 
-    void RWorkspaceMemberAck(QUuid widget_id, const QJsonArray& array);
-    void RAuditLogAck(QUuid widget_id, const QJsonArray& array);
-    void RInventoryHeatAck(QUuid widget_id, const QJsonArray& array);
-    void RPartnerHeatAck(QUuid widget_id, const QJsonArray& array);
-    void RBalanceSheetAck(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void RIncomeStatementAck(QUuid widget_id, const QJsonObject& obj);
-    void RCashFlowStatementAck(QUuid widget_id, const QJsonObject& obj);
+    void RWorkspaceMember(QUuid widget_id, const QJsonArray& array);
+    void RAuditLog(QUuid widget_id, const QJsonArray& array);
+    void RInventoryHeat(QUuid widget_id, const QJsonArray& array);
+    void RPartnerHeat(QUuid widget_id, const QJsonArray& array);
+    void RBalanceSheet(QUuid widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
+    void RIncomeStatement(QUuid widget_id, const QJsonObject& obj);
+    void RCashFlowStatement(QUuid widget_id, const QJsonObject& obj);
 
     void RAccountRoleUpdate();
 
-    void RApplyTag(const QJsonObject& obj);
+    void RTag(const QJsonObject& obj);
     void RInsertTag(const QJsonObject& obj);
     void RUpdateTag(const QJsonObject& obj);
     void RDeleteTag(const QJsonObject& obj);
@@ -216,7 +216,7 @@ private slots:
     void RInsertEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry);
     void RRemoveEntryTag(Section section, const tag::Row& tag, TableModel* model, const Entry* entry);
 
-    void RApplySharedConfig(const QJsonArray& arr);
+    void RSharedConfig(const QJsonArray& arr);
     void RUpdateDocumentDir(Section section, const QString& document_dir);
     void RUpdateDefaultUnit(Section section, int unit);
     void RDenyDefaultUnit();

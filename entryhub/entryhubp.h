@@ -34,7 +34,7 @@ public:
     void PushEntry(QUuid node_id);
 
     void DeleteSingleLeaf(const QSet<QUuid>& leaf_entry);
-    void ApplyPartnerEntry(const QJsonArray& array);
+    void SyncPartnerEntry(const QJsonArray& array);
 
     void ReplaceInternalInventoryRef(QUuid source_id, QUuid target_id);
 };

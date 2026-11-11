@@ -20,7 +20,7 @@ void MainWindow::on_actionHeatPartner_triggered()
     dialog->show();
 }
 
-void MainWindow::RPartnerHeatAck(QUuid widget_id, const QJsonArray& array)
+void MainWindow::RPartnerHeat(QUuid widget_id, const QJsonArray& array)
 {
     auto widget { sc_p_.widget_hash.value(widget_id).widget };
     if (!widget)

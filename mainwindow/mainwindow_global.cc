@@ -6,7 +6,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::RApplySharedConfig(const QJsonArray& arr)
+void MainWindow::RSharedConfig(const QJsonArray& arr)
 {
     for (const QJsonValue& val : arr) {
         if (!val.isObject()) {

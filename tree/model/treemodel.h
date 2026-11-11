@@ -95,16 +95,16 @@ public:
     }
 
     // WebSocket's
-    virtual void ApplyTree(const QJsonObject& data);
+    virtual void SyncTree(const QJsonObject& data);
     void ApplyNode(QUuid ancestor, const QJsonObject& data);
 
     void SyncTotalArray(const QJsonArray& total_array);
     void UpdateVersion(QUuid node_id, int version);
 
     void ApplyMerge(QUuid source_id, QUuid target_id);
-    void ApplyDrag(QUuid ancestor, QUuid descendant);
+    void MoveNode(QUuid ancestor, QUuid descendant);
     void ApplyDirectionRule(QUuid node_id, bool direction_rule, int version);
-    void ApplyStatus(QUuid node_id, int status, int version);
+    void UpdateStatus(QUuid node_id, int status, int version);
     void ApplyDelete(QUuid node_id);
     void ApplyUpdate(QUuid node_id, const QJsonObject& update, int version);
 

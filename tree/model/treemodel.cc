@@ -259,7 +259,7 @@ void TreeModel::RequestStatus(Node* node, int value)
     node->sync_state = SyncState::kUpdating;
 
     QJsonObject message { JsonGen::NodeStatus(section_, node->id, value, node->version) };
-    WebSocket::Instance()->SendMessage(WsKey::kNodeStatus, message);
+    WebSocket::Instance()->SendMessage(WsKey::kNodeStatusUpdate, message);
 }
 
 void TreeModel::ApplyDirectionRule(QUuid node_id, bool direction_rule, int version)
@@ -296,7 +296,7 @@ void TreeModel::ApplyDirectionRule(QUuid node_id, bool direction_rule, int versi
     emit SSyncValue();
 }
 
-void TreeModel::ApplyStatus(QUuid node_id, int status, int version)
+void TreeModel::UpdateStatus(QUuid node_id, int status, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -391,7 +391,7 @@ void TreeModel::ApplyName(QUuid node_id, const QString& name, int version)
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
-void TreeModel::ApplyDrag(QUuid ancestor, QUuid descendant)
+void TreeModel::MoveNode(QUuid ancestor, QUuid descendant)
 {
     // Get the node to be moved
     auto* node { GetNode(descendant) };
@@ -567,8 +567,8 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     QModelIndex source_parent_index { GetIndex(source_parent_node->id) };
 
     if (moveRows(source_parent_index, source_row, 1, parent, destination_child)) {
-        const auto message { JsonGen::NodeDrag(section_, node_id, destination_parent->id) };
-        WebSocket::Instance()->SendMessage(WsKey::kNodeDrag, message);
+        const auto message { JsonGen::NodeMove(section_, node_id, destination_parent->id) };
+        WebSocket::Instance()->SendMessage(WsKey::kNodeMove, message);
         return true;
     }
 
@@ -766,7 +766,7 @@ void TreeModel::AckNode(QUuid node_id) const
     if (node_hash_.contains(node_id))
         return;
 
-    const auto message { JsonGen::NodeAck(section_, node_id) };
+    const auto message { JsonGen::Node(section_, node_id) };
     WebSocket::Instance()->SendMessage(WsKey::kOrderNodeAck, message);
 }
 
@@ -961,7 +961,7 @@ void TreeModel::RestoreSyncState(QUuid node_id)
     node->sync_state = SyncState::kSynced;
 }
 
-void TreeModel::ApplyTree(const QJsonObject& data)
+void TreeModel::SyncTree(const QJsonObject& data)
 {
     QHash<QUuid, Node*> new_hash {};
     QHash<QUuid, QString> new_leaf_path {};
