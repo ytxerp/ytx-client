@@ -39,6 +39,7 @@ public:
     void SaveSucceeded(int version);
     void PostSucceeded(int version);
     void UnpostSucceeded(int version);
+    void PermissionDenied();
 
     TableModel* Model() const override { return model_; }
     QTableView* View() const override;
@@ -63,6 +64,9 @@ private:
     void InitWidget();
     void InitData();
     void UpdateButtons();
+    void SyncSucceeded(int version);
+
+    void BuildNodeInsert(QJsonObject& message);
 
 private:
     Ui::TableWidgetR* ui;

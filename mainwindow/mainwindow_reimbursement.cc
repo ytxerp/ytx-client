@@ -34,8 +34,8 @@ void MainWindow::InsertNodeR(SectionContext* sc, const QModelIndex& parent_index
     auto* widget { new TableWidgetR(table_model, node, section_config, permissions, this) };
 
     // Setup tab
-    const QString username { node->sync_state == SyncState::kSynced ? node->name : UserProfile::Instance().Username() };
-    const int tab_index { tab_widget->addTab(widget, username) };
+    const QString name { node->sync_state == SyncState::kSynced ? node->name : UserProfile::Instance().Name() };
+    const int tab_index { tab_widget->addTab(widget, name) };
     tab_bar->setTabData(tab_index, node_id);
     tab_widget->setCurrentIndex(tab_index);
 
@@ -82,8 +82,8 @@ void MainWindow::CreateLeafR(SectionContext* sc, QUuid node_id)
     auto* widget { new TableWidgetR(table_model, node, section_config, permissions, this) };
 
     // Setup tab
-    const QString username { node->sync_state == SyncState::kSynced ? node->name : UserProfile::Instance().Username() };
-    const int tab_index { tab_widget->addTab(widget, username) };
+    const QString name { node->sync_state == SyncState::kSynced ? node->name : UserProfile::Instance().Name() };
+    const int tab_index { tab_widget->addTab(widget, name) };
     tab_bar->setTabData(tab_index, node_id);
 
     // Configure view

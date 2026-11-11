@@ -33,11 +33,21 @@ void TableWidgetR::ApproveSucceeded(int version) { }
 
 void TableWidgetR::UnapproveSucceeded(int version) { }
 
-void TableWidgetR::SaveSucceeded(int version) { }
+void TableWidgetR::SaveSucceeded(int version)
+{
+    qDebug() << Q_FUNC_INFO;
+    SyncSucceeded(version);
+}
 
 void TableWidgetR::PostSucceeded(int version) { }
 
 void TableWidgetR::UnpostSucceeded(int version) { }
+
+void TableWidgetR::PermissionDenied()
+{
+    qDebug() << Q_FUNC_INFO;
+    node_->sync_state = SyncState::kSynced;
+}
 
 QTableView* TableWidgetR::View() const { return ui->tableView; }
 
@@ -93,6 +103,28 @@ void TableWidgetR::UpdateButtons()
         ready && node_->reimbursement_status == ReimbursementStatus::kPosted && (finance_permission_ & finance_permission::kUnpost));
 }
 
+void TableWidgetR::SyncSucceeded(int version)
+{
+    model_->SyncSucceeded();
+
+    pending_update_ = QJsonObject();
+
+    node_->version = version;
+    node_->sync_state = SyncState::kSynced;
+}
+
+void TableWidgetR::BuildNodeInsert(QJsonObject& message)
+{
+    const QJsonObject node_json { node_->WriteJson() };
+
+    QJsonObject path_json {};
+    path_json.insert(kAncestor, node_->parent->id.toString(QUuid::WithoutBraces));
+    path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
+
+    message.insert(kNode, node_json);
+    message.insert(kPath, path_json);
+}
+
 void TableWidgetR::on_pushButtonDelete_clicked()
 {
     auto* view { ui->tableView };
@@ -130,6 +162,7 @@ void TableWidgetR::on_pushButtonSave_clicked()
         return;
 
     QJsonObject message {};
+    message.insert(kSection, std::to_underlying(Section::kReimbursement));
 
     model_->Finalize(message);
 
@@ -141,7 +174,7 @@ void TableWidgetR::on_pushButtonSave_clicked()
     }
 
     if (node_->sync_state == SyncState::kCreating) {
-        message.insert(kNode, node_->WriteJson());
+        BuildNodeInsert(message);
         WebSocket::Instance()->SendMessage(WsKey::kReimbursementInsert, message);
     }
 
