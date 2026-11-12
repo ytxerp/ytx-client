@@ -231,6 +231,7 @@ private:
     void RecallOrder(const QJsonObject& obj);
 
     void InsertReimbursement(const QJsonObject& obj);
+    void UpdateReimbursement(const QJsonObject& obj);
 
     void InsertSettlement(const QJsonObject& obj);
     void UpdateSettlement(const QJsonObject& obj);

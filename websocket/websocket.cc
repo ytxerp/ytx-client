@@ -255,6 +255,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kReimbursementInsert] = [this](const QJsonObject& obj) { InsertReimbursement(obj); };
     handler_obj_[WsKey::kReimbursementNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
+    handler_obj_[WsKey::kReimbursementUpdate] = [this](const QJsonObject& obj) { UpdateReimbursement(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -1347,6 +1348,24 @@ void WebSocket::InsertReimbursement(const QJsonObject& obj)
     if (session_id == session_id_) {
         emit SReimbursementSync(section, node_id, version);
         emit SNodeSelect(section, descendant);
+    }
+}
+
+void WebSocket::UpdateReimbursement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    const QJsonObject node_update { obj.value(kNodeUpdate).toObject() };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const int version { obj.value(kVersion).toInt() };
+
+    auto model { tree_model_hash_.value(section) };
+    Q_ASSERT(model != nullptr);
+
+    model->UpdateNode(node_id, node_update, version);
+
+    if (session_id == session_id_) {
+        emit SReimbursementSync(section, node_id, version);
     }
 }
 

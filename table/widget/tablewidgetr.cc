@@ -175,6 +175,8 @@ void TableWidgetR::on_pushButtonSave_clicked()
     model_->Finalize(message);
 
     if (node_->sync_state == SyncState::kSynced) {
+        pending_update_.insert(kInitialTotal, QString::number(node_->initial_total, 'f', numeric_const::kDecimalPlaces4));
+
         message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
         message.insert(kVersion, node_->version);
         message.insert(kNodeUpdate, pending_update_);
