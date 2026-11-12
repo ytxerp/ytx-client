@@ -3,6 +3,7 @@
 #include <QTimer>
 
 #include "component/signalblocker.h"
+#include "global/nodepool.h"
 #include "ui_tablewidgetr.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/websocket.h"
@@ -27,7 +28,11 @@ TableWidgetR::TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& secti
     UpdateButtons();
 }
 
-TableWidgetR::~TableWidgetR() { delete ui; }
+TableWidgetR::~TableWidgetR()
+{
+    NodePool::Instance().Recycle(node_, Section::kReimbursement);
+    delete ui;
+}
 
 void TableWidgetR::ApproveSucceeded(int version) { }
 
