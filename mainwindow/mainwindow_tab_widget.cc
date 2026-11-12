@@ -104,12 +104,16 @@ void MainWindow::tabWidget_currentChanged()
 
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_tree_or { IsTreeWidgetO(widget) || IsTreeWidgetR(widget) };
+
+    const bool is_table { IsTableWidget(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
-    const bool is_statement_tertiary { IsStatementTertiaryWidget(widget) };
     const bool is_table_or { IsTableWidgetO(widget) || IsTableWidgetR(widget) };
+
     const bool is_order_section { IsOrderSection(section) };
     const bool is_finance_section { section == Section::kFinance };
     const bool is_inventory_section { section == Section::kInventory };
+
+    const bool is_statement_tertiary { IsStatementTertiaryWidget(widget) };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_or);
@@ -124,7 +128,7 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionLockAll->setEnabled(is_table_fipt);
     ui->actionUnlockAll->setEnabled(is_table_fipt);
 
-    ui->actionJumpEntry->setEnabled(is_table_fipt || is_table_or);
+    ui->actionJumpEntry->setEnabled(is_table);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
@@ -132,8 +136,8 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionOrderOverview->setEnabled(is_order_section);
     ui->actionNewBranch->setEnabled(is_tree_or);
 
-    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_or);
-    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_or);
+    ui->actionAppendEntry->setEnabled(is_table);
+    ui->actionDelete->setEnabled(is_tree || is_table);
 
     ui->actionBalanceSheet->setEnabled(is_finance_section);
     ui->actionCashFlowStatement->setEnabled(is_finance_section);

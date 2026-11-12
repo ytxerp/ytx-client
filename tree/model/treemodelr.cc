@@ -40,6 +40,8 @@ QVariant TreeModelR::data(const QModelIndex& index, int role) const
         return d_node->document;
     case NodeEnumR::kInitialTotal:
         return d_node->initial_total;
+    case NodeEnumR::kKind:
+        return std::to_underlying(d_node->kind);
     }
 
     return QVariant();
@@ -80,6 +82,7 @@ bool TreeModelR::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumR::kStatus:
     case NodeEnumR::kCode:
     case NodeEnumR::kInitialTotal:
+    case NodeEnumR::kKind:
         return false;
     }
 
@@ -114,6 +117,8 @@ void TreeModelR::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumR::kDocument:
             return utils::CompareMember(lhs, rhs, &Node::document, order);
+        case NodeEnumR::kKind:
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         }
     };
 
@@ -144,6 +149,7 @@ Qt::ItemFlags TreeModelR::flags(const QModelIndex& index) const
     case NodeEnumR::kColor:
     case NodeEnumR::kDocument:
     case NodeEnumR::kInitialTotal:
+    case NodeEnumR::kKind:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

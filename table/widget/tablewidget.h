@@ -40,3 +40,5 @@ protected:
     {
     }
 };
+
+inline const char* kTableWidget = "TableWidget";

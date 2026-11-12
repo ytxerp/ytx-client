@@ -400,9 +400,12 @@ private:
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
     inline bool IsTreeWidgetR(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetR); }
+
+    inline bool IsTableWidget(const QWidget* widget) { return widget && widget->inherits(kTableWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
     inline bool IsTableWidgetR(const QWidget* widget) { return widget && widget->inherits(kTableWidgetR); }
+
     inline bool IsStatementTertiaryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementTertiaryWidget); }
 
 private:

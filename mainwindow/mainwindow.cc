@@ -502,11 +502,6 @@ void MainWindow::on_actionInsertNode_triggered()
     if (QApplication::activeWindow() != this)
         return;
 
-    auto* widget { sc_->tab_widget->currentWidget() };
-    if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
-        return;
-    }
-
     auto current_index { sc_->tree_view->currentIndex() };
     auto parent_index { current_index.parent() };
 

@@ -185,6 +185,10 @@ void NodeR::ReadJson(const QJsonObject& object)
         version = val.toInt();
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
+    if (const auto val = object.value(kKind); val.isDouble())
+        kind = static_cast<NodeKind>(val.toInt());
+    if (const auto val = object.value(kUnit); val.isDouble())
+        unit = static_cast<NodeUnit>(val.toInt());
 
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
@@ -205,6 +209,8 @@ QJsonObject NodeR::WriteJson() const
     object.insert(kStatus, std::to_underlying(reimbursement_status));
     object.insert(kVersion, version);
     object.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
+    object.insert(kKind, std::to_underlying(kind));
+    object.insert(kUnit, std::to_underlying(unit));
 
     object.insert(kTag, QJsonArray::fromStringList(tag));
     object.insert(kDocument, QJsonArray::fromStringList(document));

@@ -275,6 +275,7 @@ void MainWindow::InitHeader(SectionInfo& f, SectionInfo& i, SectionInfo& t, Sect
         tr("Tag"),
         tr("Color"),
         tr("Document"),
+        tr("Kind"),
         tr("Initial Total"),
     };
 

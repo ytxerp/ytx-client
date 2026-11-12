@@ -39,8 +39,6 @@ void MainWindow::on_actionNewBranch_triggered()
     qInfo() << Q_FUNC_INFO;
 
     const Section section { sc_->section };
-    if (section != Section::kSale && section != Section::kPurchase)
-        return;
 
     auto current_index { sc_->tree_view->currentIndex() };
     current_index = current_index.isValid() ? current_index : QModelIndex();
@@ -56,15 +54,28 @@ void MainWindow::on_actionNewBranch_triggered()
     const QUuid parent_id { parent_node->id };
 
     auto* node { NodePool::Instance().Allocate(section) };
-    auto* d_node { static_cast<NodeO*>(node) };
 
     node->id = QUuid::createUuidV7();
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->kind = NodeKind::kBranch;
-    d_node->order_status = OrderStatus::kUnreleased; // Branch nodes are always kUnreleased
     node->parent = parent_node;
 
-    static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTime();
+    switch (section) {
+    case Section::kSale:
+    case Section::kPurchase:
+        static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTime();
+        break;
+
+    case Section::kReimbursement:
+        static_cast<NodeR*>(node)->issued_time = QDateTime::currentDateTime();
+        break;
+
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+    case Section::kPartner:
+        Q_UNREACHABLE();
+    }
 
     auto parent_path { tree_model->Path(parent_id) };
     if (!parent_path.isEmpty())

@@ -311,5 +311,6 @@ enum class NodeEnumR {
     kTag,
     kColor,
     kDocument,
+    kKind,
     kInitialTotal,
 };
