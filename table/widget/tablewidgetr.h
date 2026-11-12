@@ -48,6 +48,7 @@ public:
 
 public slots:
     void RSyncInitial(QUuid node_id, double initial_delta);
+    void RDataChanged();
     void on_pushButtonSave_clicked();
 
 private slots:

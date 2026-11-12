@@ -76,13 +76,13 @@ void MainWindow::CreateLeafR(SectionContext* sc, QUuid node_id)
     *tmp_node = *node;
 
     // Create model and widget
-    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
-    auto* table_model { new TableModelR(table_model_arg, node, permissions, this) };
+    TableModelArg table_model_arg { section, node_id, info.entry_header, tmp_node->direction_rule };
+    auto* table_model { new TableModelR(table_model_arg, tmp_node, permissions, this) };
 
-    auto* widget { new TableWidgetR(table_model, node, section_config, permissions, this) };
+    auto* widget { new TableWidgetR(table_model, tmp_node, section_config, permissions, this) };
 
     // Setup tab
-    const QString name { node->sync_state == SyncState::kSynced ? node->name : UserProfile::Instance().Name() };
+    const QString name { tmp_node->sync_state == SyncState::kSynced ? tmp_node->name : UserProfile::Instance().Name() };
     const int tab_index { tab_widget->addTab(widget, name) };
     tab_bar->setTabData(tab_index, node_id);
 

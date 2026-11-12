@@ -180,4 +180,5 @@ void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget)
 void MainWindow::TableConnectR(TableModelR* table_model_r, TableWidgetR* widget) const
 {
     connect(table_model_r, &TableModelR::SSyncInitial, widget, &TableWidgetR::RSyncInitial);
+    connect(table_model_r, &TableModelR::SDataChanged, widget, &TableWidgetR::RDataChanged);
 }

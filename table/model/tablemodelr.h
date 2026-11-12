@@ -30,6 +30,7 @@ public:
 
 signals:
     void SSyncInitial(QUuid node_id, double initial_delta);
+    void SDataChanged();
 
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;

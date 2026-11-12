@@ -76,6 +76,8 @@ void TableWidgetR::RSyncInitial(QUuid node_id, double initial_delta)
     ui->dSpinInitialTotal->setValue(node_->initial_total);
 }
 
+void TableWidgetR::RDataChanged() { ui->pushButtonApprove->setEnabled(false); }
+
 void TableWidgetR::InitWidget()
 {
     ui->dateTimeEdit->setDisplayFormat(datetime_format::kDateTime);
@@ -190,6 +192,9 @@ void TableWidgetR::on_pushButtonUnpost_clicked() { }
 
 void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {
+    if (node_->reimbursement_status != ReimbursementStatus::kDraft || node_->sync_state == SyncState::kUpdating)
+        return;
+
     if (node_->issued_time == dateTime)
         return;
 
@@ -203,6 +208,9 @@ void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 
 void TableWidgetR::on_lineEditDescription_textEdited(const QString& arg1)
 {
+    if (node_->reimbursement_status != ReimbursementStatus::kDraft || node_->sync_state == SyncState::kUpdating)
+        return;
+
     if (node_->description == arg1)
         return;
 

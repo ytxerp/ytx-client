@@ -77,10 +77,10 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (!(flags(index) & Qt::ItemIsEditable))
+    if (data(index, role) == value)
         return false;
 
-    if (data(index, role) == value)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
         return false;
 
     const EntryEnumR column { index.column() };
@@ -113,6 +113,7 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     }
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+    emit SDataChanged();
 
     const double initial_delta { row->initial - old_initial };
     if (!qFuzzyIsNull(initial_delta))
@@ -321,7 +322,7 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 
     auto flags { QAbstractItemModel::flags(index) };
 
-    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
         return flags;
 
     const EntryEnumR column { index.column() };
@@ -355,7 +356,7 @@ bool TableModelR::insertRows(int row, int count, const QModelIndex& parent)
     if (row < 0 || row > entry_list_.size())
         return false;
 
-    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
         return false;
 
     auto* entry { EntryPool::Instance().Allocate(section_) };
@@ -369,6 +370,7 @@ bool TableModelR::insertRows(int row, int count, const QModelIndex& parent)
     entry_list_.insert(row, entry);
     endInsertRows();
 
+    emit SDataChanged();
     return true;
 }
 
@@ -380,7 +382,7 @@ bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
     if (row < 0 || row >= entry_list_.size())
         return false;
 
-    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft)
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
         return false;
 
     auto* entry = static_cast<EntryR*>(entry_list_.at(row));
@@ -398,5 +400,6 @@ bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
         pending_delete_.insert(entry_id);
 
     EntryPool::Instance().Recycle(entry, section_);
+    emit SDataChanged();
     return true;
 }
