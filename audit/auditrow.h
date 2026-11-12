@@ -51,7 +51,6 @@ enum class RowField {
     kTargetType,
     kTargetOperation,
     kTargetField,
-    kPlaceholder,
     kBefore,
     kAfter,
 };

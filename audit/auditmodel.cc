@@ -72,8 +72,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return row->rhs_node_name;
     case RowField::kTargetField:
         return row->target_field;
-    case RowField::kPlaceholder:
-        return QVariant();
     }
 }
 

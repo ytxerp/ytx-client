@@ -19,7 +19,7 @@ void MainWindow::on_actionAuditLog_triggered()
     InitFilterView(filter_view, data_view);
 
     {
-        InitTableView(data_view, std::to_underlying(audit::RowField::kPlaceholder));
+        InitTableView(data_view, std::to_underlying(audit::RowField::kAfter));
         DelegateAuditLog(data_view);
         data_view->horizontalHeader()->hide();
     }

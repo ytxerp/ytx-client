@@ -45,7 +45,6 @@ void MainWindow::InitHeader()
         tr("Type"),
         tr("Operation"),
         tr("Field"),
-        QString(),
         tr("Before Change"),
         tr("After Change"),
     };
