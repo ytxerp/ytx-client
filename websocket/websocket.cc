@@ -11,6 +11,7 @@
 #include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
+#include "tree/model/treemodelr.h"
 #include "utils/mainwindowutils.h"
 #include "workspace/sectionpermissions.h"
 
@@ -251,6 +252,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnEntriesLock(obj); };
     handler_obj_[WsKey::kEntriesLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntriesLockPermissionDeny(obj); };
     handler_obj_[WsKey::kLeafDeleteLockedDeny] = [this](const QJsonObject& obj) { OnLeafDeleteLockedDeny(obj); };
+
+    handler_obj_[WsKey::kReimbursementInsert] = [this](const QJsonObject& obj) { InsertReimbursement(obj); };
+    handler_obj_[WsKey::kReimbursementNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -1321,6 +1325,29 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
 
     order_model->UpdateNode(node_id, node_update, version);
     order_model->HandleStatusChanged(node_id, OrderStatus::kRecalled);
+}
+
+void WebSocket::InsertReimbursement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    const QJsonObject node_obj { obj.value(kNode).toObject() };
+    const QJsonObject path_obj { obj.value(kPath).toObject() };
+
+    const auto descendant { QUuid(path_obj.value(kDescendant).toString()) };
+    const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
+    const auto node_id { QUuid(node_obj.value(kId).toString()) };
+    const int version { node_obj.value(kVersion).toInt() };
+
+    auto model { tree_model_hash_.value(section) };
+    Q_ASSERT(model != nullptr);
+
+    model->SyncNode(ancestor, node_obj);
+
+    if (session_id == session_id_) {
+        emit SReimbursementSync(section, node_id, version);
+        emit SNodeSelect(section, descendant);
+    }
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)

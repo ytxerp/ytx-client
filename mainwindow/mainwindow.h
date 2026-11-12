@@ -194,6 +194,8 @@ private slots:
     void ROrderPermissionDeny(Section section, QUuid widget_id);
     void RSettlementPermissionDeny(Section section, QUuid widget_id);
 
+    void RReimbursementSync(Section section, QUuid node_id, int version);
+
     void RDenyLeafDelete(const QJsonObject& obj);
     void RLeafDeleteLockedDeny(Section section, QUuid node_id);
 

@@ -33,10 +33,17 @@ void TableWidgetR::ApproveSucceeded(int version) { }
 
 void TableWidgetR::UnapproveSucceeded(int version) { }
 
-void TableWidgetR::SaveSucceeded(int version)
+void TableWidgetR::SyncSucceeded(int version)
 {
     qDebug() << Q_FUNC_INFO;
-    SyncSucceeded(version);
+    model_->SyncSucceeded();
+
+    pending_update_ = QJsonObject();
+    node_->version = version;
+
+    node_->sync_state = SyncState::kSynced;
+
+    UpdateButtons();
 }
 
 void TableWidgetR::PostSucceeded(int version) { }
@@ -101,16 +108,6 @@ void TableWidgetR::UpdateButtons()
 
     ui->pushButtonUnpost->setEnabled(
         ready && node_->reimbursement_status == ReimbursementStatus::kPosted && (finance_permission_ & finance_permission::kUnpost));
-}
-
-void TableWidgetR::SyncSucceeded(int version)
-{
-    model_->SyncSucceeded();
-
-    pending_update_ = QJsonObject();
-
-    node_->version = version;
-    node_->sync_state = SyncState::kSynced;
 }
 
 void TableWidgetR::BuildNodeInsert(QJsonObject& message)

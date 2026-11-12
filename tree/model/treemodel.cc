@@ -713,12 +713,12 @@ QModelIndex TreeModel::GetIndex(QUuid node_id) const
 
     Node* node { node_hash_.value(node_id, nullptr) };
     if (!node) {
-        qCritical() << Q_FUNC_INFO << "node_id not found in node_hash_";
+        qWarning() << Q_FUNC_INFO << "node_id not found in node_hash_";
         return {};
     }
 
     if (!node->parent) {
-        qCritical() << Q_FUNC_INFO << "node is a root node";
+        qWarning() << Q_FUNC_INFO << "node is a root node";
         return {};
     }
 
@@ -928,7 +928,25 @@ void TreeModel::FlushTimer(QUuid id)
     if (update.node && !update.changes.isEmpty()) {
         const QJsonObject message { JsonGen::NodeUpdate(section_, id, update.changes, update.node->version) };
 
-        const auto key { section_ == Section::kSale || section_ == Section::kPurchase ? WsKey::kOrderNodeUpdate : WsKey::kNodeUpdate };
+        const auto key = [this] {
+            switch (section_) {
+            case Section::kFinance:
+            case Section::kTask:
+            case Section::kInventory:
+            case Section::kPartner:
+                return WsKey::kNodeUpdate;
+
+            case Section::kSale:
+            case Section::kPurchase:
+                return WsKey::kOrderNodeUpdate;
+
+            case Section::kReimbursement:
+                return WsKey::kReimbursementNodeUpdate;
+            }
+
+            std::unreachable();
+        }();
+
         WebSocket::Instance()->SendMessage(key, message);
     }
 

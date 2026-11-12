@@ -121,3 +121,18 @@ void MainWindow::EntryLocateR(Section section, QUuid entry_id, QUuid lhs_node_id
     const auto message { JsonGen::TableFetch(section, lhs_node_id, entry_id) };
     WebSocket::Instance()->SendMessage(WsKey::kTableFetch, message);
 }
+
+void MainWindow::RReimbursementSync(Section section, QUuid node_id, int version)
+{
+    auto* sc { GetSectionContext(section) };
+
+    auto widget { sc->widget_hash.value(node_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetR*>(ptr));
+        auto* d_widget { static_cast<TableWidgetR*>(ptr) };
+
+        d_widget->SyncSucceeded(version);
+    }
+}

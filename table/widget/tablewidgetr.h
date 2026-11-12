@@ -36,7 +36,7 @@ public:
 
     void ApproveSucceeded(int version);
     void UnapproveSucceeded(int version);
-    void SaveSucceeded(int version);
+    void SyncSucceeded(int version);
     void PostSucceeded(int version);
     void UnpostSucceeded(int version);
     void PermissionDenied();
@@ -64,7 +64,6 @@ private:
     void InitWidget();
     void InitData();
     void UpdateButtons();
-    void SyncSucceeded(int version);
 
     void BuildNodeInsert(QJsonObject& message);
 

@@ -99,6 +99,8 @@ signals:
     void SNodeLocate(Section section, QUuid node_id);
     void SEntrySelect(Section section, QUuid node_id, QUuid entry_id);
 
+    void SReimbursementSync(Section section, QUuid node_id, int version);
+
     void SLeafDeleteLockedDeny(Section section, QUuid node_id);
     void SOrderPermissionDeny(Section section, QUuid widget_id);
     void SSettlementPermissionDeny(Section section, QUuid widget_id);
@@ -227,6 +229,8 @@ private:
     void SaveOrder(const QJsonObject& obj);
     void InsertOrder(const QJsonObject& obj, bool is_released);
     void RecallOrder(const QJsonObject& obj);
+
+    void InsertReimbursement(const QJsonObject& obj);
 
     void InsertSettlement(const QJsonObject& obj);
     void UpdateSettlement(const QJsonObject& obj);

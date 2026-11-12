@@ -466,6 +466,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteLockedDeny, this, &MainWindow::RLeafDeleteLockedDeny);
     connect(WebSocket::Instance(), &WebSocket::SOrderSearch, this, &MainWindow::ROrderSearch);
     connect(WebSocket::Instance(), &WebSocket::SEntrySearch, this, &MainWindow::REntrySearch);
+    connect(WebSocket::Instance(), &WebSocket::SReimbursementSync, this, &MainWindow::RReimbursementSync);
 }
 
 void MainWindow::SetIcon() const
