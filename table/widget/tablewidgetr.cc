@@ -154,6 +154,8 @@ void TableWidgetR::on_pushButtonInsert_clicked()
 
 void TableWidgetR::on_pushButtonSave_clicked()
 {
+    Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft);
+
     if (node_->sync_state == SyncState::kUpdating) {
         utils::ShowMessage(
             QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
@@ -162,8 +164,10 @@ void TableWidgetR::on_pushButtonSave_clicked()
 
     model_->Purify();
 
-    if (!model_->HasPendingUpdate() && pending_update_.isEmpty())
+    if (!model_->HasPendingUpdate() && pending_update_.isEmpty()) {
+        ui->pushButtonApprove->setEnabled(finance_permission_ & finance_permission::kApprove);
         return;
+    }
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kReimbursement));
