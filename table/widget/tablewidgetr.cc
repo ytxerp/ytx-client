@@ -7,13 +7,14 @@
 #include "ui_tablewidgetr.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/websocket.h"
+#include "workspace/sectionpermissions.h"
 
-TableWidgetR::TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int finance_permission, QWidget* parent)
+TableWidgetR::TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int permission, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetR)
     , node_ { node }
     , model_ { qobject_cast<TableModelR*>(model) }
-    , finance_permission_ { finance_permission }
+    , permission_ { permission }
     , node_id_ { node->id }
     , config_ { section_config }
 {
@@ -34,26 +35,31 @@ TableWidgetR::~TableWidgetR()
     delete ui;
 }
 
-void TableWidgetR::ApproveSucceeded(int version) { }
-
-void TableWidgetR::UnapproveSucceeded(int version) { }
-
 void TableWidgetR::SyncSucceeded(int version)
 {
     qDebug() << Q_FUNC_INFO;
+
     model_->SyncSucceeded();
-
     pending_update_ = QJsonObject();
-    node_->version = version;
 
+    node_->version = version;
     node_->sync_state = SyncState::kSynced;
 
     UpdateButtons();
 }
 
-void TableWidgetR::PostSucceeded(int version) { }
+void TableWidgetR::StatusSucceeded(int status, int version)
+{
+    qDebug() << Q_FUNC_INFO;
 
-void TableWidgetR::UnpostSucceeded(int version) { }
+    Q_ASSERT(status >= std::to_underlying(ReimbursementStatus::kDraft) && status <= std::to_underlying(ReimbursementStatus::kPosted));
+
+    node_->reimbursement_status = static_cast<ReimbursementStatus>(status);
+    node_->version = version;
+    node_->sync_state = SyncState::kSynced;
+
+    UpdateButtons();
+}
 
 void TableWidgetR::PermissionDenied()
 {
@@ -103,18 +109,24 @@ void TableWidgetR::InitData()
 
 void TableWidgetR::UpdateButtons()
 {
-    const bool ready { node_->sync_state == SyncState::kSynced && !model_->HasPendingUpdate() && pending_update_.isEmpty() };
+    const bool synced { node_->sync_state == SyncState::kSynced };
+    const bool draft { node_->reimbursement_status == ReimbursementStatus::kDraft };
+    const bool pending { model_->HasPendingUpdate() || !pending_update_.isEmpty() };
+    const bool ready { synced && !pending };
 
-    ui->pushButtonApprove->setEnabled(
-        ready && node_->reimbursement_status == ReimbursementStatus::kDraft && (finance_permission_ & finance_permission::kApprove));
+    ui->pushButtonSave->setEnabled(synced && draft && pending);
+
+    ui->pushButtonApprove->setEnabled(ready && draft && (permission_ & reimbursement_permission::kApprove));
 
     ui->pushButtonUnapprove->setEnabled(
-        ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (finance_permission_ & finance_permission::kUnapprove));
+        ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
 
-    ui->pushButtonPost->setEnabled(ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (finance_permission_ & finance_permission::kPost));
+    ui->pushButtonPost->setEnabled(ready && node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kPost));
 
-    ui->pushButtonUnpost->setEnabled(
-        ready && node_->reimbursement_status == ReimbursementStatus::kPosted && (finance_permission_ & finance_permission::kUnpost));
+    ui->pushButtonUnpost->setEnabled(ready && node_->reimbursement_status == ReimbursementStatus::kPosted && (permission_ & reimbursement_permission::kUnpost));
+
+    ui->dateTimeEdit->setEnabled(draft);
+    ui->lineEditDescription->setEnabled(draft);
 }
 
 void TableWidgetR::BuildNodeInsert(QJsonObject& message)
@@ -154,7 +166,8 @@ void TableWidgetR::on_pushButtonInsert_clicked()
 
 void TableWidgetR::on_pushButtonSave_clicked()
 {
-    Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft);
+    if (node_->reimbursement_status != ReimbursementStatus::kDraft)
+        return;
 
     if (node_->sync_state == SyncState::kUpdating) {
         utils::ShowMessage(
@@ -165,7 +178,7 @@ void TableWidgetR::on_pushButtonSave_clicked()
     model_->Purify();
 
     if (!model_->HasPendingUpdate() && pending_update_.isEmpty()) {
-        ui->pushButtonApprove->setEnabled(finance_permission_ & finance_permission::kApprove);
+        ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove);
         return;
     }
 
@@ -193,11 +206,37 @@ void TableWidgetR::on_pushButtonSave_clicked()
     node_->sync_state = SyncState::kUpdating;
 }
 
-void TableWidgetR::on_pushButtonApprove_clicked() { }
+void TableWidgetR::on_pushButtonApprove_clicked()
+{
+    Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft && (permission_ & reimbursement_permission::kApprove));
+    Q_ASSERT(!model_->HasPendingUpdate() && pending_update_.isEmpty());
+
+    if (node_->sync_state == SyncState::kUpdating) {
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+        return;
+    }
+
+    WebSocket::Instance()->SendMessage(WsKey::kReimbursementApprove, BuildStatusMessage());
+    node_->sync_state = SyncState::kUpdating;
+}
 
 void TableWidgetR::on_pushButtonPost_clicked() { }
 
-void TableWidgetR::on_pushButtonUnapprove_clicked() { }
+void TableWidgetR::on_pushButtonUnapprove_clicked()
+{
+    Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
+    Q_ASSERT(!model_->HasPendingUpdate() && pending_update_.isEmpty());
+
+    if (node_->sync_state == SyncState::kUpdating) {
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+        return;
+    }
+
+    WebSocket::Instance()->SendMessage(WsKey::kReimbursementUnapprove, BuildStatusMessage());
+    node_->sync_state = SyncState::kUpdating;
+}
 
 void TableWidgetR::on_pushButtonUnpost_clicked() { }
 
@@ -231,4 +270,16 @@ void TableWidgetR::on_lineEditDescription_textEdited(const QString& arg1)
         pending_update_.insert(kDescription, arg1);
 
     UpdateButtons();
+}
+
+QJsonObject TableWidgetR::BuildStatusMessage() const
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(Section::kReimbursement));
+    message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, node_->version);
+    message.insert(kStatus, std::to_underlying(node_->reimbursement_status));
+    message.insert(kInitialTotal, QString::number(node_->initial_total, 'f', numeric_const::kDecimalPlaces4));
+
+    return message;
 }

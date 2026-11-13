@@ -296,7 +296,7 @@ void TreeModel::UpdateDirectionRule(QUuid node_id, bool direction_rule, int vers
     emit SSyncValue();
 }
 
-void TreeModel::UpdateStatus(QUuid node_id, int status, int version)
+void TreeModel::UpdateNodeStatus(QUuid node_id, int status, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())

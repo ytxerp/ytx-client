@@ -133,6 +133,7 @@ enum class WsKey : uint16_t {
     kEntryLockPermissionDeny = 1750,
     kEntriesLockPermissionDeny = 1751,
     kLeafDeleteLockedDeny = 1752,
+    kPermissionDenyReimbursement = 1760,
 
     // --- Profile ---
     kAccountNameUpdate = 1800,
@@ -414,5 +415,7 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kReimbursementUnpost";
     case WsKey::kReimbursementNodeUpdate:
         return "kReimbursementNodeUpdate";
+    case WsKey::kPermissionDenyReimbursement:
+        return "kReimbursementPermissionDeny";
     }
 }

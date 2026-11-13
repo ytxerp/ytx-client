@@ -27,7 +27,7 @@ QVariant TreeModelR::data(const QModelIndex& index, int role) const
     case NodeEnumR::kIssuedTime:
         return d_node->issued_time;
     case NodeEnumR::kStatus:
-        return std::to_underlying(d_node->status);
+        return std::to_underlying(d_node->reimbursement_status);
     case NodeEnumR::kCode:
         return d_node->code;
     case NodeEnumR::kDescription:
@@ -56,13 +56,16 @@ bool TreeModelR::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeR*>(node) };
+    const NodeEnumR column { index.column() };
+
+    if (d_node->reimbursement_status != ReimbursementStatus::kDraft && column != NodeEnumR::kTag && column != NodeEnumR::kColor)
+        return false;
 
     const QUuid id { node->id };
     auto& update { pending_updates_[id] };
     update.node = node;
     auto& changes { update.changes };
-
-    const NodeEnumR column { index.column() };
 
     switch (column) {
     case NodeEnumR::kTag:
@@ -75,8 +78,6 @@ bool TreeModelR::setData(const QModelIndex& index, const QVariant& value, int ro
         node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumR::kDescription:
-        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
-        break;
     case NodeEnumR::kName:
     case NodeEnumR::kIssuedTime:
     case NodeEnumR::kStatus:
@@ -140,8 +141,6 @@ Qt::ItemFlags TreeModelR::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;
     case NodeEnumR::kDescription:
-        flags |= Qt::ItemIsEditable;
-        break;
     case NodeEnumR::kCode:
     case NodeEnumR::kIssuedTime:
     case NodeEnumR::kStatus:
@@ -257,20 +256,37 @@ void TreeModelR::UpdateName(QUuid node_id, const QString& name, int version)
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
-void TreeModelR::HandleStatusChanged(QUuid node_id, ReimbursementStatus value)
+void TreeModelR::SyncStatus(QUuid node_id, int status, int version)
 {
-    auto* d_node { DerivedPtr<NodeR>(node_hash_.value(node_id)) };
-    if (!d_node)
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
         return;
 
-    const int coefficient { value == ReimbursementStatus::kDraft ? -1 : 1 };
+    auto* node { static_cast<NodeR*>(index.internalPointer()) };
+    if (!node)
+        return;
+
+    const auto old_status { node->reimbursement_status };
+    const auto new_status { static_cast<ReimbursementStatus>(status) };
+
+    node->reimbursement_status = new_status;
+    node->version = version;
+    node->sync_state = SyncState::kSynced;
+
+    // Refresh the view first, as the following status check may return early.
+    const int row { index.row() };
+    const int column { node::StatusColumn(section_) };
+    EmitDataChanged(row, row, column, column, index.parent());
+
+    const int coefficient { (old_status == ReimbursementStatus::kDraft ? 1 : 0) - (new_status == ReimbursementStatus::kDraft ? 1 : 0) };
+    if (coefficient == 0)
+        return;
 
     const node::Delta delta {
-        .initial = coefficient * d_node->initial_total,
+        .initial = coefficient * node->initial_total,
     };
 
-    const auto ids { UpdateAncestorTotal(d_node, delta) };
-
+    const auto ids { UpdateAncestorTotal(node, delta) };
     EmitNumericChanged(ids);
 }
 

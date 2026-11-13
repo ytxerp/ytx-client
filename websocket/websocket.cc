@@ -256,6 +256,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kReimbursementInsert] = [this](const QJsonObject& obj) { InsertReimbursement(obj); };
     handler_obj_[WsKey::kReimbursementNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kReimbursementUpdate] = [this](const QJsonObject& obj) { UpdateReimbursement(obj); };
+    handler_obj_[WsKey::kReimbursementApprove] = [this](const QJsonObject& obj) { SyncReimbursementStatus(obj); };
+    handler_obj_[WsKey::kReimbursementUnapprove] = [this](const QJsonObject& obj) { SyncReimbursementStatus(obj); };
+    handler_obj_[WsKey::kPermissionDenyReimbursement] = [this](const QJsonObject& obj) { OnPermissionDenyReimbursement(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -1170,7 +1173,7 @@ void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
     Q_ASSERT(tree_model);
 
-    tree_model->UpdateStatus(node_id, status, version);
+    tree_model->UpdateNodeStatus(node_id, status, version);
 }
 
 void WebSocket::UpdateNodeName(const QJsonObject& obj)
@@ -1367,6 +1370,32 @@ void WebSocket::UpdateReimbursement(const QJsonObject& obj)
     if (session_id == session_id_) {
         emit SReimbursementSync(section, node_id, version);
     }
+}
+
+void WebSocket::SyncReimbursementStatus(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const int version { obj.value(kVersion).toInt() };
+    const int status { obj.value(kStatus).toInt() };
+
+    auto model { tree_model_hash_.value(section) };
+    Q_ASSERT(model != nullptr);
+
+    model->SyncStatus(node_id, status, version);
+
+    if (session_id == session_id_) {
+        emit SReimbursementStatus(section, node_id, status, version);
+    }
+}
+
+void WebSocket::OnPermissionDenyReimbursement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { obj.value(kId).toString() };
+
+    emit SPermissionDenyReimbursement(section, widget_id);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)

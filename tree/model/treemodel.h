@@ -104,11 +104,17 @@ public:
     void MergeNode(QUuid source_id, QUuid target_id);
     void MoveNode(QUuid ancestor, QUuid descendant);
     void UpdateDirectionRule(QUuid node_id, bool direction_rule, int version);
-    void UpdateStatus(QUuid node_id, int status, int version);
     void DeleteNode(QUuid node_id);
     void UpdateNode(QUuid node_id, const QJsonObject& update, int version);
 
     virtual void UpdateName(QUuid node_id, const QString& name, int version);
+    virtual void UpdateNodeStatus(QUuid node_id, int status, int version);
+    virtual void SyncStatus(QUuid node_id, int status, int version)
+    {
+        Q_UNUSED(node_id)
+        Q_UNUSED(status)
+        Q_UNUSED(version)
+    }
 
     // Ytx's
     double InitialTotal(QUuid node_id) const { return Value(node_id, &Node::initial_total); }

@@ -78,6 +78,11 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetOperation::kPeriodClose), tr("Period Close") },
         { std::to_underlying(TargetOperation::kLock), tr("Lock") },
         { std::to_underlying(TargetOperation::kUnlock), tr("Unlock") },
+        { std::to_underlying(TargetOperation::kApprove), tr("Approve") },
+        { std::to_underlying(TargetOperation::kUnapprove), tr("Unapprove") },
+        { std::to_underlying(TargetOperation::kPost), tr("Post") },
+        { std::to_underlying(TargetOperation::kUnpost), tr("Unpost") },
+
     };
 
     audit_info_.target_field_map = {

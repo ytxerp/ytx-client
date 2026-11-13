@@ -100,9 +100,11 @@ signals:
     void SEntrySelect(Section section, QUuid node_id, QUuid entry_id);
 
     void SReimbursementSync(Section section, QUuid node_id, int version);
+    void SReimbursementStatus(Section section, QUuid node_id, int status, int version);
 
     void SLeafDeleteLockedDeny(Section section, QUuid node_id);
     void SOrderPermissionDeny(Section section, QUuid widget_id);
+    void SPermissionDenyReimbursement(Section section, QUuid widget_id);
     void SSettlementPermissionDeny(Section section, QUuid widget_id);
 
     // Targeted replies, routed by widget_id to the dialog that sent the request.
@@ -232,6 +234,8 @@ private:
 
     void InsertReimbursement(const QJsonObject& obj);
     void UpdateReimbursement(const QJsonObject& obj);
+    void SyncReimbursementStatus(const QJsonObject& obj);
+    void OnPermissionDenyReimbursement(const QJsonObject& obj);
 
     void InsertSettlement(const QJsonObject& obj);
     void UpdateSettlement(const QJsonObject& obj);

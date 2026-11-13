@@ -136,3 +136,33 @@ void MainWindow::RReimbursementSync(Section section, QUuid node_id, int version)
         d_widget->SyncSucceeded(version);
     }
 }
+
+void MainWindow::RReimbursementStatus(Section section, QUuid node_id, int status, int version)
+{
+    auto* sc { GetSectionContext(section) };
+
+    auto widget { sc->widget_hash.value(node_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetR*>(ptr));
+        auto* d_widget { static_cast<TableWidgetR*>(ptr) };
+
+        d_widget->StatusSucceeded(status, version);
+    }
+}
+
+void MainWindow::RPermissionDenyReimbursement(Section section, QUuid widget_id)
+{
+    auto* sc { GetSectionContext(section) };
+
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetR*>(ptr));
+        auto* d_widget { static_cast<TableWidgetR*>(ptr) };
+
+        d_widget->PermissionDenied();
+    }
+}

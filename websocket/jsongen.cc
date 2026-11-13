@@ -535,23 +535,4 @@ QJsonObject LockEntries(Section section, QUuid node_id, bool is_locked)
     return message;
 }
 
-QJsonObject ReimbursementSecondary(QUuid widget_id, QUuid reimbursement_id)
-{
-    QJsonObject message {};
-
-    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kReimbursementId, reimbursement_id.toString(QUuid::WithoutBraces));
-
-    return message;
-}
-
-QJsonObject ReimbursementDelete(QUuid reimbursement_id, int version)
-{
-    QJsonObject message {};
-
-    message.insert(kReimbursementId, reimbursement_id.toString(QUuid::WithoutBraces));
-    message.insert(kVersion, version);
-    return message;
-}
-
 }

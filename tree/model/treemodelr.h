@@ -41,7 +41,7 @@ public:
 
     void SyncTree(const QJsonObject& data) override;
     void UpdateName(QUuid node_id, const QString& name, int version) override;
-    void HandleStatusChanged(QUuid node_id, ReimbursementStatus value);
+    void SyncStatus(QUuid node_id, int status, int version) override;
 
 protected:
     void RegisterNode(Node* node) override;

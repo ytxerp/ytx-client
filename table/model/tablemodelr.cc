@@ -2,10 +2,10 @@
 
 #include <QJsonArray>
 
-#include "component/constant.h"
 #include "component/constantstring.h"
 #include "global/entrypool.h"
 #include "utils/templateutils.h"
+#include "workspace/sectionpermissions.h"
 
 TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, int finance_permission, QObject* parent)
     : TableModel { arg, parent }
@@ -330,7 +330,7 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
     switch (column) {
     case EntryEnumR::kDebitNode:
     case EntryEnumR::kCreditNode:
-        if (finance_permission_ & (finance_permission::kApprove | finance_permission::kUnapprove))
+        if (finance_permission_ & (reimbursement_permission::kApprove | reimbursement_permission::kUnapprove))
             flags |= Qt::ItemIsEditable;
         break;
     case EntryEnumR::kDescription:

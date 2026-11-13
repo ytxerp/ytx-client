@@ -31,14 +31,11 @@ class TableWidgetR final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int finance_permission, QWidget* parent = nullptr);
+    explicit TableWidgetR(TableModel* model, NodeR* node, CSectionConfig& section_config, int permission, QWidget* parent = nullptr);
     ~TableWidgetR() override;
 
-    void ApproveSucceeded(int version);
-    void UnapproveSucceeded(int version);
     void SyncSucceeded(int version);
-    void PostSucceeded(int version);
-    void UnpostSucceeded(int version);
+    void StatusSucceeded(int status, int version);
     void PermissionDenied();
 
     TableModel* Model() const override { return model_; }
@@ -67,6 +64,7 @@ private:
     void UpdateButtons();
 
     void BuildNodeInsert(QJsonObject& message);
+    QJsonObject BuildStatusMessage() const;
 
 private:
     Ui::TableWidgetR* ui;
@@ -76,7 +74,7 @@ private:
 
     QJsonObject pending_update_ {};
 
-    const int finance_permission_ {};
+    const int permission_ {};
     const QUuid node_id_ {};
 
     CSectionConfig& config_ {};
