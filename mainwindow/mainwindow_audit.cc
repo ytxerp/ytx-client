@@ -81,7 +81,7 @@ void MainWindow::InitAuditInfo()
     };
 
     audit_info_.target_field_map = {
-        { std::to_underlying(TargetField::kNone), QString() },
+        { std::to_underlying(TargetField::kNone), "-" },
         { std::to_underlying(TargetField::kName), tr("Name") },
         { std::to_underlying(TargetField::kDirectionRule), tr("Direction Rule") },
         { std::to_underlying(TargetField::kNumeric), tr("Numeric") },
