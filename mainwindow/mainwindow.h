@@ -191,8 +191,8 @@ private slots:
     void RSaveOrder(Section section, QUuid node_id, int version);
     void RDenyOperation();
     void RPermissionDeny();
-    void ROrderPermissionDeny(Section section, QUuid widget_id);
-    void RSettlementPermissionDeny(Section section, QUuid widget_id);
+    void RPermissionDenyOrder(Section section, QUuid widget_id);
+    void RPermissionDenySettlement(Section section, QUuid widget_id);
 
     void RReimbursementSync(Section section, QUuid node_id, int version);
     void RReimbursementStatus(Section section, QUuid node_id, int status, int version);

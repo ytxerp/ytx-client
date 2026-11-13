@@ -127,11 +127,11 @@ enum class WsKey : uint16_t {
     // --- Misc (1700-1799) ---
     kOperationDeny = 1700,
     kPermissionDeny = 1710,
-    kOrderPermissionDeny = 1720,
-    kSettlementPermissionDeny = 1730,
-    kNodePermissionDeny = 1740,
-    kEntryLockPermissionDeny = 1750,
-    kEntriesLockPermissionDeny = 1751,
+    kPermissionDenyOrder = 1720,
+    kPermissionDenySettlement = 1730,
+    kPermissionDenyNode = 1740,
+    kPermissionDenyEntry = 1750,
+    kPermissionDenyEntries = 1751,
     kLeafDeleteLockedDeny = 1752,
     kPermissionDenyReimbursement = 1760,
 
@@ -323,12 +323,12 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kEntryNumericUpdate";
     case WsKey::kEntryLockedUpdate:
         return "kEntryLockedUpdate";
-    case WsKey::kEntryLockPermissionDeny:
-        return "kEntryLockedPermissionDeny";
+    case WsKey::kPermissionDenyEntry:
+        return "kPermissionDenyEntry";
     case WsKey::kEntriesLock:
         return "kEntriesLock";
-    case WsKey::kEntriesLockPermissionDeny:
-        return "kEntriesLockPermissionDeny";
+    case WsKey::kPermissionDenyEntries:
+        return "kPermissionDenyEntries";
     case WsKey::kPartnerEntryUpdate:
         return "kPartnerEntryUpdate";
 
@@ -351,12 +351,12 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOperationDeny";
     case WsKey::kPermissionDeny:
         return "kPermissionDeny";
-    case WsKey::kOrderPermissionDeny:
-        return "kOrderPermissionDeny";
-    case WsKey::kSettlementPermissionDeny:
-        return "kSettlementPermissionDeny";
-    case WsKey::kNodePermissionDeny:
-        return "kNodePermissionDeny";
+    case WsKey::kPermissionDenyOrder:
+        return "kPermissionDenyOrder";
+    case WsKey::kPermissionDenySettlement:
+        return "kPermissionDenySettlement";
+    case WsKey::kPermissionDenyNode:
+        return "kPermissionDenyNode";
 
     case WsKey::kAccountNameUpdate:
         return "kAccountNameUpdate";
@@ -416,6 +416,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kReimbursementNodeUpdate:
         return "kReimbursementNodeUpdate";
     case WsKey::kPermissionDenyReimbursement:
-        return "kReimbursementPermissionDeny";
+        return "kPermissionDenyReimbursement";
     }
 }

@@ -130,7 +130,7 @@ void MainWindow::RSettlementSecondary(Section section, QUuid widget_id, const QJ
     model->Rebuild(array);
 }
 
-void MainWindow::RSettlementPermissionDeny(Section section, QUuid widget_id)
+void MainWindow::RPermissionDenySettlement(Section section, QUuid widget_id)
 {
     auto* sc { GetSectionContext(section) };
 

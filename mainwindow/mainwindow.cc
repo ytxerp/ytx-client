@@ -448,8 +448,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SOrderSave, this, &MainWindow::RSaveOrder);
     connect(WebSocket::Instance(), &WebSocket::SOperationDeny, this, &MainWindow::RDenyOperation);
     connect(WebSocket::Instance(), &WebSocket::SPermissionDeny, this, &MainWindow::RPermissionDeny);
-    connect(WebSocket::Instance(), &WebSocket::SOrderPermissionDeny, this, &MainWindow::ROrderPermissionDeny);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementPermissionDeny, this, &MainWindow::RSettlementPermissionDeny);
+    connect(WebSocket::Instance(), &WebSocket::SPermissionDenyOrder, this, &MainWindow::RPermissionDenyOrder);
+    connect(WebSocket::Instance(), &WebSocket::SPermissionDenySettlement, this, &MainWindow::RPermissionDenySettlement);
     connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RNodeSelect);
     connect(WebSocket::Instance(), &WebSocket::SNodeLocate, this, &MainWindow::RNodeLocate);
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
@@ -468,7 +468,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SEntrySearch, this, &MainWindow::REntrySearch);
     connect(WebSocket::Instance(), &WebSocket::SReimbursementSync, this, &MainWindow::RReimbursementSync);
     connect(WebSocket::Instance(), &WebSocket::SReimbursementStatus, this, &MainWindow::RReimbursementStatus);
-    connect(WebSocket::Instance(), &WebSocket::SPermissionDenyReimbursement, this, &MainWindow::ROrderPermissionDeny);
+    connect(WebSocket::Instance(), &WebSocket::SPermissionDenyReimbursement, this, &MainWindow::RPermissionDenyReimbursement);
 }
 
 void MainWindow::SetIcon() const

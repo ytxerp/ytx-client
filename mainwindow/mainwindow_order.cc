@@ -155,7 +155,7 @@ void MainWindow::RPermissionDeny()
         QMessageBox::Information, tr("Permission Denied"), tr("You do not have permission to perform this operation."), time_const::kAutoCloseMs);
 }
 
-void MainWindow::ROrderPermissionDeny(Section section, QUuid widget_id)
+void MainWindow::RPermissionDenyOrder(Section section, QUuid widget_id)
 {
     auto* sc { GetSectionContext(section) };
 

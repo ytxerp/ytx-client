@@ -184,9 +184,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kSettlementViewFetch] = [this](const QJsonObject& obj) { FetchSettlementView(obj); };
     handler_obj_[WsKey::kOperationDeny] = [this](const QJsonObject& /*obj*/) { DenyOperation(); };
     handler_obj_[WsKey::kPermissionDeny] = [this](const QJsonObject& /*obj*/) { OnPermissionDeny(); };
-    handler_obj_[WsKey::kOrderPermissionDeny] = [this](const QJsonObject& obj) { OnOrderPermissionDeny(obj); };
-    handler_obj_[WsKey::kSettlementPermissionDeny] = [this](const QJsonObject& obj) { OnSettlementPermissionDeny(obj); };
-    handler_obj_[WsKey::kNodePermissionDeny] = [this](const QJsonObject& obj) { OnNodePermissionDeny(obj); };
+    handler_obj_[WsKey::kPermissionDenyOrder] = [this](const QJsonObject& obj) { OnPermissionDenyOrder(obj); };
+    handler_obj_[WsKey::kPermissionDenySettlement] = [this](const QJsonObject& obj) { OnPermissionDenySettlement(obj); };
+    handler_obj_[WsKey::kPermissionDenyNode] = [this](const QJsonObject& obj) { OnPermissionDenyNode(obj); };
     handler_obj_[WsKey::kTreeSync] = [this](const QJsonObject& obj) { SyncTree(obj); };
 
     handler_obj_[WsKey::kTagSync] = [this](const QJsonObject& obj) { SyncTag(obj); };
@@ -248,9 +248,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kPartnerEntryInsert] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
 
     handler_obj_[WsKey::kEntryLockedUpdate] = [this](const QJsonObject& obj) { UpdateEntryLocked(obj); };
-    handler_obj_[WsKey::kEntryLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntryLockPermissionDeny(obj); };
+    handler_obj_[WsKey::kPermissionDenyEntry] = [this](const QJsonObject& obj) { OnPermissionDenyEntry(obj); };
     handler_obj_[WsKey::kEntriesLock] = [this](const QJsonObject& obj) { OnEntriesLock(obj); };
-    handler_obj_[WsKey::kEntriesLockPermissionDeny] = [this](const QJsonObject& obj) { OnEntriesLockPermissionDeny(obj); };
+    handler_obj_[WsKey::kPermissionDenyEntries] = [this](const QJsonObject& obj) { OnPermissionDenyEntries(obj); };
     handler_obj_[WsKey::kLeafDeleteLockedDeny] = [this](const QJsonObject& obj) { OnLeafDeleteLockedDeny(obj); };
 
     handler_obj_[WsKey::kReimbursementInsert] = [this](const QJsonObject& obj) { InsertReimbursement(obj); };
@@ -417,23 +417,23 @@ void WebSocket::OnPermissionDeny() { emit SPermissionDeny(); }
 
 void WebSocket::FinishTreeSync() { emit STreeSyncFinish(); }
 
-void WebSocket::OnOrderPermissionDeny(const QJsonObject& obj)
+void WebSocket::OnPermissionDenyOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { obj.value(kId).toString() };
 
-    emit SOrderPermissionDeny(section, widget_id);
+    emit SPermissionDenyOrder(section, widget_id);
 }
 
-void WebSocket::OnSettlementPermissionDeny(const QJsonObject& obj)
+void WebSocket::OnPermissionDenySettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { obj.value(kId).toString() };
 
-    emit SSettlementPermissionDeny(section, widget_id);
+    emit SPermissionDenySettlement(section, widget_id);
 }
 
-void WebSocket::OnNodePermissionDeny(const QJsonObject& obj)
+void WebSocket::OnPermissionDenyNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid node_id { obj.value(kId).toString() };
@@ -1009,7 +1009,7 @@ void WebSocket::UpdateEntryLocked(const QJsonObject& obj)
     entry_hub->UpdateEntryLocked(entry_id, version, is_locked);
 }
 
-void WebSocket::OnEntryLockPermissionDeny(const QJsonObject& obj)
+void WebSocket::OnPermissionDenyEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -1032,7 +1032,7 @@ void WebSocket::OnEntriesLock(const QJsonObject& obj)
     entry_hub->LockEntries(node_id, is_locked);
 }
 
-void WebSocket::OnEntriesLockPermissionDeny(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
+void WebSocket::OnPermissionDenyEntries(const QJsonObject& /*obj*/) { emit SPermissionDeny(); }
 
 void WebSocket::OnLeafDeleteLockedDeny(const QJsonObject& obj)
 {

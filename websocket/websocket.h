@@ -103,9 +103,9 @@ signals:
     void SReimbursementStatus(Section section, QUuid node_id, int status, int version);
 
     void SLeafDeleteLockedDeny(Section section, QUuid node_id);
-    void SOrderPermissionDeny(Section section, QUuid widget_id);
+    void SPermissionDenyOrder(Section section, QUuid widget_id);
     void SPermissionDenyReimbursement(Section section, QUuid widget_id);
-    void SSettlementPermissionDeny(Section section, QUuid widget_id);
+    void SPermissionDenySettlement(Section section, QUuid widget_id);
 
     // Targeted replies, routed by widget_id to the dialog that sent the request.
     // These dialogs are stored in the shared MainWindow::widget_hash_ (not tied
@@ -196,9 +196,9 @@ private:
     void DenyOperation();
     void OnPermissionDeny();
     void FinishTreeSync();
-    void OnOrderPermissionDeny(const QJsonObject& obj);
-    void OnSettlementPermissionDeny(const QJsonObject& obj);
-    void OnNodePermissionDeny(const QJsonObject& obj);
+    void OnPermissionDenyOrder(const QJsonObject& obj);
+    void OnPermissionDenySettlement(const QJsonObject& obj);
+    void OnPermissionDenyNode(const QJsonObject& obj);
 
 private:
     void SyncSharedConfig(const QJsonArray& arr);
@@ -255,9 +255,9 @@ private:
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);
     void UpdateEntryLocked(const QJsonObject& obj);
-    void OnEntryLockPermissionDeny(const QJsonObject& obj);
+    void OnPermissionDenyEntry(const QJsonObject& obj);
     void OnEntriesLock(const QJsonObject& obj);
-    void OnEntriesLockPermissionDeny(const QJsonObject& obj);
+    void OnPermissionDenyEntries(const QJsonObject& obj);
     void OnLeafDeleteLockedDeny(const QJsonObject& obj);
 
 private:
