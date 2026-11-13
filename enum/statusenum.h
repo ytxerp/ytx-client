@@ -30,7 +30,7 @@
 enum class NodeStatus { kInactive = 0, kActive = 1 };
 
 /** @brief Workflow status of an order node. */
-enum class OrderStatus { kUnreleased = 0, kReleased, kRecalled };
+enum class OrderStatus { kDraft = 0, kReleased, kRecalled };
 
 /** @brief Workflow status of a reimbursement node. */
 enum class ReimbursementStatus { kDraft, kApproved, kPosted };

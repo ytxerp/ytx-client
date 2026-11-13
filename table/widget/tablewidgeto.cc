@@ -231,14 +231,14 @@ void TableWidgetO::InitData(const NodeO* node)
 
 void TableWidgetO::LockWidgets(OrderStatus value)
 {
-    const bool is_unreleased { value == OrderStatus::kUnreleased };
+    const bool is_draft { value == OrderStatus::kDraft };
     const bool is_released { value == OrderStatus::kReleased };
 
-    ui->comboPartner->setReadOnly(!is_unreleased);
+    ui->comboPartner->setReadOnly(!is_draft);
     ui->comboEmployee->setReadOnly(is_released);
 
-    ui->rBtnRO->setEnabled(is_unreleased);
-    ui->rBtnFO->setEnabled(is_unreleased);
+    ui->rBtnRO->setEnabled(is_draft);
+    ui->rBtnFO->setEnabled(is_draft);
 
     ui->rBtnIS->setEnabled(!is_released);
     ui->rBtnMS->setEnabled(!is_released);
@@ -336,7 +336,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (node_->order_status != OrderStatus::kUnreleased)
+    if (node_->order_status != OrderStatus::kDraft)
         return;
 
     node_->direction_rule = static_cast<bool>(id);
@@ -508,12 +508,12 @@ void TableWidgetO::SaveOrder()
     if (node_->sync_state == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
 
-        const auto key { node_->order_status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
+        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
         WebSocket::Instance()->SendMessage(key, order_message);
     }
 
     if (node_->sync_state == SyncState::kCreating) {
-        node_->order_status = OrderStatus::kUnreleased; // Same as default
+        node_->order_status = OrderStatus::kDraft; // Same as default
 
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
@@ -548,7 +548,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         BuildNodeUpdate(order_message);
 
-        const auto key { node_->order_status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
+        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
         WebSocket::Instance()->SendMessage(key, order_message);
     }
 
