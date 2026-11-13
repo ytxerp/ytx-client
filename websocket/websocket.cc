@@ -11,7 +11,6 @@
 #include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
-#include "tree/model/treemodelr.h"
 #include "utils/mainwindowutils.h"
 #include "workspace/sectionpermissions.h"
 
@@ -223,13 +222,13 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryRateUpdate] = [this](const QJsonObject& obj) { UpdateEntryRate(obj); };
     handler_obj_[WsKey::kEntryNumericUpdate] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[WsKey::kLeafDeleteAllow] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
-    handler_obj_[WsKey::kOrderInsertSave] = [this](const QJsonObject& obj) { InsertOrder(obj, false); };
-    handler_obj_[WsKey::kUnreleasedOrderSave] = [this](const QJsonObject& obj) { SaveOrder(obj); };
-    handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj, true); };
-    handler_obj_[WsKey::kUnreleasedOrderRelease] = [this](const QJsonObject& obj) { ReleaseOrder(obj); };
-    handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { RecallOrder(obj); };
-    handler_obj_[WsKey::kRecalledOrderRelease] = [this](const QJsonObject& obj) { ReleaseOrder(obj); };
-    handler_obj_[WsKey::kRecalledOrderSave] = [this](const QJsonObject& obj) { SaveOrder(obj); };
+    handler_obj_[WsKey::kOrderInsert] = [this](const QJsonObject& obj) { InsertOrder(obj); };
+    handler_obj_[WsKey::kUnreleasedOrderSave] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
+    handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj); };
+    handler_obj_[WsKey::kUnreleasedOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
+    handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
+    handler_obj_[WsKey::kRecalledOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
+    handler_obj_[WsKey::kRecalledOrderSave] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
@@ -1199,42 +1198,7 @@ void WebSocket::UpdateAccountUsername(const QJsonObject& obj) { emit SAccountUse
 
 void WebSocket::UpdateAccountRole(const QJsonObject& /*obj*/) { emit SAccountRoleUpdate(); }
 
-void WebSocket::ReleaseOrder(const QJsonObject& obj)
-{
-    const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const auto node_update { obj.value(kNodeUpdate).toObject() };
-    const int version { obj.value(kVersion).toInt() };
-
-    auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
-    Q_ASSERT(order_model != nullptr);
-
-    {
-        const NodeUnit unit { node_update.value(kUnit).toInt() };
-        if (unit == NodeUnit::OMonthly) {
-            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
-            Q_ASSERT(partner_model != nullptr);
-
-            const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
-            const double initial_total { node_update.value(kInitialTotal).toString().toDouble() };
-
-            partner_model->UpdateAmount(partner_id, initial_total);
-        }
-    }
-
-    if (!order_model->Contains(node_id))
-        return;
-
-    if (session_id == session_id_) {
-        emit SOrderRelease(section, node_id, version);
-    }
-
-    order_model->UpdateNode(node_id, node_update, version);
-    order_model->HandleStatusChanged(node_id, OrderStatus::kReleased);
-}
-
-void WebSocket::SaveOrder(const QJsonObject& obj)
+void WebSocket::UpdateOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -1255,7 +1219,7 @@ void WebSocket::SaveOrder(const QJsonObject& obj)
     order_model->UpdateNode(node_id, node_update, version);
 }
 
-void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
+void WebSocket::InsertOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -1274,29 +1238,11 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
 
     if (session_id == session_id_) {
         emit SNodeSelect(section, descendant);
-
-        if (is_released)
-            emit SOrderRelease(section, node_id, version);
-        else
-            emit SOrderSave(section, node_id, version);
-    }
-
-    if (is_released) {
-        const NodeUnit unit { node_obj.value(kUnit).toInt() };
-
-        if (unit == NodeUnit::OMonthly) {
-            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
-            Q_ASSERT(partner_model != nullptr);
-
-            const auto partner_id { QUuid(node_obj.value(kPartnerId).toString()) };
-            const double initial_total { node_obj.value(kInitialTotal).toString().toDouble() };
-
-            partner_model->UpdateAmount(partner_id, initial_total);
-        }
+        emit SOrderSave(section, node_id, version);
     }
 }
 
-void WebSocket::RecallOrder(const QJsonObject& obj)
+void WebSocket::SyncOrderStatus(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -1304,6 +1250,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const int version { obj.value(kVersion).toInt() };
     const NodeUnit unit { node_update.value(kUnit).toInt() };
+    const int status { obj.value(kStatus).toInt() };
 
     auto* order_model = static_cast<TreeModelO*>(tree_model_hash_.value(section).data());
     Q_ASSERT(order_model != nullptr);
@@ -1324,11 +1271,11 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
         return;
 
     if (session_id == session_id_) {
-        emit SOrderRecall(section, node_id, version);
+        emit SOrderStatus(section, node_id, status, version);
     }
 
     order_model->UpdateNode(node_id, node_update, version);
-    order_model->HandleStatusChanged(node_id, OrderStatus::kRecalled);
+    order_model->SyncStatus(node_id, status, version);
 }
 
 void WebSocket::InsertReimbursement(const QJsonObject& obj)

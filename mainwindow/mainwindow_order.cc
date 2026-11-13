@@ -3,6 +3,7 @@
 #include "dialog/insertnode/insertnodebranch.h"
 #include "global/nodepool.h"
 #include "global/tablesstation.h"
+#include "global/userprofile.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
@@ -98,7 +99,7 @@ void MainWindow::on_actionNewBranch_triggered()
     dialog->show();
 }
 
-void MainWindow::RReleaseOrder(Section section, QUuid node_id, int version)
+void MainWindow::ROrderStatus(Section section, QUuid node_id, int status, int version)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -109,22 +110,7 @@ void MainWindow::RReleaseOrder(Section section, QUuid node_id, int version)
         Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
         auto* d_widget { static_cast<TableWidgetO*>(ptr) };
 
-        d_widget->ReleaseSucceeded(version);
-    }
-}
-
-void MainWindow::RRecallOrder(Section section, QUuid node_id, int version)
-{
-    auto* sc { GetSectionContext(section) };
-
-    auto widget { sc->widget_hash.value(node_id).widget };
-    if (widget) {
-        auto* ptr { widget.data() };
-
-        Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
-        auto* d_widget { static_cast<TableWidgetO*>(ptr) };
-
-        d_widget->RecallSucceeded(version);
+        d_widget->StatusSucceeded(status, version);
     }
 }
 
@@ -139,7 +125,7 @@ void MainWindow::RSaveOrder(Section section, QUuid node_id, int version)
         Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
         auto* d_widget { static_cast<TableWidgetO*>(ptr) };
 
-        d_widget->SaveSucceeded(version);
+        d_widget->SyncSucceeded(version);
     }
 }
 
@@ -208,7 +194,7 @@ void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index
         section,
     };
 
-    auto* widget { new TableWidgetO(order_arg, node, this) };
+    auto* widget { new TableWidgetO(order_arg, node, UserProfile::Instance().SectionPermissions(section), this) };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
@@ -269,7 +255,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
         section_config,
         section,
     };
-    auto* widget = new TableWidgetO(order_arg, tmp_node, this);
+    auto* widget = new TableWidgetO(order_arg, tmp_node, UserProfile::Instance().SectionPermissions(section), this);
 
     // Setup tab
     const QString partner_name { tree_model_p->Name(partner_id) };

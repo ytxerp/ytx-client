@@ -8,15 +8,18 @@
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
+#include "workspace/sectionpermissions.h"
 
-TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, int permission, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
     , node_ { node }
+    , original_node_ { *node }
     , table_model_ { qobject_cast<TableModelO*>(arg.table_model) }
     , section_config_ { arg.section_config }
     , node_id_ { node->id }
     , section_ { arg.section }
+    , permission_ { permission }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -39,32 +42,20 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-void TableWidgetO::ReleaseSucceeded(int version)
+void TableWidgetO::SyncSucceeded(int version)
 {
     qDebug() << Q_FUNC_INFO;
 
-    SyncSucceeded(version);
+    table_model_->SyncSucceeded();
+    pending_update_ = QJsonObject();
 
-    ui->rBtnRO->setEnabled(false);
-    ui->rBtnFO->setEnabled(false);
-    LockWidgets(OrderStatus::kReleased);
-    node_->order_status = OrderStatus::kReleased;
-}
+    node_->version = version;
+    node_->sync_state = SyncState::kSynced;
 
-void TableWidgetO::RecallSucceeded(int version)
-{
-    qDebug() << Q_FUNC_INFO;
+    original_node_ = *node_;
 
-    SyncSucceeded(version);
-    LockWidgets(OrderStatus::kRecalled);
-    node_->order_status = OrderStatus::kRecalled;
-}
-
-void TableWidgetO::SaveSucceeded(int version)
-{
-    qDebug() << Q_FUNC_INFO;
-
-    SyncSucceeded(version);
+    ui->pBtnSave->setEnabled(false);
+    ui->pBtnRelease->setEnabled(permission_ & order_permission::kRelease);
 }
 
 void TableWidgetO::PermissionDenied()
@@ -74,22 +65,22 @@ void TableWidgetO::PermissionDenied()
     node_->sync_state = SyncState::kSynced;
 }
 
-void TableWidgetO::SyncSucceeded(int version)
+void TableWidgetO::StatusSucceeded(int status, int version)
 {
-    ui->pBtnPrint->setFocus();
+    qDebug() << Q_FUNC_INFO;
 
-    table_model_->SyncSucceeded();
+    Q_ASSERT(status >= std::to_underlying(OrderStatus::kDraft) && status <= std::to_underlying(OrderStatus::kRecalled));
 
-    has_pending_update_ = false;
-    pending_update_ = QJsonObject();
-
+    node_->order_status = static_cast<OrderStatus>(status);
     node_->version = version;
     node_->sync_state = SyncState::kSynced;
+
+    UpdateButtons(node_->order_status);
 }
 
 bool TableWidgetO::HasPendingUpdate() const
 {
-    const bool node_pending { has_pending_update_ };
+    const bool node_pending { original_node_ != *node_ };
     const bool entry_pending { table_model_->HasPendingUpdate() };
 
     qDebug() << "[HasPendingUpdate]"
@@ -98,26 +89,20 @@ bool TableWidgetO::HasPendingUpdate() const
     return node_pending || entry_pending;
 }
 
-void TableWidgetO::RSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta)
+void TableWidgetO::RSyncDelta(QUuid node_id, const entry::Delta& delta)
 {
     Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
-    {
-        if (node_->direction_rule == direction_rule::kRO) {
-            initial_delta *= -1;
-            count_delta *= -1;
-            measure_delta *= -1;
-        }
-    }
+    const double factor { node_->direction_rule == direction_rule::kRO ? -1.0 : 1.0 };
 
-    {
-        node_->count_total += count_delta;
-        node_->measure_total += measure_delta;
-        node_->initial_total += initial_delta;
+    node_->initial_total += delta.initial * factor;
+    node_->count_total += delta.count * factor;
+    node_->measure_total += delta.measure * factor;
 
-        InitUiValue();
-    }
+    InitUiValue();
 }
+
+void TableWidgetO::RDataChanged() { UpdateSaveReleaseButtons(); }
 
 void TableWidgetO::InitWidget(QSortFilterProxyModel* pmodel, QSortFilterProxyModel* emodel)
 {
@@ -210,7 +195,7 @@ void TableWidgetO::InitData(const NodeO* node)
     }
 
     {
-        LockWidgets(OrderStatus(node->order_status));
+        UpdateButtons(OrderStatus(node->order_status));
     }
 
     if (node_->sync_state == SyncState::kCreating)
@@ -229,28 +214,42 @@ void TableWidgetO::InitData(const NodeO* node)
     }
 }
 
-void TableWidgetO::LockWidgets(OrderStatus value)
+void TableWidgetO::UpdateButtons(OrderStatus value)
 {
-    const bool is_draft { value == OrderStatus::kDraft };
-    const bool is_released { value == OrderStatus::kReleased };
+    const bool draft { value == OrderStatus::kDraft };
+    const bool released { value == OrderStatus::kReleased };
+    const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
+    const bool no_pending { !pending };
 
-    ui->comboPartner->setReadOnly(!is_draft);
-    ui->comboEmployee->setReadOnly(is_released);
+    ui->comboPartner->setReadOnly(!draft);
+    ui->comboEmployee->setReadOnly(released);
 
-    ui->rBtnRO->setEnabled(is_draft);
-    ui->rBtnFO->setEnabled(is_draft);
+    ui->rBtnRO->setEnabled(draft);
+    ui->rBtnFO->setEnabled(draft);
 
-    ui->rBtnIS->setEnabled(!is_released);
-    ui->rBtnMS->setEnabled(!is_released);
-    ui->rBtnPEND->setEnabled(!is_released);
+    ui->rBtnIS->setEnabled(!released);
+    ui->rBtnMS->setEnabled(!released);
+    ui->rBtnPEND->setEnabled(!released);
 
-    ui->lineDescription->setReadOnly(is_released);
-    ui->dateTimeEdit->setReadOnly(is_released);
+    ui->lineDescription->setReadOnly(released);
+    ui->dateTimeEdit->setReadOnly(released);
 
-    ui->pBtnSave->setEnabled(!is_released);
-    ui->pBtnRelease->setEnabled(!is_released && node_->unit != NodeUnit::OPending);
-    ui->pBtnRecall->setEnabled(is_released);
-    ui->pushButtonDelete->setEnabled(!is_released);
+    ui->pBtnSave->setEnabled(!released && pending);
+
+    ui->pBtnRelease->setEnabled(
+        !released && no_pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kRelease));
+    ui->pBtnRecall->setEnabled(released && (permission_ & order_permission::kUnrelease));
+}
+
+void TableWidgetO::UpdateSaveReleaseButtons()
+{
+    const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
+    const bool released { node_->order_status == OrderStatus::kReleased };
+
+    ui->pBtnSave->setEnabled(!released && pending);
+
+    ui->pBtnRelease->setEnabled(
+        !released && !pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kRelease));
 }
 
 void TableWidgetO::InitUiValue()
@@ -284,11 +283,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     node_->partner_id = partner_id;
     emit SSyncPartner(node_->parent->id, node_id_, partner_id);
 
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
-    }
-
-    has_pending_update_ = true;
+    UpdateSaveReleaseButtons();
 }
 
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
@@ -299,11 +294,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
     node_->employee_id = employee_id;
 
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
-    }
-
-    has_pending_update_ = true;
+    UpdateSaveReleaseButtons();
 }
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
@@ -313,11 +304,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 
     node_->issued_time = date_time;
 
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kIssuedTime, date_time.toUTC().toString(Qt::ISODate));
-    }
-
-    has_pending_update_ = true;
+    UpdateSaveReleaseButtons();
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
@@ -327,11 +314,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
     node_->description = arg1;
 
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kDescription, arg1);
-    }
-
-    has_pending_update_ = true;
+    UpdateSaveReleaseButtons();
 }
 
 void TableWidgetO::RRuleGroupClicked(int id)
@@ -340,17 +323,13 @@ void TableWidgetO::RRuleGroupClicked(int id)
         return;
 
     node_->direction_rule = static_cast<bool>(id);
-    has_pending_update_ = true;
 
     node_->count_total *= -1;
     node_->measure_total *= -1;
     node_->initial_total *= -1;
 
     InitUiValue();
-
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kDirectionRule, node_->direction_rule);
-    }
+    UpdateSaveReleaseButtons();
 }
 
 void TableWidgetO::RUnitGroupClicked(int id)
@@ -358,18 +337,56 @@ void TableWidgetO::RUnitGroupClicked(int id)
     const NodeUnit unit { id };
 
     node_->unit = unit;
-
-    const bool is_pending { unit == NodeUnit::OPending };
-    ui->pBtnRelease->setEnabled(!is_pending);
-
-    if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kUnit, id);
-    }
-
-    has_pending_update_ = true;
+    UpdateSaveReleaseButtons();
 }
 
-void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
+void TableWidgetO::on_pBtnSave_clicked()
+{
+    if (!ValidatePartner())
+        return;
+
+    if (!ValidateSyncState())
+        return;
+
+    table_model_->Purify();
+
+    if (!HasPendingUpdate())
+        return;
+
+    if (!ValidateUnitPrice())
+        return;
+
+    Q_ASSERT(node_->order_status != OrderStatus::kReleased);
+
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section_));
+
+    table_model_->Finalize(message);
+
+    if (node_->sync_state == SyncState::kSynced) {
+        pending_update_ = QJsonObject();
+        BuildNodeUpdate(pending_update_);
+
+        message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
+        message.insert(kVersion, node_->version);
+        message.insert(kNodeUpdate, pending_update_);
+        message.insert(kPartnerId, node_->partner_id.toString(QUuid::WithoutBraces));
+
+        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
+        WebSocket::Instance()->SendMessage(key, message);
+    }
+
+    if (node_->sync_state == SyncState::kCreating) {
+        node_->order_status = OrderStatus::kDraft; // Same as default
+
+        BuildNodeInsert(message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderInsert, message);
+    }
+
+    qInfo() << Q_FUNC_INFO << node_->version;
+
+    node_->sync_state = SyncState::kUpdating;
+}
 
 void TableWidgetO::on_pBtnPrint_clicked()
 {
@@ -407,7 +424,7 @@ bool TableWidgetO::PreparePrint()
     return true;
 }
 
-void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
+void TableWidgetO::BuildNodeInsert(QJsonObject& message)
 {
     const QJsonObject node_json { node_->WriteJson() };
 
@@ -415,16 +432,33 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
     path_json.insert(kAncestor, node_->parent->id.toString(QUuid::WithoutBraces));
     path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
-    order_message.insert(kNode, node_json);
-    order_message.insert(kPath, path_json);
+    message.insert(kNode, node_json);
+    message.insert(kPath, path_json);
 }
 
-void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
+void TableWidgetO::BuildNodeUpdate(QJsonObject& message)
 {
-    order_message.insert(kVersion, node_->version);
-    order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_message.insert(kPartnerId, node_->partner_id.toString(QUuid::WithoutBraces));
-    order_message.insert(kNodeUpdate, pending_update_);
+    if (node_->partner_id != original_node_.partner_id)
+        message.insert(kPartnerId, node_->partner_id.toString(QUuid::WithoutBraces));
+
+    if (node_->employee_id != original_node_.employee_id)
+        message.insert(kEmployeeId, node_->employee_id.toString(QUuid::WithoutBraces));
+
+    if (node_->issued_time != original_node_.issued_time)
+        message.insert(kIssuedTime, node_->issued_time.toUTC().toString(Qt::ISODate));
+
+    if (node_->description != original_node_.description)
+        message.insert(kDescription, node_->description);
+
+    if (node_->direction_rule != original_node_.direction_rule)
+        message.insert(kDirectionRule, node_->direction_rule);
+
+    if (node_->unit != original_node_.unit)
+        message.insert(kUnit, std::to_underlying(node_->unit));
+
+    message.insert(kInitialTotal, QString::number(node_->initial_total, 'f', numeric_const::kDecimalPlaces4));
+    message.insert(kCountTotal, QString::number(node_->count_total, 'f', numeric_const::kDecimalPlaces8));
+    message.insert(kMeasureTotal, QString::number(node_->measure_total, 'f', numeric_const::kDecimalPlaces8));
 }
 
 void TableWidgetO::on_pBtnRecall_clicked()
@@ -438,8 +472,6 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
         return;
     }
-
-    pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kRecalled));
 
     qDebug() << Q_FUNC_INFO << node_->version;
 
@@ -482,48 +514,6 @@ bool TableWidgetO::ValidateUnitPrice() const
     return result == QMessageBox::Yes;
 }
 
-void TableWidgetO::SaveOrder()
-{
-    if (!ValidatePartner())
-        return;
-
-    if (!ValidateSyncState())
-        return;
-
-    table_model_->Purify();
-
-    if (!HasPendingUpdate())
-        return;
-
-    if (!ValidateUnitPrice())
-        return;
-
-    Q_ASSERT(node_->order_status != OrderStatus::kReleased);
-
-    QJsonObject order_message {};
-    order_message.insert(kSection, std::to_underlying(section_));
-
-    table_model_->Finalize(order_message);
-
-    if (node_->sync_state == SyncState::kSynced) {
-        BuildNodeUpdate(order_message);
-
-        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
-        WebSocket::Instance()->SendMessage(key, order_message);
-    }
-
-    if (node_->sync_state == SyncState::kCreating) {
-        node_->order_status = OrderStatus::kDraft; // Same as default
-
-        BuildNodeInsert(order_message);
-        WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
-    }
-
-    qInfo() << Q_FUNC_INFO << node_->version;
-
-    node_->sync_state = SyncState::kUpdating;
-}
-
 void TableWidgetO::on_pBtnRelease_clicked()
 {
     if (!ValidatePartner())
@@ -544,8 +534,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     table_model_->Finalize(order_message);
 
     if (node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kReleased));
-
         BuildNodeUpdate(order_message);
 
         const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
@@ -569,19 +557,4 @@ void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
     if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
         utils::ShowMessage(QMessageBox::Warning, tr("Operation Failed"), tr("Failed to load the print template."), time_const::kAutoCloseMs);
     }
-}
-
-void TableWidgetO::on_pushButtonDelete_clicked()
-{
-    if (node_->order_status == OrderStatus::kReleased) {
-        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
-            tr("This order has been released and cannot be deleted.\n"
-               "Please recall it before deleting."),
-            time_const::kAutoCloseMs);
-
-        return;
-    }
-
-    const QJsonObject value { JsonGen::LeafDelete(section_, node_id_, node_->version) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderLeafDelete, value);
 }

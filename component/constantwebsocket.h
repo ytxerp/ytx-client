@@ -181,7 +181,7 @@ enum class WsKey : uint16_t {
     kPartnerHeatFetch = 2520,
 
     // --- Order ---
-    kOrderInsertSave = 2600,
+    kOrderInsert = 2600,
     kOrderInsertRelease = 2601,
     kUnreleasedOrderSave = 2602,
     kUnreleasedOrderRelease = 2603,
@@ -332,8 +332,8 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kPartnerEntryUpdate:
         return "kPartnerEntryUpdate";
 
-    case WsKey::kOrderInsertSave:
-        return "kOrderInsertSave";
+    case WsKey::kOrderInsert:
+        return "kOrderInsert";
     case WsKey::kUnreleasedOrderSave:
         return "kUnreleasedOrderSave";
     case WsKey::kOrderInsertRelease:

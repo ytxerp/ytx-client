@@ -120,6 +120,12 @@ struct NodeO final : Node {
 
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
+
+    bool operator==(const NodeO& other) const
+    {
+        return partner_id == other.partner_id && employee_id == other.employee_id && issued_time == other.issued_time && description == other.description
+            && direction_rule == other.direction_rule && unit == other.unit;
+    }
 };
 
 struct PendingNodeUpdate {

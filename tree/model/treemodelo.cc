@@ -12,21 +12,36 @@ TreeModelO::TreeModelO(Section section, const QStringList& header, CString& sepa
 {
 }
 
-void TreeModelO::HandleStatusChanged(QUuid node_id, OrderStatus value)
+void TreeModelO::SyncStatus(QUuid node_id, int status, int version)
 {
-    auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
-    if (!d_node)
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
         return;
 
-    const int coefficient { value == OrderStatus::kReleased ? 1 : -1 };
+    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
+    if (!node)
+        return;
+
+    const auto new_status { static_cast<OrderStatus>(status) };
+
+    node->version = version;
+    node->sync_state = SyncState::kSynced;
+    node->order_status = new_status;
+
+    // Refresh the view first, as the following status check may return early.
+    const int row { index.row() };
+    const int column { node::StatusColumn(section_) };
+    EmitDataChanged(row, row, column, column, index.parent());
+
+    const int coefficient { new_status == OrderStatus::kReleased ? 1 : -1 };
 
     const node::Delta delta {
-        .initial = coefficient * d_node->initial_total,
-        .count = coefficient * d_node->count_total,
-        .measure = coefficient * d_node->measure_total,
+        .initial = coefficient * node->initial_total,
+        .count = coefficient * node->count_total,
+        .measure = coefficient * node->measure_total,
     };
 
-    const auto ids { UpdateAncestorTotal(d_node, delta) };
+    const auto ids { UpdateAncestorTotal(node, delta) };
 
     EmitNumericChanged(ids);
 }
@@ -360,13 +375,16 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeO*>(node) };
+    const NodeEnumO column { index.column() };
+
+    if (d_node->order_status == OrderStatus::kReleased && column != NodeEnumO::kTag && column != NodeEnumO::kColor)
+        return false;
 
     const QUuid id { node->id };
     auto& update { pending_updates_[id] };
     update.node = node;
     auto& changes { update.changes };
-
-    const NodeEnumO column { index.column() };
 
     switch (column) {
     case NodeEnumO::kTag:
@@ -379,8 +397,6 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumO::kDescription:
-        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
-        break;
     case NodeEnumO::kName:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:
@@ -412,8 +428,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;
     case NodeEnumO::kDescription:
-        flags |= Qt::ItemIsEditable;
-        break;
     case NodeEnumO::kCode:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:

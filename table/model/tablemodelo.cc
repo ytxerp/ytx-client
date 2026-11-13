@@ -205,14 +205,13 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     }
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+    emit SDataChanged();
 
-    const double count_delta { d_entry->count - old_count };
-    const double measure_delta { d_entry->measure - old_measure };
     const double initial_delta { d_entry->initial - old_initial };
+    const entry::Delta delta { .initial = initial_delta, .count = d_entry->count - old_count, .measure = d_entry->measure - old_measure };
 
-    if (!qFuzzyIsNull(initial_delta) || !qFuzzyIsNull(count_delta) || !qFuzzyIsNull(measure_delta)) {
-        emit SSyncDeltaO(d_entry->lhs_node, initial_delta, count_delta, measure_delta);
-    }
+    if (!delta.IsNull())
+        emit SSyncDelta(d_entry->lhs_node, delta);
 
     if (!qFuzzyIsNull(initial_delta))
         EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kInitial));
@@ -316,6 +315,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     entry_list_.insert(row, entry);
     endInsertRows();
 
+    emit SDataChanged();
     return true;
 }
 
@@ -336,19 +336,17 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     endRemoveRows();
 
     if (!rhs_node.isNull()) {
-        const double count_delta { -d_entry->count };
-        const double measure_delta { -d_entry->measure };
-        const double initial_delta { -d_entry->initial };
+        const entry::Delta delta { .initial = -d_entry->initial, .count = -d_entry->count, .measure = -d_entry->measure };
 
-        if (!qFuzzyIsNull(count_delta) || !qFuzzyIsNull(measure_delta) || !qFuzzyIsNull(initial_delta)) {
-            emit SSyncDeltaO(lhs_node, initial_delta, count_delta, measure_delta);
-        }
+        if (!delta.IsNull())
+            emit SSyncDelta(lhs_node, delta);
     }
 
     if (d_entry->sync_state != SyncState::kCreating)
         pending_delete_.insert(entry_id);
 
     EntryPool::Instance().Recycle(d_entry, section_);
+    emit SDataChanged();
     return true;
 }
 

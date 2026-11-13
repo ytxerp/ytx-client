@@ -117,7 +117,7 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
 
     const double initial_delta { row->initial - old_initial };
     if (!qFuzzyIsNull(initial_delta))
-        emit SSyncInitial(node_id_, initial_delta);
+        emit SSyncDelta(node_id_, entry::Delta { .initial = initial_delta });
 
     return true;
 }
@@ -394,7 +394,7 @@ bool TableModelR::removeRows(int row, int count, const QModelIndex& parent)
     endRemoveRows();
 
     if (!qFuzzyIsNull(initial_delta))
-        emit SSyncInitial(node_id_, initial_delta);
+        emit SSyncDelta(node_id_, entry::Delta { .initial = initial_delta });
 
     if (entry->sync_state != SyncState::kCreating)
         pending_delete_.insert(entry_id);

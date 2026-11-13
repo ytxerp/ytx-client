@@ -44,7 +44,7 @@ public:
     void RecallSettlement(QUuid settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Value(node_id, &NodeO::partner_id); };
-    void HandleStatusChanged(QUuid node_id, OrderStatus value);
+    void SyncStatus(QUuid node_id, int status, int version) override;
 
 protected:
     void RegisterNode(Node* node) override;

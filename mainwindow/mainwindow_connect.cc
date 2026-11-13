@@ -173,12 +173,13 @@ void MainWindow::TableConnectP(TableModel* table_model) const
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const
 {
-    connect(table_model_o, &TableModelO::SSyncDeltaO, widget, &TableWidgetO::RSyncDeltaO);
+    connect(table_model_o, &TableModelO::SSyncDelta, widget, &TableWidgetO::RSyncDelta);
+    connect(table_model_o, &TableModelO::SDataChanged, widget, &TableWidgetO::RDataChanged);
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 }
 
 void MainWindow::TableConnectR(TableModelR* table_model_r, TableWidgetR* widget) const
 {
-    connect(table_model_r, &TableModelR::SSyncInitial, widget, &TableWidgetR::RSyncInitial);
+    connect(table_model_r, &TableModelR::SSyncDelta, widget, &TableWidgetR::RSyncDelta);
     connect(table_model_r, &TableModelR::SDataChanged, widget, &TableWidgetR::RDataChanged);
 }

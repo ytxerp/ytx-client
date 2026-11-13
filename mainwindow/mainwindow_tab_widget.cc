@@ -195,7 +195,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
             return;
 
         if (ret == QMessageBox::Save)
-            widget->SaveOrder();
+            widget->on_pBtnSave_clicked();
     }
 
     utils::DeleteWidget(sc_->widget_hash, node_id);

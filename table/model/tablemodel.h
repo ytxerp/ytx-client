@@ -26,6 +26,7 @@
 #include "component/constantbool.h"
 #include "enum/entryenum.h"
 #include "table/entryshadow.h"
+#include "utils/delta.h"
 #include "utils/templateutils.h"
 
 using utils::DerivedPtr;
@@ -51,6 +52,11 @@ signals:
 
     // send to MainWindow
     void SEntryLocked();
+
+    // Notify the owning widget that table data has changed.
+    void SDataChanged();
+    // Notify the owning widget of entry value changes.
+    void SSyncDelta(QUuid node_id, const entry::Delta& delta);
 
 public slots:
     virtual void RAppendEntries(const EntryList& entry_list);

@@ -56,7 +56,7 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetO(COrderWidgetArg& arg, NodeO* node, QWidget* parent = nullptr);
+    explicit TableWidgetO(COrderWidgetArg& arg, NodeO* node, int permission, QWidget* parent = nullptr);
     ~TableWidgetO() override;
 
 signals:
@@ -65,19 +65,19 @@ signals:
 
 public slots:
     // receive from TableModelOrder
-    void RSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta);
+    void RDataChanged();
+    void RSyncDelta(QUuid node_id, const entry::Delta& delta);
+    void on_pBtnSave_clicked();
 
 public:
     TableModel* Model() const override { return table_model_; }
     QTableView* View() const override;
 
-    void ReleaseSucceeded(int version);
-    void RecallSucceeded(int version);
-    void SaveSucceeded(int version);
+    void SyncSucceeded(int version);
     void PermissionDenied();
 
+    void StatusSucceeded(int status, int version);
     bool HasPendingUpdate() const;
-    void SaveOrder();
 
 private slots:
 
@@ -94,44 +94,43 @@ private slots:
     void RRuleGroupClicked(int id);
     void RUnitGroupClicked(int id);
 
-    void on_pBtnSave_clicked();
     void on_pBtnRecall_clicked();
     void on_pBtnRelease_clicked();
-    void on_pushButtonDelete_clicked();
 
 private:
     void InitWidget(QSortFilterProxyModel* pmodel, QSortFilterProxyModel* emodel);
     void InitConnect();
     void InitData(const NodeO* node);
-    void LockWidgets(OrderStatus value);
+    void UpdateButtons(OrderStatus value);
+    void UpdateSaveReleaseButtons();
     void InitRuleGroup();
     void InitUnitGroup();
     void InitUiValue();
 
     bool PreparePrint();
 
-    void BuildNodeInsert(QJsonObject& order_message);
-    void BuildNodeUpdate(QJsonObject& order_message);
+    void BuildNodeInsert(QJsonObject& message);
+    void BuildNodeUpdate(QJsonObject& message);
 
     bool ValidatePartner() const;
     bool ValidateSyncState() const;
     bool ValidateUnitPrice() const;
-    void SyncSucceeded(int version);
 
 private:
     Ui::TableWidgetO* ui;
     NodeO* node_ {};
+    NodeO original_node_ {};
 
     TableModelO* table_model_ {};
     CSectionConfig& section_config_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    bool has_pending_update_ { false };
     QJsonObject pending_update_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};
+    const int permission_ {};
 };
 
 inline const char* kTableWidgetO = "TableWidgetO";

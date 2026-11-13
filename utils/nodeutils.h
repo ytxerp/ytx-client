@@ -67,8 +67,10 @@ constexpr int StatusColumn(Section section)
     case Section::kFinance:
     case Section::kTask:
     case Section::kInventory:
+        return -1;
     case Section::kSale:
     case Section::kPurchase:
+        return std::to_underlying(NodeEnumO::kStatus);
     case Section::kReimbursement:
         return std::to_underlying(NodeEnumR::kStatus);
     case Section::kPartner:

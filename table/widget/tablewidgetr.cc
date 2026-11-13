@@ -84,10 +84,10 @@ bool TableWidgetR::HasPendingUpdate() const
     return node_pending || entry_pending;
 }
 
-void TableWidgetR::RSyncInitial(QUuid node_id, double initial_delta)
+void TableWidgetR::RSyncDelta(QUuid node_id, const entry::Delta& delta)
 {
     Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
-    node_->initial_total += initial_delta;
+    node_->initial_total += delta.initial;
     ui->dSpinInitialTotal->setValue(node_->initial_total);
 }
 

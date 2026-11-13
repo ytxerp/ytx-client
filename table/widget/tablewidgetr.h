@@ -44,7 +44,7 @@ public:
     bool HasPendingUpdate() const;
 
 public slots:
-    void RSyncInitial(QUuid node_id, double initial_delta);
+    void RSyncDelta(QUuid node_id, const entry::Delta& delta);
     void RDataChanged();
     void on_pushButtonSave_clicked();
 

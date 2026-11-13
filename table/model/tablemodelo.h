@@ -81,10 +81,6 @@ public:
     explicit TableModelO(CTableModelArg& arg, const NodeO* node, QObject* parent = nullptr);
     ~TableModelO() override;
 
-signals:
-    // send to TableWidgetO
-    void SSyncDeltaO(QUuid node_id, double initial_delta, double count_delta, double measure_delta);
-
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;
 

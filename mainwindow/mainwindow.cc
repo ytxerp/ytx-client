@@ -443,8 +443,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSettlementRecall, this, &MainWindow::RRecallSettlement);
     connect(WebSocket::Instance(), &WebSocket::SSettlementUpdate, this, &MainWindow::RUpdateSettlement);
     connect(WebSocket::Instance(), &WebSocket::SSettlementView, this, &MainWindow::RSettlementView);
-    connect(WebSocket::Instance(), &WebSocket::SOrderRelease, this, &MainWindow::RReleaseOrder);
-    connect(WebSocket::Instance(), &WebSocket::SOrderRecall, this, &MainWindow::RRecallOrder);
+    connect(WebSocket::Instance(), &WebSocket::SOrderStatus, this, &MainWindow::ROrderStatus);
     connect(WebSocket::Instance(), &WebSocket::SOrderSave, this, &MainWindow::RSaveOrder);
     connect(WebSocket::Instance(), &WebSocket::SOperationDeny, this, &MainWindow::ROperationDeny);
     connect(WebSocket::Instance(), &WebSocket::SPermissionDeny, this, &MainWindow::RPermissionDeny);

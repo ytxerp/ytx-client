@@ -34,3 +34,13 @@ struct Delta final {
 };
 
 }
+
+namespace entry {
+struct Delta final {
+    double initial {};
+    double count {};
+    double measure {};
+
+    bool IsNull() const { return qFuzzyIsNull(initial) && qFuzzyIsNull(count) && qFuzzyIsNull(measure); }
+};
+}

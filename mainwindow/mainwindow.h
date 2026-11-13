@@ -186,8 +186,7 @@ private slots:
     void RUpdateSettlement(const QJsonObject& obj);
     void RSettlementView(Section section, QUuid widget_id, const QJsonArray& array);
 
-    void RReleaseOrder(Section section, QUuid node_id, int version);
-    void RRecallOrder(Section section, QUuid node_id, int version);
+    void ROrderStatus(Section section, QUuid node_id, int status, int version);
     void RSaveOrder(Section section, QUuid node_id, int version);
     void ROperationDeny();
     void RPermissionDeny();

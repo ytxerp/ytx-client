@@ -92,8 +92,7 @@ signals:
     void SOrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
     void SEntrySearch(Section section, QUuid widget_id, const QJsonArray& entry_array);
 
-    void SOrderRelease(Section section, QUuid node_id, int version);
-    void SOrderRecall(Section section, QUuid node_id, int version);
+    void SOrderStatus(Section section, QUuid node_id, int status, int version);
     void SOrderSave(Section section, QUuid node_id, int version);
     void SNodeSelect(Section section, QUuid node_id);
     void SNodeLocate(Section section, QUuid node_id);
@@ -227,10 +226,9 @@ private:
 
     void PeriodClose(const QJsonObject& obj);
 
-    void ReleaseOrder(const QJsonObject& obj);
-    void SaveOrder(const QJsonObject& obj);
-    void InsertOrder(const QJsonObject& obj, bool is_released);
-    void RecallOrder(const QJsonObject& obj);
+    void InsertOrder(const QJsonObject& obj);
+    void UpdateOrder(const QJsonObject& obj);
+    void SyncOrderStatus(const QJsonObject& obj);
 
     void InsertReimbursement(const QJsonObject& obj);
     void UpdateReimbursement(const QJsonObject& obj);
