@@ -370,15 +370,11 @@ void TableWidgetO::on_pBtnSave_clicked()
         message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
         message.insert(kVersion, node_->version);
         message.insert(kNodeUpdate, pending_update_);
-        message.insert(kPartnerId, node_->partner_id.toString(QUuid::WithoutBraces));
 
-        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
-        WebSocket::Instance()->SendMessage(key, message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderUpdate, message);
     }
 
     if (node_->sync_state == SyncState::kCreating) {
-        node_->order_status = OrderStatus::kDraft; // Same as default
-
         BuildNodeInsert(message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsert, message);
     }
@@ -533,19 +529,9 @@ void TableWidgetO::on_pBtnRelease_clicked()
     order_message.insert(kSection, std::to_underlying(section_));
     table_model_->Finalize(order_message);
 
-    if (node_->sync_state == SyncState::kSynced) {
-        BuildNodeUpdate(order_message);
+    BuildNodeUpdate(order_message);
 
-        const auto key { node_->order_status == OrderStatus::kDraft ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
-        WebSocket::Instance()->SendMessage(key, order_message);
-    }
-
-    if (node_->sync_state == SyncState::kCreating) {
-        node_->order_status = OrderStatus::kReleased;
-
-        BuildNodeInsert(order_message);
-        WebSocket::Instance()->SendMessage(WsKey::kOrderInsertRelease, order_message);
-    }
+    WebSocket::Instance()->SendMessage(WsKey::kOrderRelease, order_message);
 
     qInfo() << Q_FUNC_INFO << node_->version;
 

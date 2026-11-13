@@ -223,12 +223,12 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryNumericUpdate] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[WsKey::kLeafDeleteAllow] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kOrderInsert] = [this](const QJsonObject& obj) { InsertOrder(obj); };
-    handler_obj_[WsKey::kUnreleasedOrderSave] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
+    handler_obj_[WsKey::kOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
     handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj); };
-    handler_obj_[WsKey::kUnreleasedOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
+    handler_obj_[WsKey::kOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
     handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
     handler_obj_[WsKey::kRecalledOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
-    handler_obj_[WsKey::kRecalledOrderSave] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
+    handler_obj_[WsKey::kRecalledOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
