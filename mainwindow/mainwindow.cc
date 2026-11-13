@@ -446,7 +446,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SOrderRelease, this, &MainWindow::RReleaseOrder);
     connect(WebSocket::Instance(), &WebSocket::SOrderRecall, this, &MainWindow::RRecallOrder);
     connect(WebSocket::Instance(), &WebSocket::SOrderSave, this, &MainWindow::RSaveOrder);
-    connect(WebSocket::Instance(), &WebSocket::SOperationDeny, this, &MainWindow::RDenyOperation);
+    connect(WebSocket::Instance(), &WebSocket::SOperationDeny, this, &MainWindow::ROperationDeny);
     connect(WebSocket::Instance(), &WebSocket::SPermissionDeny, this, &MainWindow::RPermissionDeny);
     connect(WebSocket::Instance(), &WebSocket::SPermissionDenyOrder, this, &MainWindow::RPermissionDenyOrder);
     connect(WebSocket::Instance(), &WebSocket::SPermissionDenySettlement, this, &MainWindow::RPermissionDenySettlement);

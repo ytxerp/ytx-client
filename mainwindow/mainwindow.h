@@ -189,7 +189,7 @@ private slots:
     void RReleaseOrder(Section section, QUuid node_id, int version);
     void RRecallOrder(Section section, QUuid node_id, int version);
     void RSaveOrder(Section section, QUuid node_id, int version);
-    void RDenyOperation();
+    void ROperationDeny();
     void RPermissionDeny();
     void RPermissionDenyOrder(Section section, QUuid widget_id);
     void RPermissionDenySettlement(Section section, QUuid widget_id);

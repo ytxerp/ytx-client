@@ -165,4 +165,6 @@ void MainWindow::RPermissionDenyReimbursement(Section section, QUuid widget_id)
 
         d_widget->PermissionDenied();
     }
+
+    RPermissionDeny();
 }
