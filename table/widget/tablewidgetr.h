@@ -49,8 +49,6 @@ public slots:
     void on_pushButtonSave_clicked();
 
 private slots:
-    void on_pushButtonDelete_clicked();
-    void on_pushButtonInsert_clicked();
     void on_pushButtonApprove_clicked();
     void on_pushButtonPost_clicked();
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
@@ -62,14 +60,17 @@ private:
     void InitWidget();
     void InitData();
     void UpdateButtons();
+    void UpdateSaveApproveButtons();
 
     void BuildNodeInsert(QJsonObject& message);
+    void BuildNodeUpdate(QJsonObject& message);
     QJsonObject BuildStatusMessage() const;
 
 private:
     Ui::TableWidgetR* ui;
 
     NodeR* node_ {};
+    NodeR original_node_ {};
     TableModelR* model_ {};
 
     QJsonObject pending_update_ {};

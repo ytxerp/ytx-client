@@ -99,6 +99,8 @@ struct NodeR final : Node {
 
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
+
+    bool operator==(const NodeR& other) const { return description == other.description && issued_time == other.issued_time; }
 };
 
 struct NodeO final : Node {
