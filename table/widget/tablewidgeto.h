@@ -111,6 +111,7 @@ private:
 
     void BuildNodeInsert(QJsonObject& message);
     void BuildNodeUpdate(QJsonObject& message);
+    QJsonObject BuildStatusMessage() const;
 
     bool ValidatePartner() const;
     bool ValidateSyncState() const;

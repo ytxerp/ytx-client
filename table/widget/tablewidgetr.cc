@@ -164,11 +164,8 @@ void TableWidgetR::on_pushButtonSave_clicked()
     if (node_->reimbursement_status != ReimbursementStatus::kDraft)
         return;
 
-    if (node_->sync_state == SyncState::kUpdating) {
-        utils::ShowMessage(
-            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+    if (!ValidateSyncState())
         return;
-    }
 
     model_->Purify();
 
@@ -206,12 +203,10 @@ void TableWidgetR::on_pushButtonApprove_clicked()
 {
     Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft && (permission_ & reimbursement_permission::kApprove));
     Q_ASSERT(!model_->HasPendingUpdate() && original_node_ == *node_);
+    Q_ASSERT(node_->sync_state == SyncState::kSynced);
 
-    if (node_->sync_state == SyncState::kUpdating) {
-        utils::ShowMessage(
-            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+    if (!ValidateSyncState())
         return;
-    }
 
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementApprove, BuildStatusMessage());
     node_->sync_state = SyncState::kUpdating;
@@ -224,11 +219,8 @@ void TableWidgetR::on_pushButtonUnapprove_clicked()
     Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
     Q_ASSERT(!model_->HasPendingUpdate() && original_node_ == *node_);
 
-    if (node_->sync_state == SyncState::kUpdating) {
-        utils::ShowMessage(
-            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+    if (!ValidateSyncState())
         return;
-    }
 
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementUnapprove, BuildStatusMessage());
     node_->sync_state = SyncState::kUpdating;
@@ -269,7 +261,19 @@ QJsonObject TableWidgetR::BuildStatusMessage() const
     message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
     message.insert(kVersion, node_->version);
     message.insert(kStatus, std::to_underlying(node_->reimbursement_status));
-    message.insert(kInitialTotal, QString::number(node_->initial_total, 'f', numeric_const::kDecimalPlaces4));
 
     return message;
+}
+
+bool TableWidgetR::ValidateSyncState() const
+{
+    if (node_->sync_state == SyncState::kUpdating) {
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
+        return false;
+    }
+
+    qDebug() << Q_FUNC_INFO << static_cast<int>(node_->sync_state);
+
+    return true;
 }

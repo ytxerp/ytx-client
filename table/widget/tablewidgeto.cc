@@ -458,8 +458,24 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& message)
     message.insert(kMeasureTotal, QString::number(node_->measure_total, 'f', numeric_const::kDecimalPlaces8));
 }
 
+QJsonObject TableWidgetO::BuildStatusMessage() const
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(Section::kReimbursement));
+    message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, node_->version);
+    message.insert(kStatus, std::to_underlying(node_->order_status));
+
+    return message;
+}
+
 void TableWidgetO::on_pBtnRecall_clicked()
 {
+    Q_ASSERT(node_->order_status == OrderStatus::kReleased && (permission_ & order_permission::kUnrelease));
+    Q_ASSERT(!table_model_->HasPendingUpdate() && original_node_ == *node_);
+    Q_ASSERT(node_->sync_state == SyncState::kSynced);
+
     if (!ValidateSyncState())
         return;
 
@@ -472,7 +488,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     qDebug() << Q_FUNC_INFO << node_->version;
 
-    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_, node_->version));
+    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, BuildStatusMessage());
 
     node_->sync_state = SyncState::kUpdating;
 }
@@ -513,26 +529,14 @@ bool TableWidgetO::ValidateUnitPrice() const
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
-    if (!ValidatePartner())
-        return;
+    Q_ASSERT(node_->order_status != OrderStatus::kReleased && (permission_ & order_permission::kRelease));
+    Q_ASSERT(!table_model_->HasPendingUpdate() && original_node_ == *node_);
+    Q_ASSERT(node_->sync_state == SyncState::kSynced);
 
     if (!ValidateSyncState())
         return;
 
-    table_model_->Purify();
-
-    if (!ValidateUnitPrice())
-        return;
-
-    Q_ASSERT(node_->order_status != OrderStatus::kReleased);
-
-    QJsonObject order_message {};
-    order_message.insert(kSection, std::to_underlying(section_));
-    table_model_->Finalize(order_message);
-
-    BuildNodeUpdate(order_message);
-
-    WebSocket::Instance()->SendMessage(WsKey::kOrderRelease, order_message);
+    WebSocket::Instance()->SendMessage(WsKey::kOrderRelease, BuildStatusMessage());
 
     qInfo() << Q_FUNC_INFO << node_->version;
 

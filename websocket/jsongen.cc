@@ -244,16 +244,6 @@ QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword)
     return message;
 }
 
-QJsonObject OrderRecall(Section section, QUuid node_id, CJsonObject& update, int version)
-{
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kNodeUpdate, update);
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kVersion, version);
-    return message;
-}
-
 QJsonObject EntryValue(Section section, QUuid entry_id, CJsonObject& update, InputSide side, int version)
 {
     QJsonObject message {};

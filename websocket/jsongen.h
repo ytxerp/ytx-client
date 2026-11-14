@@ -81,7 +81,6 @@ QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>
 QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword);
 QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
 
-QJsonObject OrderRecall(Section section, QUuid node_id, CJsonObject& update, int version);
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 
