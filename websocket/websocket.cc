@@ -1243,25 +1243,22 @@ void WebSocket::SyncOrderStatus(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const int version { obj.value(kVersion).toInt() };
-    const NodeUnit unit { node_update.value(kUnit).toInt() };
     const int status { obj.value(kStatus).toInt() };
+    const NodeUnit unit { obj.value(kUnit).toInt() };
 
     auto* order_model = static_cast<TreeModelO*>(tree_model_hash_.value(section).data());
     Q_ASSERT(order_model != nullptr);
 
-    {
-        if (unit == NodeUnit::OMonthly) {
-            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
-            Q_ASSERT(partner_model != nullptr);
+    if (unit == NodeUnit::OMonthly) {
+        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+        Q_ASSERT(partner_model != nullptr);
 
-            const auto partner_id { QUuid(node_update.value(kPartnerId).toString()) };
-            const double initial_total { node_update.value(kInitialTotal).toString().toDouble() };
+        const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
+        const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
 
-            partner_model->UpdateAmount(partner_id, -initial_total);
-        }
+        partner_model->UpdateAmount(partner_id, initial_delta);
     }
 
     if (!order_model->Contains(node_id))
@@ -1271,7 +1268,6 @@ void WebSocket::SyncOrderStatus(const QJsonObject& obj)
         emit SOrderStatus(section, node_id, status, version);
     }
 
-    order_model->UpdateNode(node_id, node_update, version);
     order_model->SyncStatus(node_id, status, version);
 }
 

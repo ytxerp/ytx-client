@@ -203,7 +203,6 @@ void TableWidgetR::on_pushButtonApprove_clicked()
 {
     Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft && (permission_ & reimbursement_permission::kApprove));
     Q_ASSERT(!model_->HasPendingUpdate() && original_node_ == *node_);
-    Q_ASSERT(node_->sync_state == SyncState::kSynced);
 
     if (!ValidateSyncState())
         return;

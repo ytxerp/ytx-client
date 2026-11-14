@@ -462,7 +462,7 @@ QJsonObject TableWidgetO::BuildStatusMessage() const
 {
     QJsonObject message {};
 
-    message.insert(kSection, std::to_underlying(Section::kReimbursement));
+    message.insert(kSection, std::to_underlying(section_));
     message.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
     message.insert(kVersion, node_->version);
     message.insert(kStatus, std::to_underlying(node_->order_status));
@@ -531,7 +531,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 {
     Q_ASSERT(node_->order_status != OrderStatus::kReleased && (permission_ & order_permission::kRelease));
     Q_ASSERT(!table_model_->HasPendingUpdate() && original_node_ == *node_);
-    Q_ASSERT(node_->sync_state == SyncState::kSynced);
 
     if (!ValidateSyncState())
         return;
