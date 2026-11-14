@@ -159,92 +159,70 @@ void MainWindow::RPermissionDenyOrder(Section section, QUuid widget_id)
 
 void MainWindow::InsertNodeO(SectionContext* sc, const QModelIndex& parent_index)
 {
-    // Extract frequently used shortcuts
-    const auto& section_config { sc->section_config };
-    const auto& info { sc->info };
-    const Section section { sc->section };
+    Q_ASSERT(sc);
 
-    auto tab_widget { sc->tab_widget };
-    auto* tab_bar { tab_widget->tabBar() };
+    const Section section { sc->section };
+    Q_ASSERT(IsOrderSection(section));
+
     auto* parent_node { sc->tree_model->GetNodeByIndex(parent_index) };
 
+    Q_ASSERT(parent_node);
+
     NodeO* node { static_cast<NodeO*>(NodePool::Instance().Allocate(section)) };
+
     node->id = QUuid::createUuidV7();
     node->direction_rule = parent_node->direction_rule;
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc->shared_config.default_unit);
     node->parent = parent_node;
     node->issued_time = QDateTime::currentDateTime();
 
-    const QUuid node_id { node->id };
-
-    // Create model and widget
-    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
-    auto* table_model { new TableModelO(table_model_arg, node, this) };
-
-    // Prepare dependencies
-    auto tree_model_p { sc_p_.tree_model };
-    auto* pmodel { tree_model_p->IncludeUnit(section == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor) };
-    auto* emodel { tree_model_p->IncludeUnit(NodeUnit::PEmployee) };
-
-    OrderWidgetArg order_arg {
-        table_model,
-        pmodel,
-        emodel,
-        section_config,
-        section,
-    };
-
-    auto* widget { new TableWidgetO(order_arg, node, UserProfile::Instance().SectionPermissions(section), this) };
-
-    // Setup tab
-    const int tab_index { tab_widget->addTab(widget, QString()) };
-    tab_bar->setTabData(tab_index, node_id);
-    tab_widget->setCurrentIndex(tab_index);
-
-    // Configure view
-    auto* view { widget->View() };
-    TableConnectO(table_model, widget);
-    SetTableView(view, section, std::to_underlying(EntryEnumO::kDescription));
-    TableDelegateO(view, section_config, section);
-
-    view->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
-
-    RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabOR);
-    TableSStation::Instance()->RegisterModel(node_id, table_model);
+    OpenNodeTabO(sc, node);
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
 {
     Q_ASSERT(sc);
 
-    // Extract frequently used shortcuts
-    const auto& section_config { sc->section_config };
-
     const Section section { sc->section };
     Q_ASSERT(IsOrderSection(section));
 
-    auto* tab_widget { sc->tab_widget.data() };
-    auto* tab_bar { tab_widget->tabBar() };
-
-    // Validate node
     auto* node { static_cast<NodeO*>(sc->tree_model->GetNode(node_id)) };
-    if (!node) {
+    if (!node)
         return;
-    }
 
     NodeO* tmp_node { static_cast<NodeO*>(NodePool::Instance().Allocate(section)) };
     *tmp_node = *node;
 
-    const auto partner_id { tmp_node->partner_id };
-    Q_ASSERT(!partner_id.isNull());
+    Q_ASSERT(!tmp_node->partner_id.isNull());
 
-    // Create model and widget
-    TableModelArg table_model_arg { section, node_id, sc->info.entry_header, tmp_node->direction_rule };
-    auto* table_model { new TableModelO(table_model_arg, tmp_node, this) };
+    OpenNodeTabO(sc, tmp_node);
+}
+
+void MainWindow::OpenNodeTabO(SectionContext* sc, NodeO* node)
+{
+    Q_ASSERT(sc);
+    Q_ASSERT(node);
+
+    const Section section { sc->section };
+    Q_ASSERT(IsOrderSection(section));
+
+    const auto& section_config { sc->section_config };
+    const auto& info { sc->info };
+
+    const QUuid node_id { node->id };
+    const int permissions { UserProfile::Instance().SectionPermissions(section) };
+
+    auto* tab_widget { sc->tab_widget.data() };
+    auto* tab_bar { tab_widget->tabBar() };
+
+    // Create model
+    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
+
+    auto* table_model { new TableModelO(table_model_arg, node, this) };
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };
+
     auto* pmodel { tree_model_p->IncludeUnit(section == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor) };
     auto* emodel { tree_model_p->IncludeUnit(NodeUnit::PEmployee) };
 
@@ -255,36 +233,32 @@ void MainWindow::CreateLeafO(SectionContext* sc, QUuid node_id)
         section_config,
         section,
     };
-    auto* widget = new TableWidgetO(order_arg, tmp_node, UserProfile::Instance().SectionPermissions(section), this);
+
+    auto* widget { new TableWidgetO(order_arg, node, permissions, this) };
 
     // Setup tab
-    const QString partner_name { tree_model_p->Name(partner_id) };
+    const QUuid partner_id { node->partner_id };
+    const QString partner_name { partner_id.isNull() ? QString() : tree_model_p->Name(partner_id) };
+
     const int tab_index { tab_widget->addTab(widget, partner_name) };
-
-    QString path { sc->tree_model->Path(node->parent->id) };
-
-    if (!path.isEmpty())
-        path += app_config_.separator;
-
-    path += partner_name;
-
-    tab_bar->setTabToolTip(tab_index, path);
     tab_bar->setTabData(tab_index, node_id);
 
     // Configure view
-    auto* view = widget->View();
-    SetTableView(view, section, std::to_underlying(EntryEnumO::kDescription));
+    auto* view { widget->View() };
+
     TableConnectO(table_model, widget);
+    SetTableView(view, section, std::to_underlying(EntryEnumO::kDescription));
     TableDelegateO(view, section_config, section);
 
     view->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
     RegisterWidget(sc, widget, node_id, WidgetRole::kNodeTabOR);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id)
+void MainWindow::RSyncPartner(QUuid node_id, QUuid partner_id)
 {
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
@@ -293,10 +267,7 @@ void MainWindow::RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id)
     for (int index = 0; index != count; ++index) {
         if (tab_bar->tabData(index).toUuid() == node_id) {
             const QString partner_name { sc_p_.tree_model->Name(partner_id) };
-            const QString parent_path { sc_->tree_model->Path(parent_id) };
-
             tab_bar->setTabText(index, partner_name);
-            tab_bar->setTabToolTip(index, parent_path.isEmpty() ? partner_name : parent_path + app_config_.separator + partner_name);
             break;
         }
     }

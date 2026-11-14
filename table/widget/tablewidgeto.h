@@ -61,7 +61,7 @@ public:
 
 signals:
     // send to MainWindow
-    void SSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id);
+    void SSyncPartner(QUuid node_id, QUuid partner_id);
 
 public slots:
     // receive from TableModelOrder

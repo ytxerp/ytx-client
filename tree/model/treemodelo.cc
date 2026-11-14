@@ -62,8 +62,6 @@ void TreeModelO::UpdateName(QUuid node_id, const QString& name, int version)
     node->name = name;
     node->version = version;
 
-    UpdateSubtreePath(node);
-
     const int column { std::to_underlying(NodeEnumO::kName) };
     const int row { index.row() };
 
@@ -110,40 +108,6 @@ void TreeModelO::RecallSettlement(QUuid settlement_id)
     }
 }
 
-void TreeModelO::RegisterNode(Node* node)
-{
-    // NOTE: In this section (Sale/Purchase), only branch nodes have a
-    // meaningful hierarchical path. Leaf nodes (orders) are displayed by
-    // their partner name rather than a path, so there is no leaf_path_
-    // entry to register here — unlike TreeModel::RegisterPath, which
-    // handles both branch and leaf kinds.
-
-    const NodeKind kind { node->kind };
-
-    switch (kind) {
-    case NodeKind::kBranch:
-        branch_path_.insert(node->id, path::Build(node, root_, separator_));
-        break;
-
-    case NodeKind::kLeaf: {
-        auto* d_node { DerivedPtr<NodeO>(node) };
-
-        if (d_node->order_status == OrderStatus::kReleased) {
-            const node::Delta delta {
-                .initial = d_node->initial_total,
-                .count = d_node->count_total,
-                .measure = d_node->measure_total,
-            };
-
-            const auto affected_ids { UpdateAncestorTotal(node, delta) };
-            EmitNumericChanged(affected_ids);
-        }
-
-        break;
-    }
-    }
-}
-
 void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
 {
     const auto node_id { node->id };
@@ -157,32 +121,10 @@ void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        UpdateSubtreePath(node);
-        branch_path_.remove(node_id);
         break;
     case NodeKind::kLeaf:
         emit SFreeWidget(section_, node_id);
         break;
-    }
-}
-
-void TreeModelO::UpdateSubtreePath(const Node* node)
-{
-    QQueue<const Node*> queue {};
-    queue.enqueue(node);
-
-    while (!queue.isEmpty()) {
-        const auto* current { queue.dequeue() };
-        const NodeKind kind { current->kind };
-
-        if (kind == NodeKind::kLeaf)
-            continue;
-
-        for (const auto* child : current->children)
-            queue.enqueue(child);
-
-        const auto path { path::Build(current, root_, separator_) };
-        branch_path_.insert(current->id, path);
     }
 }
 
@@ -533,5 +475,4 @@ void TreeModelO::ClearTree()
     NodePool::Instance().Recycle(node_hash_, section_);
 
     root_->children.clear();
-    branch_path_.clear();
 }

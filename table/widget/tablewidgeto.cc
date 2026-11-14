@@ -6,7 +6,6 @@
 #include "global/printhub.h"
 #include "ui_tablewidgeto.h"
 #include "utils/mainwindowutils.h"
-#include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 #include "workspace/sectionpermissions.h"
 
@@ -282,7 +281,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     node_->partner_id = partner_id;
-    emit SSyncPartner(node_->parent->id, node_id_, partner_id);
+    emit SSyncPartner(node_id_, partner_id);
 
     UpdateSaveReleaseButtons();
 }

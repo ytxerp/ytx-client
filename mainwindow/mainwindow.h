@@ -137,7 +137,7 @@ private slots:
     void REntrySelect(Section section, QUuid node_id, QUuid entry_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
-    void RSyncPartner(QUuid parent_id, QUuid node_id, QUuid partner_id);
+    void RSyncPartner(QUuid node_id, QUuid partner_id);
     void RUpdatePartner(QUuid widget_id, QUuid partner_id);
     void RUpdateName(QUuid node_id, const QString& name, bool branch);
     void RMessage(QMessageBox::Icon icon, const QString& message);
@@ -326,6 +326,9 @@ private:
     void CreateLeafFIPT(SectionContext* sc, QUuid node_id);
     void CreateLeafO(SectionContext* sc, QUuid node_id);
     void CreateLeafR(SectionContext* sc, QUuid node_id);
+
+    void OpenNodeTabR(SectionContext* sc, NodeR* node);
+    void OpenNodeTabO(SectionContext* sc, NodeO* node);
 
     // Widget
     void RegisterWidget(SectionContext* sc, QWidget* widget, QUuid widget_id, WidgetRole role);

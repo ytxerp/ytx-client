@@ -47,9 +47,9 @@ public:
     void SyncStatus(QUuid node_id, int status, int version) override;
 
 protected:
-    void RegisterNode(Node* node) override;
+    void RegisterNode(Node* node) override { Q_UNUSED(node) }
     void UnregisterNode(Node* node, Node* parent_node) override;
-    void UpdateSubtreePath(const Node* node) override;
+    void UpdateSubtreePath(const Node* node) override { Q_UNUSED(node) }
 
     void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
     void ClearTree() override;
