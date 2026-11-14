@@ -463,7 +463,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SIncomeStatement, this, &MainWindow::RIncomeStatement);
     connect(WebSocket::Instance(), &WebSocket::SCashFlowStatement, this, &MainWindow::RCashFlowStatement);
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteLockedDeny, this, &MainWindow::RLeafDeleteLockedDeny);
-    connect(WebSocket::Instance(), &WebSocket::SOrderSearch, this, &MainWindow::ROrderSearch);
+    connect(WebSocket::Instance(), &WebSocket::SNodeSearch, this, &MainWindow::RNodeSearch);
     connect(WebSocket::Instance(), &WebSocket::SEntrySearch, this, &MainWindow::REntrySearch);
     connect(WebSocket::Instance(), &WebSocket::SReimbursementSync, this, &MainWindow::RReimbursementSync);
     connect(WebSocket::Instance(), &WebSocket::SReimbursementStatus, this, &MainWindow::RReimbursementStatus);

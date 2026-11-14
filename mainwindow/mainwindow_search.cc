@@ -4,16 +4,19 @@
 #include "search/dialog/searchdialogi.h"
 #include "search/dialog/searchdialogo.h"
 #include "search/dialog/searchdialogp.h"
+#include "search/dialog/searchdialogr.h"
 #include "search/dialog/searchdialogt.h"
 #include "search/entry/searchentrymodelf.h"
 #include "search/entry/searchentrymodeli.h"
 #include "search/entry/searchentrymodelo.h"
 #include "search/entry/searchentrymodelp.h"
+#include "search/entry/searchentrymodelr.h"
 #include "search/entry/searchentrymodelt.h"
 #include "search/node/searchnodemodelf.h"
 #include "search/node/searchnodemodeli.h"
 #include "search/node/searchnodemodelo.h"
 #include "search/node/searchnodemodelp.h"
+#include "search/node/searchnodemodelr.h"
 #include "search/node/searchnodemodelt.h"
 #include "utils/mainwindowutils.h"
 
@@ -59,7 +62,10 @@ void MainWindow::on_actionSearch_triggered()
         entry = new search::EntryModelO(section, info.full_entry_header, sc_->tag_hash, this);
         dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, widget_id, nullptr);
         break;
-    default:
+    case Section::kReimbursement:
+        node = new search::NodeModelR(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
+        entry = new search::EntryModelR(section, info.full_entry_header, sc_->tag_hash, this);
+        dialog = new SearchDialogR(sc_, node, entry, sc_f_.tree_model, widget_id, nullptr);
         break;
     }
 
@@ -71,7 +77,7 @@ void MainWindow::on_actionSearch_triggered()
     dialog->show();
 }
 
-void MainWindow::ROrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array)
+void MainWindow::RNodeSearch(Section section, QUuid widget_id, const QJsonArray& node_array)
 {
     auto* sc { GetSectionContext(section) };
 
@@ -80,9 +86,9 @@ void MainWindow::ROrderSearch(Section section, QUuid widget_id, const QJsonArray
         return;
 
     auto* ptr { widget.data() };
-    Q_ASSERT(qobject_cast<SearchDialogO*>(ptr));
+    Q_ASSERT(qobject_cast<SearchDialog*>(ptr));
 
-    auto* d_widget { static_cast<SearchDialogO*>(ptr) };
+    auto* d_widget { static_cast<SearchDialog*>(ptr) };
 
     auto* model { d_widget->NodeModel() };
     model->Rebuild(node_array);

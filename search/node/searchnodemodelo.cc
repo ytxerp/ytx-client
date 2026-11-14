@@ -149,13 +149,13 @@ void NodeModelO::Search(QUuid widget_id, CString& text)
 
     // Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kOrderTagSearch, JsonGen::OrderTagSearch(section_, widget_id, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kNodeTagSearch, JsonGen::NodeTagSearch(section_, widget_id, query.tags));
         return;
     }
 
     // Send order partner name search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kOrderNameSearch, JsonGen::OrderNameSearch(section_, widget_id, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kOrderNameSearch, JsonGen::NodeNameSearch(section_, widget_id, query.text));
         return;
     }
 

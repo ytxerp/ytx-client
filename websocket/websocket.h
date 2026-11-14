@@ -89,7 +89,7 @@ signals:
     void SSettlementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
     void SSettlementSecondary(Section section, QUuid widget_id, const QJsonArray& array);
     void SSettlementView(Section section, QUuid widget_id, const QJsonArray& array);
-    void SOrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
+    void SNodeSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
     void SEntrySearch(Section section, QUuid widget_id, const QJsonArray& entry_array);
 
     void SOrderStatus(Section section, QUuid node_id, int status, int version);
@@ -188,7 +188,7 @@ private:
     void FetchCashFlowStatement(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
-    void SearchOrder(const QJsonObject& obj);
+    void SearchNode(const QJsonObject& obj);
 
     void DenyLeafDelete(const QJsonObject& obj);
     void OnDefaultUnitUpdateDeny(const QJsonObject& obj);

@@ -237,18 +237,21 @@ set(HEADERS
     search/dialog/searchdialogi.h
     search/dialog/searchdialogo.h
     search/dialog/searchdialogp.h
+    search/dialog/searchdialogr.h
     search/dialog/searchdialogt.h
     search/entry/searchentrymodel.h
     search/entry/searchentrymodelf.h
     search/entry/searchentrymodeli.h
     search/entry/searchentrymodelo.h
     search/entry/searchentrymodelp.h
+    search/entry/searchentrymodelr.h
     search/entry/searchentrymodelt.h
     search/node/searchnodemodel.h
     search/node/searchnodemodelf.h
     search/node/searchnodemodeli.h
     search/node/searchnodemodelo.h
     search/node/searchnodemodelp.h
+    search/node/searchnodemodelr.h
     search/node/searchnodemodelt.h
     table/dynamicsummarymodel.h
     table/entry.h
@@ -457,18 +460,21 @@ set(SOURCES
     search/dialog/searchdialogi.cc
     search/dialog/searchdialogo.cc
     search/dialog/searchdialogp.cc
+    search/dialog/searchdialogr.cc
     search/dialog/searchdialogt.cc
     search/entry/searchentrymodel.cc
     search/entry/searchentrymodelf.cc
     search/entry/searchentrymodeli.cc
     search/entry/searchentrymodelo.cc
     search/entry/searchentrymodelp.cc
+    search/entry/searchentrymodelr.cc
     search/entry/searchentrymodelt.cc
     search/node/searchnodemodel.cc
     search/node/searchnodemodelf.cc
     search/node/searchnodemodeli.cc
     search/node/searchnodemodelo.cc
     search/node/searchnodemodelp.cc
+    search/node/searchnodemodelr.cc
     search/node/searchnodemodelt.cc
     table/dynamicsummarymodel.cc
     table/entry.cc

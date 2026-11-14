@@ -207,8 +207,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
     handler_obj_[WsKey::kEntryDescriptionSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
     handler_obj_[WsKey::kEntryTagSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
-    handler_obj_[WsKey::kOrderNameSearch] = [this](const QJsonObject& obj) { SearchOrder(obj); };
-    handler_obj_[WsKey::kOrderTagSearch] = [this](const QJsonObject& obj) { SearchOrder(obj); };
+    handler_obj_[WsKey::kOrderNameSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
+    handler_obj_[WsKey::kNodeNameSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
+    handler_obj_[WsKey::kNodeTagSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
     handler_obj_[WsKey::kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[WsKey::kPartnerEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[WsKey::kEntryDelete] = [this](const QJsonObject& obj) { DeleteEntry(obj); };
@@ -1036,13 +1037,13 @@ void WebSocket::SearchEntry(const QJsonObject& obj)
     emit SEntrySearch(section, widget_id, array);
 }
 
-void WebSocket::SearchOrder(const QJsonObject& obj)
+void WebSocket::SearchNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray node_array { obj.value(kNodeArray).toArray() };
 
-    emit SOrderSearch(section, widget_id, node_array);
+    emit SNodeSearch(section, widget_id, node_array);
 }
 
 void WebSocket::InsertEntry(const QJsonObject& obj)

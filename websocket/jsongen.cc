@@ -235,7 +235,7 @@ QJsonObject NodeName(Section section, QUuid node_id, CString& name, int version)
     return message;
 }
 
-QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword)
+QJsonObject NodeNameSearch(Section section, QUuid widget_id, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -423,7 +423,7 @@ QJsonObject AuditLog(QUuid widget_id, CString& workspace, const utils::DateTimeR
     return message;
 }
 
-QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags)
+QJsonObject NodeTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

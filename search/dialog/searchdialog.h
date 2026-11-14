@@ -103,6 +103,7 @@ protected:
     ColorR* color_ {};
     SearchPathTableR* table_path_ {};
     TagDelegate* tag_ {};
+    IntStringR* status_ {};
 
     CSectionConfig& config_;
     CSectionInfo& info_;

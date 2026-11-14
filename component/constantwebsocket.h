@@ -189,7 +189,6 @@ enum class WsKey : uint16_t {
     kOrderNodeUpdate = 2604,
 
     kOrderNameSearch = 2610,
-    kOrderTagSearch = 2611,
 
     kOrderNodeFetch = 2620,
     kOrderTreeFetch = 2621,
@@ -367,8 +366,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kAccountRoleDelete";
     case WsKey::kAuditLogFetch:
         return "kAuditLogFetch";
-    case WsKey::kOrderTagSearch:
-        return "kOrderTagSearch";
     case WsKey::kPeriodClose:
         return "kPeriodClose";
     case WsKey::kInventoryHeatFetch:

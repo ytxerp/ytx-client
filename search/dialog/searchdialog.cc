@@ -115,13 +115,27 @@ void SearchDialog::InitDelegate()
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
     tag_ = new TagDelegate(tag_icon_hash_, this);
+    status_ = new IntStringR(info_.status_map, this);
 }
 
 void SearchDialog::HideTableColumn(QTableView* view)
 {
-    if (section_ == Section::kSale || section_ == Section::kPurchase) {
+    switch (section_) {
+    case Section::kSale:
+    case Section::kPurchase:
         view->setColumnHidden(std::to_underlying(EntryEnumO::kExternalSku), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnumO::kLhsNode), kIsHidden);
+        break;
+
+    case Section::kReimbursement:
+        view->setColumnHidden(std::to_underlying(EntryEnumR::kLhsNode), kIsHidden);
+        break;
+
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+    case Section::kPartner:
+        break;
     }
 }
 

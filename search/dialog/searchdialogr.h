@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 2026 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#pragma once
+
+#include "searchdialog.h"
+
+class SearchDialogR final : public SearchDialog {
+    Q_OBJECT
+
+public:
+    SearchDialogR(
+        SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* finance, QUuid widget_id, QWidget* parent = nullptr);
+
+private:
+    void TreeViewDelegate(QTableView* view) override;
+    void TableViewDelegate(QTableView* view) override;
+
+private:
+    CTreeModel* finance_ {};
+};

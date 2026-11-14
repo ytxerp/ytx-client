@@ -78,8 +78,8 @@ QJsonObject DefaultUnit(Section section, int unit);
 
 QJsonObject EntryDescriptionSearch(Section section, QUuid widget_id, CString& keyword);
 QJsonObject EntryTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
-QJsonObject OrderNameSearch(Section section, QUuid widget_id, CString& keyword);
-QJsonObject OrderTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
+QJsonObject NodeNameSearch(Section section, QUuid widget_id, CString& keyword);
+QJsonObject NodeTagSearch(Section section, QUuid widget_id, const QSet<QString>& tags);
 
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);

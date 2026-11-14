@@ -159,7 +159,7 @@ private slots:
     void RCleanUp();
 
     void ROrderOverview(Section section, QUuid widget_id, const QJsonArray& array);
-    void ROrderSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
+    void RNodeSearch(Section section, QUuid widget_id, const QJsonArray& node_array);
     void REntrySearch(Section section, QUuid widget_id, const QJsonArray& entry_array);
 
     void RStatementPrimary(Section section, QUuid widget_id, const QJsonArray& array);
