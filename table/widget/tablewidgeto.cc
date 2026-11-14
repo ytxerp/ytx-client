@@ -223,6 +223,7 @@ void TableWidgetO::UpdateButtons(OrderStatus value)
 
     ui->comboPartner->setReadOnly(!draft);
     ui->comboEmployee->setReadOnly(released);
+    ui->pBtnPrint->setEnabled(released && no_pending);
 
     ui->rBtnRO->setEnabled(draft);
     ui->rBtnFO->setEnabled(draft);

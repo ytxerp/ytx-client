@@ -224,11 +224,8 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kLeafDeleteAllow] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kOrderInsert] = [this](const QJsonObject& obj) { InsertOrder(obj); };
     handler_obj_[WsKey::kOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
-    handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj); };
     handler_obj_[WsKey::kOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
     handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
-    handler_obj_[WsKey::kRecalledOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
-    handler_obj_[WsKey::kRecalledOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
@@ -1206,17 +1203,17 @@ void WebSocket::UpdateOrder(const QJsonObject& obj)
     const auto node_update { obj.value(kNodeUpdate).toObject() };
     const int version { obj.value(kVersion).toInt() };
 
-    auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
-    Q_ASSERT(order_model != nullptr);
+    auto model { tree_model_hash_.value(section) };
+    Q_ASSERT(model != nullptr);
 
-    if (!order_model->Contains(node_id))
+    if (!model->Contains(node_id))
         return;
 
     if (session_id == session_id_) {
         emit SOrderSave(section, node_id, version);
     }
 
-    order_model->UpdateNode(node_id, node_update, version);
+    model->UpdateNode(node_id, node_update, version);
 }
 
 void WebSocket::InsertOrder(const QJsonObject& obj)
@@ -1230,15 +1227,15 @@ void WebSocket::InsertOrder(const QJsonObject& obj)
     const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
     const auto node_id { QUuid(node_obj.value(kId).toString()) };
 
-    auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
-    Q_ASSERT(order_model != nullptr);
+    auto model { tree_model_hash_.value(section) };
+    Q_ASSERT(model != nullptr);
 
-    order_model->SyncNode(ancestor, node_obj);
+    model->SyncNode(ancestor, node_obj);
     const int version { node_obj.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
-        emit SNodeSelect(section, descendant);
         emit SOrderSave(section, node_id, version);
+        emit SNodeSelect(section, descendant);
     }
 }
 
