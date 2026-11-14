@@ -480,7 +480,7 @@ void MainWindow::InitContextReimbursement()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     // Reimbursement Status
-    info.status_map.insert(std::to_underlying(ReimbursementStatus::kDraft), tr("Draft"));
+    info.status_map.insert(std::to_underlying(ReimbursementStatus::kDraft), QString());
     info.status_map.insert(std::to_underlying(ReimbursementStatus::kApproved), tr("Approved"));
     info.status_map.insert(std::to_underlying(ReimbursementStatus::kPosted), tr("Posted"));
 
