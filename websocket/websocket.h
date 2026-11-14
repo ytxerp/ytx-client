@@ -210,7 +210,6 @@ private:
     void MoveNode(const QJsonObject& obj);
     void MergeLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
-    void DeleteOrderLeaf(const QJsonObject& obj);
     void DeletePartnerLeaf(const QJsonObject& obj);
     void CommitDeleteNode(const QJsonObject& obj);
     void UpdateNodeDirectionRule(const QJsonObject& obj);

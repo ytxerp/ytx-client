@@ -71,6 +71,7 @@ void LeafDeleteDialog::InitCheckBoxGroup()
         break;
     case Section::kFinance:
     case Section::kTask:
+    case Section::kReimbursement:
         break;
     default:
         break;
@@ -88,12 +89,12 @@ void LeafDeleteDialog::on_pBtnOk_clicked()
     switch (section_) {
     case Section::kSale:
     case Section::kPurchase:
-        info = tr("Delete this order and all its entries."
+        info = tr("Delete this node and all its entries."
                   "<br><br>"
                   "<span style='color:#d32f2f; font-weight:bold;'>"
                   "⚠️ This action is permanent and cannot be undone."
                   "</span>");
-        key = WsKey::kOrderLeafDelete;
+        key = WsKey::kLeafDeleteO;
         break;
     case Section::kPartner:
         info = tr("Delete <b>%1</b> and all its entries."
@@ -102,7 +103,7 @@ void LeafDeleteDialog::on_pBtnOk_clicked()
                   "⚠️ This action is permanent and cannot be undone."
                   "</span>")
                    .arg(path_);
-        key = WsKey::kPartnerLeafDelete;
+        key = WsKey::kLeafDeleteP;
         break;
     case Section::kFinance:
     case Section::kTask:
@@ -116,6 +117,14 @@ void LeafDeleteDialog::on_pBtnOk_clicked()
                   "<i>💡 Tip: Consider relocating entries before deleting.</i>")
                    .arg(path_);
         key = WsKey::kLeafDelete;
+        break;
+    case Section::kReimbursement:
+        info = tr("Delete this node and all its entries."
+                  "<br><br>"
+                  "<span style='color:#d32f2f; font-weight:bold;'>"
+                  "⚠️ This action is permanent and cannot be undone."
+                  "</span>");
+        key = WsKey::kLeafDeleteR;
         break;
     }
 

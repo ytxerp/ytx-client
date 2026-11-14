@@ -34,6 +34,16 @@ void MainWindow::DeleteNode()
         }
     }
 
+    if (section == Section::kReimbursement) {
+        auto* d_node { static_cast<NodeR*>(node) };
+
+        if (d_node->reimbursement_status != ReimbursementStatus::kDraft) {
+            utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"), tr("Only draft reimbursements can be deleted."), time_const::kAutoCloseMs);
+
+            return;
+        }
+    }
+
     node->sync_state = SyncState::kDeleting;
 
     switch (NodeKind(node->kind)) {

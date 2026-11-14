@@ -197,9 +197,10 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[WsKey::kOrderNodeFetch] = [this](const QJsonObject& obj) { FetchNode(obj); };
     handler_obj_[WsKey::kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
-    handler_obj_[WsKey::kPartnerLeafDelete] = [this](const QJsonObject& obj) { DeletePartnerLeaf(obj); };
-    handler_obj_[WsKey::kOrderLeafDelete] = [this](const QJsonObject& obj) { DeleteOrderLeaf(obj); };
+    handler_obj_[WsKey::kLeafDeleteP] = [this](const QJsonObject& obj) { DeletePartnerLeaf(obj); };
+    handler_obj_[WsKey::kLeafDeleteO] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
+    handler_obj_[WsKey::kLeafDeleteR] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kLeafMerge] = [this](const QJsonObject& obj) { MergeLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kOrderNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
@@ -798,17 +799,6 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
     tree_model->DeleteNode(node_id);
 }
 
-void WebSocket::DeleteOrderLeaf(const QJsonObject& obj)
-{
-    const Section section { obj.value(kSection).toInt() };
-    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-
-    auto entry_hub { entry_hub_hash_.value(section) };
-    auto tree_model { tree_model_hash_.value(section) };
-
-    tree_model->DeleteNode(node_id);
-}
-
 void WebSocket::DeletePartnerLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
@@ -830,7 +820,6 @@ void WebSocket::CommitDeleteNode(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
-
     tree_model->DeleteNode(node_id);
 }
 

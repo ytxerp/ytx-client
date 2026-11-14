@@ -75,8 +75,9 @@ enum class WsKey : uint16_t {
     kLeafMerge = 1400,
     kBranchDelete = 1401,
     kLeafDelete = 1402,
-    kPartnerLeafDelete = 1403,
-    kOrderLeafDelete = 1404,
+    kLeafDeleteP = 1403,
+    kLeafDeleteO = 1404,
+    kLeafDeleteR = 1405,
 
     kLeafDeleteCheck = 1410,
     kLeafDeleteAllow = 1411,
@@ -273,10 +274,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kNodeMove";
     case WsKey::kLeafDelete:
         return "kLeafDelete";
-    case WsKey::kPartnerLeafDelete:
-        return "kLeafDeletePartner";
-    case WsKey::kOrderLeafDelete:
-        return "kLeafDeleteOrder";
+    case WsKey::kLeafDeleteP:
+        return "kLeafDeleteP";
+    case WsKey::kLeafDeleteO:
+        return "kLeafDeleteO";
     case WsKey::kLeafMerge:
         return "kLeafMerge";
     case WsKey::kBranchDelete:
@@ -408,5 +409,7 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kReimbursementNodeUpdate";
     case WsKey::kPermissionDenyReimbursement:
         return "kPermissionDenyReimbursement";
+    case WsKey::kLeafDeleteR:
+        return "kLeafDeleteR";
     }
 }
