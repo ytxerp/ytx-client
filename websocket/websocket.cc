@@ -169,7 +169,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kDefaultUnitUpdateDeny] = [this](const QJsonObject& obj) { OnDefaultUnitUpdateDeny(obj); };
     handler_obj_[WsKey::kDocumentDirUpdate] = [this](const QJsonObject& obj) { UpdateDocumentDir(obj); };
 
-    handler_obj_[WsKey::kOrderTreeFetch] = [this](const QJsonObject& obj) { FetchTree(obj); };
+    handler_obj_[WsKey::kTreeFetch] = [this](const QJsonObject& obj) { FetchTree(obj); };
     handler_obj_[WsKey::kTableFetch] = [this](const QJsonObject& obj) { FetchTable(obj); };
     handler_obj_[WsKey::kOrderOverviewFetch] = [this](const QJsonObject& obj) { FetchOrderOverview(obj); };
     handler_obj_[WsKey::kStatementPrimaryFetch] = [this](const QJsonObject& obj) { FetchStatementPrimary(obj); };
@@ -195,7 +195,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kTreeSyncFinish] = [this](const QJsonObject& /*obj*/) { FinishTreeSync(); };
     handler_obj_[WsKey::kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
-    handler_obj_[WsKey::kOrderNodeFetch] = [this](const QJsonObject& obj) { FetchNode(obj); };
+    handler_obj_[WsKey::kNodeFetch] = [this](const QJsonObject& obj) { FetchNode(obj); };
     handler_obj_[WsKey::kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
     handler_obj_[WsKey::kLeafDeleteP] = [this](const QJsonObject& obj) { DeletePartnerLeaf(obj); };
     handler_obj_[WsKey::kLeafDeleteO] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };

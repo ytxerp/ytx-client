@@ -194,7 +194,7 @@ void SearchDialog::REntryDoubleClicked(const QModelIndex& index)
     auto rhs_id { entry->rhs_node };
     auto entry_id { entry->id };
 
-    if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
+    if (lhs_id.isNull() || entry_id.isNull())
         return;
 
     emit SEntryLocate(section_, entry_id, lhs_id, rhs_id);

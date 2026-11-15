@@ -767,7 +767,7 @@ void TreeModel::AckNode(QUuid node_id) const
         return;
 
     const auto message { JsonGen::NodeFetch(section_, node_id) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderNodeFetch, message);
+    WebSocket::Instance()->SendMessage(WsKey::kNodeFetch, message);
 }
 
 void TreeModel::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)

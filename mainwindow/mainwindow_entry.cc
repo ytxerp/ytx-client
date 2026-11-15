@@ -90,7 +90,7 @@ void MainWindow::REntryLocate(Section section, QUuid entry_id, QUuid lhs_node_id
         EntryLocateO(section, entry_id, lhs_node_id);
         break;
     case Section::kReimbursement:
-        EntryLocateP(section, entry_id, lhs_node_id);
+        EntryLocateR(section, entry_id, lhs_node_id);
         break;
     }
 }

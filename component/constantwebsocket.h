@@ -190,9 +190,7 @@ enum class WsKey : uint16_t {
 
     kOrderNameSearch = 2610,
 
-    kOrderNodeFetch = 2620,
-    kOrderTreeFetch = 2621,
-    kOrderOverviewFetch = 2622,
+    kOrderOverviewFetch = 2620,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -218,8 +216,6 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kDocumentDirUpdate:
         return "kDocumentDirUpdate";
 
-    case WsKey::kOrderTreeFetch:
-        return "kOrderTreeFetch";
     case WsKey::kTableFetch:
         return "kTableFetch";
     case WsKey::kStatementPrimaryFetch:
@@ -232,8 +228,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kSettlementPrimaryFetch";
     case WsKey::kSettlementSecondaryFetch:
         return "kSettlementSecondaryFetch";
-    case WsKey::kOrderNodeFetch:
-        return "kOrderNodeFetch";
 
     case WsKey::kSettlementInsert:
         return "kSettlementInsert";
