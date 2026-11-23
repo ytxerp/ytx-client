@@ -63,6 +63,8 @@ QVariant TableModelR::data(const QModelIndex& index, int role) const
         return entry->tag;
     case EntryEnumR::kIssuedTime:
         return entry->issued_time;
+    case EntryEnumR::kStatus:
+        return entry->status;
     }
 }
 
@@ -79,6 +81,13 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
 
     const EntryEnumR column { index.column() };
     auto* row { static_cast<EntryR*>(index.internalPointer()) };
+
+    if (column == EntryEnumR::kStatus) {
+        row->status = value.toInt();
+
+        emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+        return true;
+    }
 
     const double old_initial { row->initial };
 
@@ -97,6 +106,7 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     case EntryEnumR::kLhsNode:
     case EntryEnumR::kIssuedTime:
+    case EntryEnumR::kStatus:
         break;
     }
 
@@ -178,11 +188,13 @@ void TableModelR::sort(int column, Qt::SortOrder order)
         case EntryEnumR::kInitial:
             return utils::CompareMember(d_lhs, d_rhs, &EntryR::initial, order);
         case EntryEnumR::kTag:
-            return utils::CompareMember(lhs, rhs, &EntryR::tag, order);
+            return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumR::kIssuedTime:
-            return utils::CompareMember(lhs, rhs, &EntryR::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case EntryEnumR::kLhsNode:
             return false;
+        case EntryEnumR::kStatus:
+            return utils::CompareMember(lhs, rhs, &Entry::status, order);
         }
     };
 
@@ -294,6 +306,7 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
     case EntryEnumR::kTag:
     case EntryEnumR::kLhsNode:
     case EntryEnumR::kIssuedTime:
+    case EntryEnumR::kStatus:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

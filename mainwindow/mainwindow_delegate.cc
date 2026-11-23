@@ -782,6 +782,10 @@ void MainWindow::TableDelegateR(QTableView* table_view, CSectionConfig& config) 
 
     auto* issued_time { new IssuedTimeR(datetime_format::kTime, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kIssuedTime), issued_time);
+
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kStatus), status);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

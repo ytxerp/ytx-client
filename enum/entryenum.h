@@ -105,6 +105,7 @@ enum class EntryEnumR {
     kIssuedTime,
     kDescription,
     kInitial,
+    kStatus,
     kTag,
     kDocument,
 };
