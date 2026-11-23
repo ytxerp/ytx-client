@@ -76,9 +76,6 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     if (data(index, role) == value)
         return false;
 
-    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
-        return false;
-
     const EntryEnumR column { index.column() };
     auto* row { static_cast<EntryR*>(index.internalPointer()) };
 
@@ -88,6 +85,9 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
         emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
         return true;
     }
+
+    if (d_node_->reimbursement_status != ReimbursementStatus::kDraft || d_node_->sync_state == SyncState::kUpdating)
+        return false;
 
     const double old_initial { row->initial };
 
