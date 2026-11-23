@@ -123,6 +123,7 @@ enum class TargetField {
     kNumeric = 200,
     kRate = 201,
     kLinkedNode = 202,
+    kLocked = 203,
 
     // --- Common: 300–399 ---
     kStatus = 300,

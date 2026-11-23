@@ -91,6 +91,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetField::kDirectionRule), tr("Direction Rule") },
         { std::to_underlying(TargetField::kNumeric), tr("Numeric") },
         { std::to_underlying(TargetField::kRate), tr("Rate") },
+        { std::to_underlying(TargetField::kLocked), tr("Locked") },
         { std::to_underlying(TargetField::kLinkedNode), tr("Linked Node") },
         { std::to_underlying(TargetField::kContent), tr("Content") },
         { std::to_underlying(TargetField::kStatus), tr("Status") },
