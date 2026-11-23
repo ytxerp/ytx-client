@@ -58,7 +58,7 @@ void TableWidgetR::StatusSucceeded(int status, int version)
 {
     qDebug() << Q_FUNC_INFO;
 
-    Q_ASSERT(status >= std::to_underlying(ReimbursementStatus::kDraft) && status <= std::to_underlying(ReimbursementStatus::kPosted));
+    Q_ASSERT(status >= std::to_underlying(ReimbursementStatus::kDraft) && status <= std::to_underlying(ReimbursementStatus::kApproved));
 
     node_->reimbursement_status = static_cast<ReimbursementStatus>(status);
     node_->version = version;

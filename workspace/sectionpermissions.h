@@ -27,13 +27,11 @@
 namespace reimbursement_permission {
 inline constexpr int kApprove = 1 << 2;
 inline constexpr int kUnapprove = 1 << 3;
-inline constexpr int kPost = 1 << 4;
-inline constexpr int kUnpost = 1 << 5;
 }
 
 namespace order_permission {
-inline constexpr int kRelease = 1 << 2;
-inline constexpr int kUnrelease = 1 << 3;
+inline constexpr int kApprove = 1 << 2;
+inline constexpr int kUnapprove = 1 << 3;
 }
 
 namespace section {

@@ -267,25 +267,25 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pBtnRecall">
+         <widget class="QPushButton" name="pBtnApprove">
           <property name="focusPolicy">
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="text">
-           <string>Recall</string>
+           <string>Approve</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pBtnRelease">
+         <widget class="QPushButton" name="pBtnUnapprove">
           <property name="focusPolicy">
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="text">
-           <string>Release</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
+           <string>Unapprove</string>
           </property>
          </widget>
         </item>

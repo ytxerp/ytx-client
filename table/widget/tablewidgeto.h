@@ -94,8 +94,8 @@ private slots:
     void RRuleGroupClicked(int id);
     void RUnitGroupClicked(int id);
 
-    void on_pBtnRecall_clicked();
-    void on_pBtnRelease_clicked();
+    void on_pBtnUnapprove_clicked();
+    void on_pBtnApprove_clicked();
 
 private:
     void InitWidget(QSortFilterProxyModel* pmodel, QSortFilterProxyModel* emodel);

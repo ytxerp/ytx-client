@@ -407,8 +407,8 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.status_map.insert(std::to_underlying(OrderStatus::kDraft), tr("Draft", "Filter"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released", "Filter"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kApproved), tr("Approved", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kUnapproved), tr("Unapproved", "Filter"));
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
@@ -446,8 +446,8 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.status_map.insert(std::to_underlying(OrderStatus::kDraft), tr("Draft", "Filter"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released", "Filter"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kApproved), tr("Approved", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kUnapproved), tr("Unapproved", "Filter"));
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
@@ -482,7 +482,6 @@ void MainWindow::InitContextReimbursement()
     // Reimbursement Status
     info.status_map.insert(std::to_underlying(ReimbursementStatus::kDraft), QString());
     info.status_map.insert(std::to_underlying(ReimbursementStatus::kApproved), tr("Approved"));
-    info.status_map.insert(std::to_underlying(ReimbursementStatus::kPosted), tr("Posted"));
 
     entry_hub = new EntryHubR(Section::kReimbursement, this);
     tree_model = new TreeModelR(Section::kReimbursement, info.node_header, app_config_.separator, this);

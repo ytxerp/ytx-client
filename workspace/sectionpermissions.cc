@@ -16,8 +16,8 @@ std::span<const PermissionItem> PermissionItems(Section section)
     static const PermissionItem order[] = {
         { 0b01, QObject::tr("Read Only") },
         { 0b11, QObject::tr("Read Write") },
-        { 1 << 2, QObject::tr("Release") },
-        { 1 << 3, QObject::tr("Unrelease") },
+        { 1 << 2, QObject::tr("Approve") },
+        { 1 << 3, QObject::tr("Unapprove") },
         { 1 << 4, QObject::tr("Settle") },
         { 1 << 5, QObject::tr("Unsettle") },
     };
@@ -27,8 +27,6 @@ std::span<const PermissionItem> PermissionItems(Section section)
         { 0b11, QObject::tr("Read Write") },
         { 1 << 2, QObject::tr("Approve") },
         { 1 << 3, QObject::tr("Unapprove") },
-        { 1 << 4, QObject::tr("Post") },
-        { 1 << 5, QObject::tr("Unpost") },
     };
 
     switch (section) {
