@@ -767,6 +767,15 @@ void MainWindow::TreeDelegateR(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kKind), kind);
+
+    auto* tag { new TagDelegate(sc_r_.tag_icon_hash, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kTag), tag);
+
+    auto* document { new Document(sc_r_.shared_config.document_dir, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kDocument), document);
+
+    auto* color { new Color(tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumR::kColor), color);
 }
 
 void MainWindow::TableDelegateR(QTableView* table_view, CSectionConfig& config) const
