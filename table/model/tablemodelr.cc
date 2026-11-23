@@ -285,6 +285,20 @@ bool TableModelR::HasPendingUpdate() const
     return false;
 }
 
+QModelIndex TableModelR::GetIndex(QUuid entry_id) const
+{
+    int row { 0 };
+
+    for (const auto* entry : entry_list_) {
+        if (entry->id == entry_id) {
+            return index(row, 0);
+        }
+        ++row;
+    }
+
+    return QModelIndex();
+}
+
 Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 {
     if (!index.isValid())

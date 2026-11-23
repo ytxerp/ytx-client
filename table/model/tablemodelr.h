@@ -48,6 +48,9 @@ public:
     void SyncSucceeded();
     bool HasPendingUpdate() const;
 
+    Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
+    QModelIndex GetIndex(QUuid entry_id) const override;
+
 private:
     bool UpdateDescription(EntryR* entry, const QString& value);
     bool UpdateDocument(EntryR* entry, const QStringList& value);
