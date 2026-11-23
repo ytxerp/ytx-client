@@ -158,9 +158,7 @@ enum class WsKey : uint16_t {
     kReimbursementUpdate = 2101,
     kReimbursementApprove = 2102,
     kReimbursementUnapprove = 2103,
-    kReimbursementPost = 2104,
-    kReimbursementUnpost = 2105,
-    kReimbursementNodeUpdate = 2106,
+    kReimbursementNodeUpdate = 2104,
 
     // --- Finance (2200-2299) ---
     kBalanceSheetFetch = 2200,
@@ -392,10 +390,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kReimbursementApprove";
     case WsKey::kReimbursementUnapprove:
         return "kReimbursementUnapprove";
-    case WsKey::kReimbursementPost:
-        return "kReimbursementPost";
-    case WsKey::kReimbursementUnpost:
-        return "kReimbursementUnpost";
     case WsKey::kReimbursementNodeUpdate:
         return "kReimbursementNodeUpdate";
     case WsKey::kPermissionDenyReimbursement:

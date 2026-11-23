@@ -104,8 +104,6 @@ enum class TargetOperation {
     // --- Reimbursement: 240–269 ---
     kApprove = 240,
     kUnapprove = 241,
-    kPost = 242,
-    kUnpost = 243,
 
     // Lock: 300–399
     kLock = 300,

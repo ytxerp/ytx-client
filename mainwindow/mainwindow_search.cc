@@ -65,7 +65,7 @@ void MainWindow::on_actionSearch_triggered()
     case Section::kReimbursement:
         node = new search::NodeModelR(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelR(section, info.full_entry_header, sc_->tag_hash, this);
-        dialog = new SearchDialogR(sc_, node, entry, sc_f_.tree_model, widget_id, nullptr);
+        dialog = new SearchDialogR(sc_, node, entry, widget_id, nullptr);
         break;
     }
 

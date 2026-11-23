@@ -25,13 +25,9 @@ class SearchDialogR final : public SearchDialog {
     Q_OBJECT
 
 public:
-    SearchDialogR(
-        SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* finance, QUuid widget_id, QWidget* parent = nullptr);
+    SearchDialogR(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent = nullptr);
 
 private:
     void TreeViewDelegate(QTableView* view) override;
     void TableViewDelegate(QTableView* view) override;
-
-private:
-    CTreeModel* finance_ {};
 };

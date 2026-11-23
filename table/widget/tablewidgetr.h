@@ -50,11 +50,9 @@ public slots:
 
 private slots:
     void on_pushButtonApprove_clicked();
-    void on_pushButtonPost_clicked();
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
     void on_lineEditDescription_textEdited(const QString& arg1);
     void on_pushButtonUnapprove_clicked();
-    void on_pushButtonUnpost_clicked();
 
 private:
     void InitWidget();

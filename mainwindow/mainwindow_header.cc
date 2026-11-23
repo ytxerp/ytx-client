@@ -363,8 +363,6 @@ void MainWindow::InitHeader(SectionInfo& f, SectionInfo& i, SectionInfo& t, Sect
         tr("Issued Time"),
         tr("Description"),
         tr("Initial"),
-        tr("Debit"),
-        tr("Credit"),
         tr("Tag"),
         tr("Document"),
     };

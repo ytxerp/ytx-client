@@ -5,12 +5,10 @@
 #include "component/constantstring.h"
 #include "global/entrypool.h"
 #include "utils/templateutils.h"
-#include "workspace/sectionpermissions.h"
 
-TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, int finance_permission, QObject* parent)
+TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, QObject* parent)
     : TableModel { arg, parent }
     , d_node_ { node }
-    , finance_permission_ { finance_permission }
 {
 }
 
@@ -55,10 +53,6 @@ QVariant TableModelR::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumR::kDescription:
         return entry->description;
-    case EntryEnumR::kDebitNode:
-        return entry->debit_node;
-    case EntryEnumR::kCreditNode:
-        return entry->credit_node;
     case EntryEnumR::kDocument:
         return entry->document;
     case EntryEnumR::kInitial:
@@ -91,12 +85,6 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     switch (column) {
     case EntryEnumR::kDescription:
         UpdateDescription(row, value.toString());
-        break;
-    case EntryEnumR::kDebitNode:
-        UpdateDebit(row, value.toUuid());
-        break;
-    case EntryEnumR::kCreditNode:
-        UpdateCredit(row, value.toUuid());
         break;
     case EntryEnumR::kDocument:
         UpdateDocument(row, value.toStringList());
@@ -161,32 +149,6 @@ bool TableModelR::UpdateInitial(EntryR* entry, double value)
     return true;
 }
 
-bool TableModelR::UpdateDebit(EntryR* entry, QUuid value)
-{
-    if (entry->debit_node == value)
-        return false;
-
-    entry->debit_node = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
-bool TableModelR::UpdateCredit(EntryR* entry, QUuid value)
-{
-    if (entry->credit_node == value)
-        return false;
-
-    entry->credit_node = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
 bool TableModelR::UpdateTag(EntryR* entry, const QStringList& value)
 {
     if (entry->tag == value)
@@ -211,10 +173,6 @@ void TableModelR::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case EntryEnumR::kDescription:
             return utils::CompareMember(lhs, rhs, &Entry::description, order);
-        case EntryEnumR::kDebitNode:
-            return utils::CompareMember(d_lhs, d_rhs, &EntryR::debit_node, order);
-        case EntryEnumR::kCreditNode:
-            return utils::CompareMember(d_lhs, d_rhs, &EntryR::credit_node, order);
         case EntryEnumR::kDocument:
             return utils::CompareMember(lhs, rhs, &Entry::document, order);
         case EntryEnumR::kInitial:
@@ -315,18 +273,6 @@ bool TableModelR::HasPendingUpdate() const
     return false;
 }
 
-bool TableModelR::ValidateAccounts() const
-{
-    for (auto* row : std::as_const(entry_list_)) {
-        auto* entry { static_cast<EntryR*>(row) };
-
-        if (entry->debit_node.isNull() || entry->credit_node.isNull() || entry->debit_node == entry->credit_node)
-            return false;
-    }
-
-    return true;
-}
-
 Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
@@ -340,11 +286,6 @@ Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
     const EntryEnumR column { index.column() };
 
     switch (column) {
-    case EntryEnumR::kDebitNode:
-    case EntryEnumR::kCreditNode:
-        if (finance_permission_ & (reimbursement_permission::kApprove | reimbursement_permission::kUnapprove))
-            flags |= Qt::ItemIsEditable;
-        break;
     case EntryEnumR::kDescription:
     case EntryEnumR::kInitial:
         flags |= Qt::ItemIsEditable;

@@ -25,14 +25,10 @@ QVariant EntryModelR::data(const QModelIndex& index, int role) const
         return d_entry->tag;
     case EntryEnumR::kInitial:
         return d_entry->initial;
-    case EntryEnumR::kDebitNode:
-        return d_entry->debit_node;
     case EntryEnumR::kDocument:
         return d_entry->document;
     case EntryEnumR::kIssuedTime:
         return d_entry->issued_time;
-    case EntryEnumR::kCreditNode:
-        return d_entry->credit_node;
     }
 }
 
@@ -57,10 +53,6 @@ void EntryModelR::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &EntryR::document, order);
         case EntryEnumR::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &EntryR::issued_time, order);
-        case EntryEnumR::kDebitNode:
-            return utils::CompareMember(d_lhs, d_rhs, &EntryR::debit_node, order);
-        case EntryEnumR::kCreditNode:
-            return utils::CompareMember(d_lhs, d_rhs, &EntryR::credit_node, order);
         }
     };
 

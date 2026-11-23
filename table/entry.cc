@@ -126,10 +126,6 @@ void EntryR::ReadJson(const QJsonObject& object)
         id = QUuid(val.toString());
     if (const auto val = object.value(kLhsNode); val.isString())
         lhs_node = QUuid(val.toString());
-    if (const auto val = object.value(kDebitNode); val.isString())
-        debit_node = QUuid(val.toString());
-    if (const auto val = object.value(kCreditNode); val.isString())
-        credit_node = QUuid(val.toString());
     if (const auto val = object.value(kInitial); val.isString())
         initial = val.toString().toDouble();
     if (const auto val = object.value(kDescription); val.isString())
@@ -151,8 +147,6 @@ QJsonObject EntryR::WriteJson() const
 
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
-    obj.insert(kDebitNode, debit_node.toString(QUuid::WithoutBraces));
-    obj.insert(kCreditNode, credit_node.toString(QUuid::WithoutBraces));
     obj.insert(kInitial, QString::number(initial, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kDescription, description);
     obj.insert(kTag, QJsonArray::fromStringList(tag));

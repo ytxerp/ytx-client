@@ -124,8 +124,6 @@ void TableWidgetR::UpdateButtons()
     ui->pushButtonApprove->setEnabled(
         no_pending && has_entries && draft && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
     ui->pushButtonUnapprove->setEnabled(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
-    ui->pushButtonPost->setEnabled(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kPost));
-    ui->pushButtonUnpost->setEnabled(node_->reimbursement_status == ReimbursementStatus::kPosted && (permission_ & reimbursement_permission::kUnpost));
 
     ui->dateTimeEdit->setEnabled(draft);
     ui->lineEditDescription->setEnabled(draft);
@@ -214,17 +212,9 @@ void TableWidgetR::on_pushButtonApprove_clicked()
     if (!ValidateSyncState())
         return;
 
-    if (!model_->ValidateAccounts()) {
-        utils::ShowMessage(QMessageBox::Warning, tr("Operation Rejected"), tr("Please specify debit and credit accounts for all entries before approval."),
-            time_const::kAutoCloseMs);
-        return;
-    }
-
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementApprove, BuildStatusMessage());
     node_->sync_state = SyncState::kUpdating;
 }
-
-void TableWidgetR::on_pushButtonPost_clicked() { }
 
 void TableWidgetR::on_pushButtonUnapprove_clicked()
 {
@@ -237,8 +227,6 @@ void TableWidgetR::on_pushButtonUnapprove_clicked()
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementUnapprove, BuildStatusMessage());
     node_->sync_state = SyncState::kUpdating;
 }
-
-void TableWidgetR::on_pushButtonUnpost_clicked() { }
 
 void TableWidgetR::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {

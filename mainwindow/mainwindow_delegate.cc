@@ -19,7 +19,6 @@
 #include "delegate/financeroledelegate.h"
 #include "delegate/intstring.h"
 #include "delegate/issuedtime.h"
-#include "delegate/leafnode.h"
 #include "delegate/line.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
@@ -777,10 +776,6 @@ void MainWindow::TableDelegateR(QTableView* table_view, CSectionConfig& config) 
 
     auto* value { new Double(config.amount_decimal, kDoubleLowest, kDoubleMax, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kInitial), value);
-
-    auto* node { new LeafNode(sc_f_.tree_model->LeafPath(), sc_f_.tree_model->LeafModel(), table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDebitNode), node);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kCreditNode), node);
 
     auto* document { new Document(sc_f_.shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumR::kDocument), document);

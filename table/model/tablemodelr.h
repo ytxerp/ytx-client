@@ -25,7 +25,7 @@
 class TableModelR final : public TableModel {
     Q_OBJECT
 public:
-    explicit TableModelR(CTableModelArg& arg, const NodeR* node, int finance_permission, QObject* parent = nullptr);
+    explicit TableModelR(CTableModelArg& arg, const NodeR* node, QObject* parent = nullptr);
     ~TableModelR() override;
 
 public slots:
@@ -47,14 +47,11 @@ public:
     void Finalize(QJsonObject& message);
     void SyncSucceeded();
     bool HasPendingUpdate() const;
-    bool ValidateAccounts() const;
 
 private:
     bool UpdateDescription(EntryR* entry, const QString& value);
     bool UpdateDocument(EntryR* entry, const QStringList& value);
     bool UpdateInitial(EntryR* entry, double value);
-    bool UpdateDebit(EntryR* entry, QUuid value);
-    bool UpdateCredit(EntryR* entry, QUuid value);
     bool UpdateTag(EntryR* entry, const QStringList& value);
 
 private:
@@ -62,6 +59,4 @@ private:
 
     QList<Entry*> entry_list_ {};
     QSet<QUuid> pending_delete_ {};
-
-    const int finance_permission_ {};
 };

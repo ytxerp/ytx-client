@@ -140,7 +140,6 @@ set(HEADERS
     delegate/financeroledelegate.h
     delegate/intstring.h
     delegate/issuedtime.h
-    delegate/leafnode.h
     delegate/line.h
     delegate/readonly/amountr.h
     delegate/readonly/boolcolorstringr.h
@@ -351,7 +350,6 @@ set(SOURCES
     delegate/financeroledelegate.cc
     delegate/intstring.cc
     delegate/issuedtime.cc
-    delegate/leafnode.cc
     delegate/line.cc
     delegate/readonly/amountr.cc
     delegate/readonly/boolcolorstringr.cc

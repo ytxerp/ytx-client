@@ -75,8 +75,6 @@ struct EntryP final : Entry {
 };
 
 struct EntryR final : Entry {
-    QUuid debit_node {};
-    QUuid credit_node {};
     double initial {};
 
     void Reset() override;

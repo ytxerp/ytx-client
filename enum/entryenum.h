@@ -105,8 +105,6 @@ enum class EntryEnumR {
     kIssuedTime,
     kDescription,
     kInitial,
-    kDebitNode,
-    kCreditNode,
     kTag,
     kDocument,
 };
