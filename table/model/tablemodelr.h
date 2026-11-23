@@ -47,6 +47,7 @@ public:
     void Finalize(QJsonObject& message);
     void SyncSucceeded();
     bool HasPendingUpdate() const;
+    bool ValidateAccounts() const;
 
 private:
     bool UpdateDescription(EntryR* entry, const QString& value);

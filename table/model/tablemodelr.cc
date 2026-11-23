@@ -315,6 +315,18 @@ bool TableModelR::HasPendingUpdate() const
     return false;
 }
 
+bool TableModelR::ValidateAccounts() const
+{
+    for (auto* row : std::as_const(entry_list_)) {
+        auto* entry { static_cast<EntryR*>(row) };
+
+        if (entry->debit_node.isNull() || entry->credit_node.isNull() || entry->debit_node == entry->credit_node)
+            return false;
+    }
+
+    return true;
+}
+
 Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const
 {
     if (!index.isValid())

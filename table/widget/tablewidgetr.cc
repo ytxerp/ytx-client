@@ -48,8 +48,10 @@ void TableWidgetR::SyncSucceeded(int version)
 
     original_node_ = *node_;
 
+    const bool has_entries { model_->rowCount() > 0 };
+
     ui->pushButtonSave->setEnabled(false);
-    ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove);
+    ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove && has_entries);
 }
 
 void TableWidgetR::StatusSucceeded(int status, int version)
@@ -116,9 +118,11 @@ void TableWidgetR::UpdateButtons()
     const bool draft { node_->reimbursement_status == ReimbursementStatus::kDraft };
     const bool pending { model_->HasPendingUpdate() || original_node_ != *node_ };
     const bool no_pending { !pending };
+    const bool has_entries { model_->rowCount() > 0 };
 
     ui->pushButtonSave->setEnabled(draft && pending);
-    ui->pushButtonApprove->setEnabled(no_pending && draft && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
+    ui->pushButtonApprove->setEnabled(
+        no_pending && has_entries && draft && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
     ui->pushButtonUnapprove->setEnabled(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
     ui->pushButtonPost->setEnabled(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kPost));
     ui->pushButtonUnpost->setEnabled(node_->reimbursement_status == ReimbursementStatus::kPosted && (permission_ & reimbursement_permission::kUnpost));
@@ -131,9 +135,11 @@ void TableWidgetR::UpdateSaveApproveButtons()
 {
     const bool pending { model_->HasPendingUpdate() || original_node_ != *node_ };
     const bool draft { node_->reimbursement_status == ReimbursementStatus::kDraft };
+    const bool has_entries { model_->rowCount() > 0 };
 
     ui->pushButtonSave->setEnabled(draft && pending);
-    ui->pushButtonApprove->setEnabled(draft && !pending && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
+    ui->pushButtonApprove->setEnabled(
+        has_entries && draft && !pending && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
 }
 
 void TableWidgetR::BuildNodeInsert(QJsonObject& message)
@@ -203,9 +209,16 @@ void TableWidgetR::on_pushButtonApprove_clicked()
 {
     Q_ASSERT(node_->reimbursement_status == ReimbursementStatus::kDraft && (permission_ & reimbursement_permission::kApprove));
     Q_ASSERT(!model_->HasPendingUpdate() && original_node_ == *node_);
+    Q_ASSERT(model_->rowCount() > 0);
 
     if (!ValidateSyncState())
         return;
+
+    if (!model_->ValidateAccounts()) {
+        utils::ShowMessage(QMessageBox::Warning, tr("Operation Rejected"), tr("Please specify debit and credit accounts for all entries before approval."),
+            time_const::kAutoCloseMs);
+        return;
+    }
 
     WebSocket::Instance()->SendMessage(WsKey::kReimbursementApprove, BuildStatusMessage());
     node_->sync_state = SyncState::kUpdating;
