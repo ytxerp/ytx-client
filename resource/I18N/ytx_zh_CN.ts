@@ -789,7 +789,7 @@
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="97"/>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="122"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="131"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -853,31 +853,36 @@
         <translation>该节点仍在使用中，你想要怎么处理？</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="110"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="111"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: Consider relocating entries before deleting.&lt;/i&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：建议在删除前将该节点下的记录迁移至其他节点。&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="91"/>
         <source>Delete this order and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
-        <translation>删除该订单及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
+        <translation type="vanished">删除该订单及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
         <source>Replace &lt;b&gt;%1&lt;/b&gt; with &lt;b&gt;%2&lt;/b&gt;.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation type="vanished">将 &lt;b&gt;%1&lt;/b&gt; 替换为 &lt;b&gt;%2&lt;/b&gt;。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="99"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="92"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="122"/>
+        <source>Delete this node and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
+        <translation>删除该节点及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="100"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="144"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="153"/>
         <source>Delete %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="148"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="157"/>
         <source>The node has external references, so it can’t be deleted.</source>
         <translation>节点存在外部引用，无法删除。</translation>
     </message>
@@ -1414,7 +1419,8 @@ Only the target node will remain.</source>
         <location filename="../../mainwindow/mainwindow_account.cc" line="44"/>
         <location filename="../../mainwindow/mainwindow_global.cc" line="46"/>
         <location filename="../../mainwindow/mainwindow_node_remove.cc" line="28"/>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="41"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="91"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
@@ -1752,7 +1758,7 @@ Only the target node will remain.</source>
         <translation>金额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="96"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="97"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="9"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="30"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="155"/>
@@ -1857,7 +1863,7 @@ Only the target node will remain.</source>
         <translation>汇率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="94"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="95"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="294"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="310"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="326"/>
@@ -1940,6 +1946,7 @@ Only the target node will remain.</source>
         <translation>金额</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="94"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="293"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="309"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="325"/>
@@ -2340,7 +2347,7 @@ Would you like to download it now?</source>
         <translation>比率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="95"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="96"/>
         <source>Content</source>
         <translation>内容</translation>
     </message>
@@ -2375,7 +2382,7 @@ Would you like to download it now?</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_entry.cc" line="55"/>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="92"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="102"/>
         <source>Confirm Delete</source>
         <translation>删除确认</translation>
     </message>
@@ -2402,12 +2409,17 @@ Please recall it before deleting.</source>
 请先撤回订单后再删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="41"/>
+        <source>Only draft reimbursements can be deleted.</source>
+        <translation>只有草稿状态的报销单可以删除。</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="91"/>
         <source>This node contains locked entries and cannot be deleted.</source>
         <translation>节点包含已锁定的记录，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="93"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="103"/>
         <source>The branch &quot;%1&quot; will be permanently deleted. Its direct children will be promoted to the same level.</source>
         <translation>分支“%1”将被永久删除，其直系子节点将提升到同一级别。</translation>
     </message>
@@ -3483,54 +3495,54 @@ Please recall it first and try again.</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="414"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="413"/>
         <source>Required Information Missing</source>
         <translation>缺少必填信息</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="414"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="413"/>
         <source>Please select a printable template before continuing.</source>
         <translation>请先选择可打印模板后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="499"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="510"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="483"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="498"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="509"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="483"/>
         <source>This order has already been settled and cannot be recalled.</source>
         <translation>该订单已完成结算，无法撤回。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="499"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="498"/>
         <source>A partner must be selected before continuing.</source>
         <translation>请先选择合作单位后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="510"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="509"/>
         <source>The data is being updated. Please refresh and try again.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="524"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="523"/>
         <source>Operation Warning</source>
         <translation>操作警告</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="525"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="524"/>
         <source>Some entries have a unit price of zero. Do you want to continue saving?</source>
         <translation>部分记录的单价为零，是否继续保存？</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="548"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="547"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="548"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="547"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
@@ -3587,12 +3599,18 @@ Please recall it before deleting.</source>
         <translation>冲销</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgetr.cc" line="271"/>
+        <location filename="../../table/widget/tablewidgetr.cc" line="218"/>
+        <location filename="../../table/widget/tablewidgetr.cc" line="284"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgetr.cc" line="271"/>
+        <location filename="../../table/widget/tablewidgetr.cc" line="218"/>
+        <source>Please specify debit and credit accounts for all entries before approval.</source>
+        <translation>审批前，请为所有明细指定借方科目和贷方科目。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgetr.cc" line="284"/>
         <source>The data is being updated. Please refresh and try again.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
