@@ -2115,18 +2115,14 @@ Would you like to download it now?</source>
         <translation>草稿</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="410"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="449"/>
         <source>Approved</source>
         <comment>Filter</comment>
-        <translation>审核</translation>
+        <translation type="vanished">审核</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="411"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="450"/>
         <source>Unapproved</source>
         <comment>Filter</comment>
-        <translation>反审</translation>
+        <translation type="vanished">反审</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="242"/>
@@ -2182,6 +2178,20 @@ Would you like to download it now?</source>
         <source>PEND</source>
         <comment>Pending</comment>
         <translation>挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="410"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="449"/>
+        <source>Released</source>
+        <comment>Filter</comment>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="411"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="450"/>
+        <source>Recalled</source>
+        <comment>Filter</comment>
+        <translation>撤回</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="484"/>
@@ -3319,6 +3329,16 @@ Please recall it first and try again.</source>
         <translation>描述</translation>
     </message>
     <message>
+        <location filename="../../table/widget/tablewidgeto.ui" line="275"/>
+        <source>Release</source>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.ui" line="288"/>
+        <source>Unrelease</source>
+        <translation>撤回</translation>
+    </message>
+    <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="305"/>
         <source>Count</source>
         <translation>计数</translation>
@@ -3374,14 +3394,12 @@ Please recall it first and try again.</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.ui" line="275"/>
         <source>Approve</source>
-        <translation>审核</translation>
+        <translation type="vanished">审核</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.ui" line="288"/>
         <source>Unapprove</source>
-        <translation>反审</translation>
+        <translation type="vanished">反审</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.cc" line="413"/>
