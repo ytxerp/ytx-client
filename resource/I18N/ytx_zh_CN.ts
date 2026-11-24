@@ -1269,6 +1269,7 @@
         <location filename="../../mainwindow/mainwindow_audit.cc" line="67"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="19"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
         <source>Settlement</source>
         <translation>结算</translation>
@@ -1318,12 +1319,12 @@
         <translation>期限</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="73"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="64"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="74"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="65"/>
         <source>The language has been changed. Please restart the application to apply the changes.</source>
         <translation>语言已更改，请重新启动应用程序以使更改生效。</translation>
     </message>
@@ -2550,9 +2551,8 @@ Do you want to save them before closing?</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="309"/>
         <source>Company Name</source>
-        <translation>公司名称</translation>
+        <translation type="vanished">公司名称</translation>
     </message>
     <message>
         <location filename="../../dialog/preferences.ui" line="338"/>
@@ -2578,6 +2578,11 @@ Do you want to save them before closing?</source>
         <location filename="../../dialog/preferences.ui" line="404"/>
         <source>Static Label</source>
         <translation>静态标签</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/preferences.ui" line="309"/>
+        <source>Company</source>
+        <translation>公司</translation>
     </message>
     <message>
         <location filename="../../dialog/preferences.ui" line="567"/>
@@ -2674,27 +2679,27 @@ Do you want to save them before closing?</source>
         <translation>周期</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="168"/>
+        <location filename="../../utils/mainwindowutils.cc" line="166"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="173"/>
+        <location filename="../../utils/mainwindowutils.cc" line="171"/>
         <source>Connected to server</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="178"/>
+        <location filename="../../utils/mainwindowutils.cc" line="176"/>
         <source>Disconnected from server</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="193"/>
+        <location filename="../../utils/mainwindowutils.cc" line="191"/>
         <source>Logged in</source>
         <translation>已登录</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="198"/>
+        <location filename="../../utils/mainwindowutils.cc" line="196"/>
         <source>Logged out</source>
         <translation>已登出</translation>
     </message>
@@ -3012,12 +3017,12 @@ Do you want to save them before closing?</source>
         <translation>未分类</translation>
     </message>
     <message>
-        <location filename="../../audit/audittextdelegate.cc" line="20"/>
+        <location filename="../../audit/audittextdelegate.cc" line="22"/>
         <source>Before Change</source>
         <translation>变更前</translation>
     </message>
     <message>
-        <location filename="../../audit/audittextdelegate.cc" line="20"/>
+        <location filename="../../audit/audittextdelegate.cc" line="23"/>
         <source>After Change</source>
         <translation>变更后</translation>
     </message>
@@ -3046,6 +3051,16 @@ Do you want to save them before closing?</source>
         <translation>解锁</translation>
     </message>
     <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
+        <source>Release</source>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
+        <source>Unrelease</source>
+        <translation>撤回</translation>
+    </message>
+    <message>
         <location filename="../../workspace/sectionpermissions.cc" line="21"/>
         <source>Settle</source>
         <translation>结算</translation>
@@ -3056,13 +3071,11 @@ Do you want to save them before closing?</source>
         <translation>取消结算</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
         <location filename="../../workspace/sectionpermissions.cc" line="28"/>
         <source>Approve</source>
         <translation>审核</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
         <location filename="../../workspace/sectionpermissions.cc" line="29"/>
         <source>Unapprove</source>
         <translation>反审</translation>
