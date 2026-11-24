@@ -14,16 +14,20 @@ bool AuditTextDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
         const QJsonValue value { index.data(audit::kRawJsonRole).toJsonValue() };
-        const QString text { audit::JsonValueToString(value, QJsonDocument::Indented) };
 
-        if (!text.isEmpty()) {
-            const QString title { index.column() == std::to_underlying(audit::RowField::kBefore) ? QObject::tr("Before Change") : QObject::tr("After Change") };
+        if (value.isObject() || value.isArray()) {
+            const QString text { audit::JsonValueToString(value, QJsonDocument::Indented) };
 
-            auto* dialog = new AuditTextDialog(text, title, const_cast<QWidget*>(option.widget));
-            dialog->setAttribute(Qt::WA_DeleteOnClose);
-            dialog->show();
+            if (!text.isEmpty()) {
+                const QString title { index.column() == std::to_underlying(audit::RowField::kBefore) ? QObject::tr("Before Change")
+                                                                                                     : QObject::tr("After Change") };
 
-            return true; // handled
+                auto* dialog = new AuditTextDialog(text, title, const_cast<QWidget*>(option.widget));
+                dialog->setAttribute(Qt::WA_DeleteOnClose);
+                dialog->show();
+
+                return true; // handled
+            }
         }
     }
 

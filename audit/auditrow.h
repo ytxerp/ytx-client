@@ -26,17 +26,23 @@ namespace audit {
 
 inline QString JsonValueToString(const QJsonValue& value, QJsonDocument::JsonFormat format)
 {
-    if (value.isObject()) {
+    switch (value.type()) {
+    case QJsonValue::Object: {
         const QJsonObject obj { value.toObject() };
         return obj.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(obj).toJson(format));
     }
-
-    if (value.isArray()) {
+    case QJsonValue::Array: {
         const QJsonArray arr { value.toArray() };
         return arr.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(arr).toJson(format));
     }
-
-    return {};
+    case QJsonValue::String:
+        return value.toString();
+    case QJsonValue::Bool:
+    case QJsonValue::Null:
+    case QJsonValue::Double:
+    case QJsonValue::Undefined:
+        return {};
+    }
 }
 
 constexpr int kRawJsonRole = Qt::UserRole + 1;
