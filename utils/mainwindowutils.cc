@@ -87,22 +87,20 @@ int utils::CompareVersion(const QString& v1, const QString& v2)
     return 0; // equal
 }
 
-QString utils::AccountIniFileName(const QString& email, const QString& workspace)
+QString utils::AccountIniFileName(const QString& email)
 {
-    QString file_name { email + "_" + workspace };
+    static const QRegularExpression invalid_chars { R"([^\p{L}\p{N}]+)" };
 
-    // Replace invalid characters with underscores and normalize the filename.
-    static const QRegularExpression invalid_chars { R"([^\p{L}\p{N}_]+)" };
-    static const QRegularExpression underscores { "_+" };
-
+    QString file_name { email.trimmed().toLower() };
     file_name.replace(invalid_chars, QLatin1String("_"));
-    file_name.replace(underscores, QLatin1String("_"));
 
     if (file_name.startsWith('_'))
         file_name.remove(0, 1);
-
     if (file_name.endsWith('_'))
         file_name.chop(1);
+
+    if (file_name.isEmpty())
+        file_name = QStringLiteral("default");
 
     return file_name;
 }

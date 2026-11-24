@@ -100,7 +100,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
 
         if (!section_settings_) {
             const QDir config_dir { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
-            const QString file_name { utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+            const QString file_name { utils::AccountIniFileName(login_info.Email()) + kDotSuffixINI };
 
             section_settings_ = QSharedPointer<QSettings>::create(config_dir.filePath(file_name), QSettings::IniFormat);
         }

@@ -35,7 +35,7 @@ void SetLoginStatus(QLabel* label, LoginState status);
 void SetPushButton(QPushButton* btn, const QKeySequence& ks);
 void SetRadioButton(QRadioButton* btn, const QKeySequence& ks);
 
-QString AccountIniFileName(const QString& email, const QString& workspace);
+QString AccountIniFileName(const QString& email);
 
 QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
 void ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, QUuid id);
