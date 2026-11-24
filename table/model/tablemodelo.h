@@ -78,7 +78,7 @@ class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    explicit TableModelO(CTableModelArg& arg, const NodeO* node, QObject* parent = nullptr);
+    explicit TableModelO(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelO() override;
 
 public slots:

@@ -10,9 +10,9 @@
 TableModel::TableModel(CTableModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { arg.header }
-    , node_id_ { arg.node_id }
+    , node_id_ { arg.node->id }
     , section_ { arg.section }
-    , direction_rule_ { arg.direction_rule }
+    , direction_rule_ { arg.node->direction_rule }
 {
 }
 

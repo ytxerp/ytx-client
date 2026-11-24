@@ -143,8 +143,8 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
     TableModel* table_model {};
 
     {
-        const bool rule { tree_model->Rule(node_id) };
-        const TableModelArg arg { section, node_id, info.entry_header, rule };
+        auto* node { tree_model->GetNode(node_id) };
+        const TableModelArg arg { section, info.entry_header, node };
 
         switch (section) {
         case Section::kFinance:

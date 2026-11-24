@@ -23,12 +23,12 @@
 #include <QUuid>
 
 #include "enum/section.h"
+#include "tree/node.h"
 
 struct TableModelArg {
     Section section {};
-    QUuid node_id {};
     QStringList header {};
-    bool direction_rule {};
+    Node* node {};
 };
 
 using CTableModelArg = const TableModelArg;

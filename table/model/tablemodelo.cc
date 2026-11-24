@@ -8,9 +8,9 @@
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 
-TableModelO::TableModelO(CTableModelArg& arg, const NodeO* node, QObject* parent)
+TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
-    , d_node_ { node }
+    , d_node_ { static_cast<NodeO*>(arg.node) }
 {
 }
 
@@ -27,7 +27,7 @@ void TableModelO::RAppendEntries(const EntryList& entry_list)
     entry_list_.append(entry_list);
     endInsertRows();
 
-    sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
+    sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
 void TableModelO::Finalize(QJsonObject& message)

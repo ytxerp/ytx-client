@@ -25,7 +25,7 @@
 class TableModelR final : public TableModel {
     Q_OBJECT
 public:
-    explicit TableModelR(CTableModelArg& arg, const NodeR* node, QObject* parent = nullptr);
+    explicit TableModelR(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelR() override;
 
 public slots:

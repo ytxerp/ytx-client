@@ -6,9 +6,9 @@
 #include "global/entrypool.h"
 #include "utils/templateutils.h"
 
-TableModelR::TableModelR(CTableModelArg& arg, const NodeR* node, QObject* parent)
+TableModelR::TableModelR(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
-    , d_node_ { node }
+    , d_node_ { static_cast<NodeR*>(arg.node) }
 {
 }
 

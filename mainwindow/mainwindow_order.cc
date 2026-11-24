@@ -216,9 +216,9 @@ void MainWindow::OpenNodeTabO(SectionContext* sc, NodeO* node)
     auto* tab_bar { tab_widget->tabBar() };
 
     // Create model
-    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
+    TableModelArg table_model_arg { section, info.entry_header, node };
 
-    auto* table_model { new TableModelO(table_model_arg, node, this) };
+    auto* table_model { new TableModelO(table_model_arg, this) };
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };

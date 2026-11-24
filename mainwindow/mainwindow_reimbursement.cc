@@ -53,9 +53,9 @@ void MainWindow::OpenNodeTabR(SectionContext* sc, NodeR* node)
     const QUuid node_id { node->id };
 
     // Create model and widget
-    TableModelArg table_model_arg { section, node_id, info.entry_header, node->direction_rule };
+    TableModelArg table_model_arg { section, info.entry_header, node };
 
-    auto* table_model { new TableModelR(table_model_arg, node, this) };
+    auto* table_model { new TableModelR(table_model_arg, this) };
 
     auto* widget { new TableWidgetR(table_model, node, section_config, permissions, this) };
 
