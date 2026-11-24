@@ -17,16 +17,23 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Abstract base of all table models. Shared by all 7 sections.
+//
+// Owns the state common to every section: header, node id and section.
+// It does not know whether a section is single-entry or double-entry, nor whether it
+// syncs in real time; that knowledge lives in the intermediate classes below.
+//
+// pending_updates_ is only used by sections that hold local changes before submitting
+// them (the double-entry sections and Partner). It stays empty in all other sections.
+//
+// Subclasses must implement insertRows() and removeRows().
+
 #pragma once
 
 #include <QAbstractItemModel>
-#include <QTimer>
 
 #include "component/arg/tablemodelarg.h"
-#include "component/constantbool.h"
-#include "enum/entryenum.h"
-#include "table/entryshadow.h"
-#include "utils/delta.h"
+#include "table/entry.h"
 #include "utils/templateutils.h"
 
 using utils::DerivedPtr;
@@ -35,86 +42,48 @@ class TableModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    ~TableModel() override;
+    ~TableModel() override = default;
     TableModel() = delete;
 
 protected:
     explicit TableModel(CTableModelArg& arg, QObject* parent = nullptr);
 
 signals:
-    // send to LeafSStation
-    void SAttachEntry(QUuid node_id, Entry* entry);
-    void SDetachEntry(QUuid node_id, QUuid entry_id, QUuid extra_value = {});
-    void SUpdateBalance(QUuid node_id, QUuid entry_id);
-
     // send to entryhub, FIPT
     void STransferEntry(Entry* entry);
 
     // send to MainWindow
     void SEntryLocked();
 
-    // Notify the owning widget that table data has changed.
-    void SDataChanged();
-    // Notify the owning widget of entry value changes.
-    void SSyncDelta(QUuid node_id, const entry::Delta& delta);
-
 public slots:
-    virtual void RAppendEntries(const EntryList& entry_list);
-    virtual void RDetachEntry(QUuid entry_id, QUuid counter_node_id = {});
-    virtual void RAttachEntry(Entry* entry);
+    virtual void RAppendEntries(const EntryList& entry_list) = 0;
+    virtual void RDetachEntry(QUuid entry_id, QUuid counter_node_id = {})
+    {
+        Q_UNUSED(entry_id)
+        Q_UNUSED(counter_node_id)
+    };
+    virtual void RAttachEntry(Entry* entry) { Q_UNUSED(entry) };
 
-    void RDeleteEntries(const QSet<QUuid>& entry_id_set);
-
-    void RUpdateBalance(QUuid entry_id);
     void RRefreshBatchEntries(int column);
-
     void RRefreshField(QUuid entry_id, int start, int end);
-    void RDirectionRule(bool value);
 
 public:
     // implemented functions
     QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : shadow_list_.size(); }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : header_.size(); }
-
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
-    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-    bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
+    bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override = 0;
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override = 0;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    void sort(int column, Qt::SortOrder order) override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
+    virtual QModelIndex GetIndex(QUuid entry_id) const = 0;
+    virtual Entry* GetEntry(const QModelIndex& index) const = 0;
 
-    virtual QModelIndex GetIndex(QUuid entry_id) const;
-    virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
-
-    void MarkEntries(MarkOperation operation);
-    void LockEntries(bool locked);
     void FlushTimers();
 
 protected:
-    virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side);
-    virtual bool UpdateRate(EntryShadow* shadow, double value);
-    virtual bool UpdateInternalSku(Entry* entry, QUuid value, int row)
-    {
-        Q_UNUSED(entry)
-        Q_UNUSED(value)
-        Q_UNUSED(row)
-        return false;
-    }
-
-    bool UpdateLocked(EntryShadow* shadow, bool value);
-    bool UpdateLinkedNode(EntryShadow* shadow, QUuid value, int row);
-    void AccumulateBalance(int start);
     void RestartTimer(QUuid id);
     void FlushTimer(QUuid id);
-    double CalculateBalance(EntryShadow* shadow) const
-    {
-        return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit);
-    }
 
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent = QModelIndex());
     void CancelPendingUpdate(QUuid entry_id);
@@ -123,8 +92,6 @@ protected:
     const QStringList header_ {};
     const QUuid node_id_ {};
     const Section section_ {};
-    bool direction_rule_ {};
 
-    QList<EntryShadow*> shadow_list_ {};
     QHash<QUuid, PendingEntryUpdate> pending_updates_ {};
 };

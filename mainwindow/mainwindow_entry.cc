@@ -186,16 +186,19 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, QUuid node_id)
 
         switch (section) {
         case Section::kFinance:
+            Q_ASSERT(qobject_cast<TableModelDouble*>(table_model));
             TableDelegateF(view, tree_model, section_config, node_id);
-            TableConnectF(table_model);
+            TableConnectF(static_cast<TableModelDouble*>(table_model));
             break;
         case Section::kInventory:
+            Q_ASSERT(qobject_cast<TableModelDouble*>(table_model));
             TableDelegateI(view, tree_model, section_config, node_id);
-            TableConnectI(table_model);
+            TableConnectI(static_cast<TableModelDouble*>(table_model));
             break;
         case Section::kTask:
+            Q_ASSERT(qobject_cast<TableModelDouble*>(table_model));
             TableDelegateT(view, tree_model, section_config, node_id);
-            TableConnectT(table_model);
+            TableConnectT(static_cast<TableModelDouble*>(table_model));
             break;
         case Section::kPartner:
             TableDelegateP(view, section_config);
@@ -219,7 +222,8 @@ void MainWindow::MarkEntries(MarkOperation operation)
     Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
     auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
-    auto table_model { leaf_widget->Model() };
+    Q_ASSERT(qobject_cast<TableModelDouble*>(leaf_widget->Model()));
+    auto* table_model { static_cast<TableModelDouble*>(leaf_widget->Model()) };
     table_model->MarkEntries(operation);
 }
 
@@ -236,7 +240,8 @@ void MainWindow::LockEntries(bool locked)
     Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
     auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
-    auto* table_model { leaf_widget->Model() };
+    Q_ASSERT(qobject_cast<TableModelDouble*>(leaf_widget->Model()));
+    auto* table_model { static_cast<TableModelDouble*>(leaf_widget->Model()) };
     table_model->LockEntries(locked);
 }
 

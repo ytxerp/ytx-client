@@ -2,6 +2,8 @@
 
 #include <QCoreApplication>
 
+#include "table/model/tablemodeldouble.h"
+
 TableSStation* TableSStation::Instance()
 {
     static auto* instance = new TableSStation(qApp);
@@ -58,11 +60,13 @@ void TableSStation::RUpdateBalance(QUuid node_id, QUuid entry_id)
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
 
-    const auto* model { FindModel(node_id) };
+    const auto* base { FindModel(node_id) };
+    Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
+    const auto* model { static_cast<const TableModelDouble*>(base) };
     if (!model)
         return;
 
-    connect(this, &TableSStation::SUpdateBalance, model, &TableModel::RUpdateBalance, Qt::SingleShotConnection);
+    connect(this, &TableSStation::SUpdateBalance, model, &TableModelDouble::RUpdateBalance, Qt::SingleShotConnection);
     emit SUpdateBalance(entry_id);
 }
 
@@ -112,11 +116,13 @@ void TableSStation::RDirectionRule(QUuid node_id, bool rule)
 {
     Q_ASSERT(!node_id.isNull());
 
-    const auto* model { FindModel(node_id) };
+    const auto* base { FindModel(node_id) };
+    Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
+    const auto* model { static_cast<const TableModelDouble*>(base) };
     if (!model)
         return;
 
-    connect(this, &TableSStation::SDirectionRule, model, &TableModel::RDirectionRule, Qt::SingleShotConnection);
+    connect(this, &TableSStation::SDirectionRule, model, &TableModelDouble::RDirectionRule, Qt::SingleShotConnection);
     emit SDirectionRule(rule);
 }
 
@@ -128,11 +134,13 @@ void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
 
         const QSet<QUuid>& entry_id_set = it.value();
 
-        const auto* model = FindModel(node_id);
+        const auto* base { FindModel(node_id) };
+        Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
+        const auto* model { static_cast<const TableModelDouble*>(base) };
         if (!model)
             continue;
 
-        connect(this, &TableSStation::SDeleteEntries, model, &TableModel::RDeleteEntries, Qt::SingleShotConnection);
+        connect(this, &TableSStation::SDeleteEntries, model, &TableModelDouble::RDeleteEntries, Qt::SingleShotConnection);
         emit SDeleteEntries(entry_id_set);
     }
 }
@@ -141,9 +149,10 @@ void TableSStation::RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_se
 {
     Q_ASSERT(!node_id.isNull());
 
-    const auto* old_model { FindModel(node_id) };
-    if (old_model) {
-        connect(this, &TableSStation::SDeleteEntries, old_model, &TableModel::RDeleteEntries, Qt::SingleShotConnection);
-        emit SDeleteEntries(entry_id_set);
-    }
+    const auto* base { FindModel(node_id) };
+    Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
+    const auto* model { static_cast<const TableModelDouble*>(base) };
+
+    connect(this, &TableSStation::SDeleteEntries, model, &TableModelDouble::RDeleteEntries, Qt::SingleShotConnection);
+    emit SDeleteEntries(entry_id_set);
 }

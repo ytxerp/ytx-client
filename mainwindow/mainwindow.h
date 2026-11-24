@@ -40,6 +40,7 @@
 #include "order/settlement/settlementprimarymodel.h"
 #include "order/statement/statementtertiarywidget.h"
 #include "table/model/tablemodel.h"
+#include "table/model/tablemodeldouble.h"
 #include "table/model/tablemodelo.h"
 #include "table/widget/tablewidgetfipt.h"
 #include "table/widget/tablewidgeto.h"
@@ -257,9 +258,9 @@ private:
 
     void SetTableView(QTableView* view, Section section, int stretch_column) const;
 
-    void TableConnectF(TableModel* table_model) const;
-    void TableConnectI(TableModel* table_model) const;
-    void TableConnectT(TableModel* table_model) const;
+    void TableConnectF(TableModelDouble* table_model) const;
+    void TableConnectI(TableModelDouble* table_model) const;
+    void TableConnectT(TableModelDouble* table_model) const;
     void TableConnectP(TableModel* table_model) const;
     void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
     void TableConnectR(TableModelR* table_model_r, TableWidgetR* widget) const;

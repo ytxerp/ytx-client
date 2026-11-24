@@ -9,62 +9,12 @@
 #include "global/partner_inventory_registry.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
-    : TableModel { arg, parent }
+    : TableModelSingleDeferred { arg, parent }
     , d_node_ { static_cast<NodeO*>(arg.node) }
 {
 }
 
 TableModelO::~TableModelO() { EntryPool::Instance().Recycle(entry_list_, section_); }
-
-void TableModelO::RAppendEntries(const EntryList& entry_list)
-{
-    if (entry_list.isEmpty())
-        return;
-
-    const auto row { entry_list_.size() };
-
-    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
-    entry_list_.append(entry_list);
-    endInsertRows();
-
-    sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
-}
-
-void TableModelO::Finalize(QJsonObject& message)
-{
-    // deleted
-    {
-        QJsonArray deleted_entry_array {};
-        for (const auto& id : std::as_const(pending_delete_)) {
-            deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
-        }
-        message.insert(kDeletedEntryArray, deleted_entry_array);
-    }
-
-    // insert and update
-    {
-        QJsonArray inserted_entry_array {};
-        QJsonArray updated_entry_array {};
-
-        for (auto* entry : std::as_const(entry_list_)) {
-            switch (entry->sync_state) {
-            case SyncState::kCreating:
-                inserted_entry_array.append(entry->WriteJson());
-                break;
-            case SyncState::kUpdating:
-                updated_entry_array.append(entry->WriteJson());
-                break;
-            case SyncState::kSynced:
-            case SyncState::kDeleting:
-            case SyncState::kError:
-                break;
-            }
-        }
-
-        message.insert(kInsertedEntryArray, inserted_entry_array);
-        message.insert(kUpdatedEntryArray, updated_entry_array);
-    }
-}
 
 bool TableModelO::HasZeroUnitPrice() const
 {
@@ -76,32 +26,6 @@ bool TableModelO::HasZeroUnitPrice() const
     }
 
     return false;
-}
-
-bool TableModelO::HasPendingUpdate() const
-{
-    if (!pending_delete_.isEmpty())
-        return true;
-
-    for (auto* entry : std::as_const(entry_list_)) {
-        if (entry->sync_state == SyncState::kCreating || entry->sync_state == SyncState::kUpdating)
-            return true;
-    }
-    return false;
-}
-
-QModelIndex TableModelO::GetIndex(QUuid entry_id) const
-{
-    int row { 0 };
-
-    for (const auto* entry : entry_list_) {
-        if (entry->id == entry_id) {
-            return index(row, 0);
-        }
-        ++row;
-    }
-
-    return QModelIndex();
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
@@ -292,14 +216,6 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     return flags;
 }
 
-QModelIndex TableModelO::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    return createIndex(row, column, entry_list_.at(row));
-}
-
 bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent));
@@ -434,45 +350,6 @@ bool TableModelO::UpdateCount(EntryO* entry, double value)
     return true;
 }
 
-bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
-{
-    if (entry->description == value)
-        return false;
-
-    entry->description = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
-bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value)
-{
-    if (entry->tag == value)
-        return false;
-
-    entry->tag = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
-bool TableModelO::UpdateDocument(EntryO* entry, const QStringList& value)
-{
-    if (entry->document == value)
-        return false;
-
-    entry->document = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
 // Purify newly inserted entries:
 // - Entries with null `rhs_node` (internal SKU not selected) are removed.
 // - The entry objects are recycled via EntryPool.
@@ -488,23 +365,4 @@ void TableModelO::Purify()
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
-}
-
-void TableModelO::SyncSucceeded()
-{
-    for (auto* entry : std::as_const(entry_list_)) {
-        switch (entry->sync_state) {
-        case SyncState::kCreating:
-        case SyncState::kUpdating:
-            entry->sync_state = SyncState::kSynced;
-            break;
-
-        case SyncState::kSynced:
-        case SyncState::kDeleting:
-        case SyncState::kError:
-            break;
-        }
-    }
-
-    pending_delete_.clear();
 }

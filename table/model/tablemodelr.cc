@@ -3,38 +3,17 @@
 #include <QJsonArray>
 
 #include "component/constantstring.h"
+#include "enum/entryenum.h"
 #include "global/entrypool.h"
 #include "utils/templateutils.h"
 
 TableModelR::TableModelR(CTableModelArg& arg, QObject* parent)
-    : TableModel { arg, parent }
+    : TableModelSingleDeferred { arg, parent }
     , d_node_ { static_cast<NodeR*>(arg.node) }
 {
 }
 
 TableModelR::~TableModelR() { EntryPool::Instance().Recycle(entry_list_, section_); }
-
-void TableModelR::RAppendEntries(const EntryList& entry_list)
-{
-    if (entry_list.isEmpty())
-        return;
-
-    const auto row { entry_list_.size() };
-
-    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
-    entry_list_.append(entry_list);
-    endInsertRows();
-
-    sort(std::to_underlying(EntryEnumR::kDescription), Qt::AscendingOrder);
-}
-
-QModelIndex TableModelR::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    return createIndex(row, column, entry_list_.at(row));
-}
 
 QVariant TableModelR::data(const QModelIndex& index, int role) const
 {
@@ -120,51 +99,12 @@ bool TableModelR::setData(const QModelIndex& index, const QVariant& value, int r
     return true;
 }
 
-bool TableModelR::UpdateDescription(EntryR* entry, const QString& value)
-{
-    if (entry->description == value)
-        return false;
-
-    entry->description = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
-bool TableModelR::UpdateDocument(EntryR* entry, const QStringList& value)
-{
-    if (entry->document == value)
-        return false;
-
-    entry->document = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
 bool TableModelR::UpdateInitial(EntryR* entry, double value)
 {
     if (qFuzzyCompare(entry->initial, value))
         return false;
 
     entry->initial = value;
-
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
-
-    return true;
-}
-
-bool TableModelR::UpdateTag(EntryR* entry, const QStringList& value)
-{
-    if (entry->tag == value)
-        return false;
-
-    entry->tag = value;
 
     if (entry->sync_state == SyncState::kSynced)
         entry->sync_state = SyncState::kUpdating;
@@ -203,42 +143,6 @@ void TableModelR::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void TableModelR::Finalize(QJsonObject& message)
-{
-    // deleted
-    {
-        QJsonArray deleted_entry_array {};
-        for (const auto& id : std::as_const(pending_delete_)) {
-            deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
-        }
-        message.insert(kDeletedEntryArray, deleted_entry_array);
-    }
-
-    // insert and update
-    {
-        QJsonArray inserted_entry_array {};
-        QJsonArray updated_entry_array {};
-
-        for (auto* entry : std::as_const(entry_list_)) {
-            switch (entry->sync_state) {
-            case SyncState::kCreating:
-                inserted_entry_array.append(entry->WriteJson());
-                break;
-            case SyncState::kUpdating:
-                updated_entry_array.append(entry->WriteJson());
-                break;
-            case SyncState::kSynced:
-            case SyncState::kDeleting:
-            case SyncState::kError:
-                break;
-            }
-        }
-
-        message.insert(kInsertedEntryArray, inserted_entry_array);
-        message.insert(kUpdatedEntryArray, updated_entry_array);
-    }
-}
-
 void TableModelR::Purify()
 {
     for (auto i = entry_list_.size() - 1; i >= 0; --i) {
@@ -253,50 +157,16 @@ void TableModelR::Purify()
     }
 }
 
-void TableModelR::SyncSucceeded()
+bool TableModelR::HasZeroUnitPrice() const
 {
-    for (auto* entry : std::as_const(entry_list_)) {
-        switch (entry->sync_state) {
-        case SyncState::kCreating:
-        case SyncState::kUpdating:
-            entry->sync_state = SyncState::kSynced;
-            break;
+    for (const Entry* entry : entry_list_) {
+        const auto* d_entry { static_cast<const EntryR*>(entry) };
 
-        case SyncState::kSynced:
-        case SyncState::kDeleting:
-        case SyncState::kError:
-            break;
-        }
-    }
-
-    pending_delete_.clear();
-}
-
-bool TableModelR::HasPendingUpdate() const
-{
-    if (!pending_delete_.isEmpty())
-        return true;
-
-    for (auto* row : std::as_const(entry_list_)) {
-        if (row->sync_state == SyncState::kCreating || row->sync_state == SyncState::kUpdating)
+        if (qFuzzyIsNull(d_entry->initial))
             return true;
     }
 
     return false;
-}
-
-QModelIndex TableModelR::GetIndex(QUuid entry_id) const
-{
-    int row { 0 };
-
-    for (const auto* entry : entry_list_) {
-        if (entry->id == entry_id) {
-            return index(row, 0);
-        }
-        ++row;
-    }
-
-    return QModelIndex();
 }
 
 Qt::ItemFlags TableModelR::flags(const QModelIndex& index) const

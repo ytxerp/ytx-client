@@ -19,14 +19,14 @@
 
 #pragma once
 
-#include "tablemodel.h"
+#include "tablemodelsingle.h"
 
-class TableModelP final : public TableModel {
+class TableModelP final : public TableModelSingle {
     Q_OBJECT
 
 public:
     explicit TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
-    ~TableModelP() override = default;
+    ~TableModelP() override;
 
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;
@@ -52,5 +52,4 @@ protected:
 
 private:
     QSet<QUuid> internal_sku_set_ {};
-    QList<Entry*> entry_list_ {};
 };

@@ -258,11 +258,14 @@ set(HEADERS
     table/filterinputmodel.h
     table/filterproxymodel.h
     table/model/tablemodel.h
+    table/model/tablemodeldouble.h
     table/model/tablemodelf.h
     table/model/tablemodeli.h
     table/model/tablemodelo.h
     table/model/tablemodelp.h
     table/model/tablemodelr.h
+    table/model/tablemodelsingle.h
+    table/model/tablemodelsingledeferred.h
     table/model/tablemodelt.h
     table/tablesummarymodel.h
     table/unitmodel.h
@@ -480,11 +483,14 @@ set(SOURCES
     table/filterinputmodel.cc
     table/filterproxymodel.cc
     table/model/tablemodel.cc
+    table/model/tablemodeldouble.cc
     table/model/tablemodelf.cc
     table/model/tablemodeli.cc
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     table/model/tablemodelr.cc
+    table/model/tablemodelsingle.cc
+    table/model/tablemodelsingledeferred.cc
     table/model/tablemodelt.cc
     table/tablesummarymodel.cc
     table/unitmodel.cc

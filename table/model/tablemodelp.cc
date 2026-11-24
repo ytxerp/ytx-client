@@ -12,9 +12,11 @@
 #include "websocket/websocket.h"
 
 TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
-    : TableModel { arg, parent }
+    : TableModelSingle { arg, parent }
 {
 }
+
+TableModelP::~TableModelP() { FlushTimers(); }
 
 void TableModelP::RAppendEntries(const EntryList& entry_list)
 {

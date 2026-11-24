@@ -7,7 +7,7 @@
 #include "websocket/websocket.h"
 
 TableModelF::TableModelF(CTableModelArg& arg, QObject* parent)
-    : TableModel { arg, parent }
+    : TableModelDouble { arg, parent }
 {
 }
 

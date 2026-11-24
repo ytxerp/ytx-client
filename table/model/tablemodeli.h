@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include "tablemodel.h"
+#include "tablemodeldouble.h"
 
-class TableModelI final : public TableModel {
+class TableModelI final : public TableModelDouble {
     Q_OBJECT
 
 public:

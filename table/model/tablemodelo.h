@@ -71,52 +71,34 @@
 
 #pragma once
 
-#include "tablemodel.h"
+#include "tablemodelsingledeferred.h"
 #include "tree/node.h"
 
-class TableModelO final : public TableModel {
+class TableModelO final : public TableModelSingleDeferred {
     Q_OBJECT
 
 public:
     explicit TableModelO(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelO() override;
 
-public slots:
-    void RAppendEntries(const EntryList& entry_list) override;
-
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
-    Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
-    QModelIndex GetIndex(QUuid entry_id) const override;
-
-    const QList<Entry*>& GetEntryList() const { return entry_list_; }
-    void Purify();
-    void Finalize(QJsonObject& message);
-    void SyncSucceeded();
-    bool HasZeroUnitPrice() const;
-    bool HasPendingUpdate() const;
+    void Purify() override;
+    bool HasZeroUnitPrice() const override;
 
 private:
     bool UpdateInternalSku(Entry* entry, QUuid value, int row) override;
     bool UpdateUnitPrice(EntryO* entry, double value);
     bool UpdateMeasure(EntryO* entry, double value);
     bool UpdateCount(EntryO* entry, double value);
-    bool UpdateDescription(EntryO* entry, const QString& value);
-    bool UpdateTag(EntryO* entry, const QStringList& value);
-    bool UpdateDocument(EntryO* entry, const QStringList& value);
 
 private:
     const NodeO* d_node_ {};
-
-    QList<Entry*> entry_list_ {};
-    QSet<QUuid> pending_delete_ {};
 };
