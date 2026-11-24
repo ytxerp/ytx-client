@@ -54,7 +54,7 @@ void TableWidgetO::SyncSucceeded(int version)
     original_node_ = *node_;
 
     ui->pBtnSave->setEnabled(false);
-    ui->pBtnApprove->setEnabled(permission_ & order_permission::kApprove);
+    ui->pBtnRelease->setEnabled(permission_ & order_permission::kApprove);
 }
 
 void TableWidgetO::PermissionDenied()
@@ -68,7 +68,7 @@ void TableWidgetO::StatusSucceeded(int status, int version)
 {
     qDebug() << Q_FUNC_INFO;
 
-    Q_ASSERT(status >= std::to_underlying(OrderStatus::kDraft) && status <= std::to_underlying(OrderStatus::kUnapproved));
+    Q_ASSERT(status >= std::to_underlying(OrderStatus::kDraft) && status <= std::to_underlying(OrderStatus::kRecalled));
 
     node_->order_status = static_cast<OrderStatus>(status);
     node_->version = version;
@@ -137,8 +137,8 @@ void TableWidgetO::InitWidget(QSortFilterProxyModel* pmodel, QSortFilterProxyMod
 
     {
         utils::SetPushButton(ui->pBtnSave, QKeySequence::Save);
-        utils::SetPushButton(ui->pBtnApprove, QKeySequence(Qt::CTRL | Qt::Key_Return));
-        utils::SetPushButton(ui->pBtnUnapprove, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+        utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
+        utils::SetPushButton(ui->pBtnUnrelease, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
         utils::SetPushButton(ui->pBtnPreview, QKeySequence(Qt::CTRL | Qt::Key_P));
         utils::SetPushButton(ui->pBtnPrint, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
 
@@ -216,7 +216,7 @@ void TableWidgetO::InitData(const NodeO* node)
 void TableWidgetO::UpdateButtons(OrderStatus value)
 {
     const bool draft { value == OrderStatus::kDraft };
-    const bool released { value == OrderStatus::kApproved };
+    const bool released { value == OrderStatus::kReleased };
     const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
     const bool no_pending { !pending };
 
@@ -236,19 +236,19 @@ void TableWidgetO::UpdateButtons(OrderStatus value)
 
     ui->pBtnSave->setEnabled(!released && pending);
 
-    ui->pBtnApprove->setEnabled(
+    ui->pBtnRelease->setEnabled(
         !released && no_pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kApprove));
-    ui->pBtnUnapprove->setEnabled(released && (permission_ & order_permission::kUnapprove));
+    ui->pBtnUnrelease->setEnabled(released && (permission_ & order_permission::kUnapprove));
 }
 
 void TableWidgetO::UpdateSaveReleaseButtons()
 {
     const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
-    const bool released { node_->order_status == OrderStatus::kApproved };
+    const bool released { node_->order_status == OrderStatus::kReleased };
 
     ui->pBtnSave->setEnabled(!released && pending);
 
-    ui->pBtnApprove->setEnabled(
+    ui->pBtnRelease->setEnabled(
         !released && !pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kApprove));
 }
 
@@ -356,7 +356,7 @@ void TableWidgetO::on_pBtnSave_clicked()
     if (!ValidateUnitPrice())
         return;
 
-    Q_ASSERT(node_->order_status != OrderStatus::kApproved);
+    Q_ASSERT(node_->order_status != OrderStatus::kReleased);
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section_));
@@ -469,9 +469,9 @@ QJsonObject TableWidgetO::BuildStatusMessage() const
     return message;
 }
 
-void TableWidgetO::on_pBtnUnapprove_clicked()
+void TableWidgetO::on_pBtnUnrelease_clicked()
 {
-    Q_ASSERT(node_->order_status == OrderStatus::kApproved && (permission_ & order_permission::kUnapprove));
+    Q_ASSERT(node_->order_status == OrderStatus::kReleased && (permission_ & order_permission::kUnapprove));
     Q_ASSERT(!table_model_->HasPendingUpdate() && original_node_ == *node_);
     Q_ASSERT(node_->sync_state == SyncState::kSynced);
 
@@ -487,7 +487,7 @@ void TableWidgetO::on_pBtnUnapprove_clicked()
 
     qDebug() << Q_FUNC_INFO << node_->version;
 
-    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, BuildStatusMessage());
+    WebSocket::Instance()->SendMessage(WsKey::kOrderUnrelease, BuildStatusMessage());
 
     node_->sync_state = SyncState::kUpdating;
 }
@@ -526,9 +526,9 @@ bool TableWidgetO::ValidateUnitPrice() const
     return result == QMessageBox::Yes;
 }
 
-void TableWidgetO::on_pBtnApprove_clicked()
+void TableWidgetO::on_pBtnRelease_clicked()
 {
-    Q_ASSERT(node_->order_status != OrderStatus::kApproved && (permission_ & order_permission::kApprove));
+    Q_ASSERT(node_->order_status != OrderStatus::kReleased && (permission_ & order_permission::kApprove));
     Q_ASSERT(!table_model_->HasPendingUpdate() && original_node_ == *node_);
 
     if (!ValidateSyncState())

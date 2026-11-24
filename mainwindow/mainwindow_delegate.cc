@@ -201,7 +201,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* issued_time { new IssuedTimeR(section_config.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
-    auto* status_r { new StatusR(std::to_underlying(OrderStatus::kApproved), tree_view) };
+    auto* status_r { new StatusR(std::to_underlying(OrderStatus::kReleased), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);
 
     const auto& sc { section == Section::kSale ? sc_sale_ : sc_purchase_ };

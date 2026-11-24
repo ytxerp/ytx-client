@@ -227,7 +227,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kOrderInsert] = [this](const QJsonObject& obj) { InsertOrder(obj); };
     handler_obj_[WsKey::kOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
     handler_obj_[WsKey::kOrderRelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
-    handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
+    handler_obj_[WsKey::kOrderUnrelease] = [this](const QJsonObject& obj) { SyncOrderStatus(obj); };
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };

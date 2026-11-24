@@ -267,12 +267,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pBtnApprove">
+         <widget class="QPushButton" name="pBtnRelease">
           <property name="focusPolicy">
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="text">
-           <string>Approve</string>
+           <string>Release</string>
           </property>
           <property name="checkable">
            <bool>false</bool>
@@ -280,12 +280,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pBtnUnapprove">
+         <widget class="QPushButton" name="pBtnUnrelease">
           <property name="focusPolicy">
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="text">
-           <string>Unapprove</string>
+           <string>Unrelease</string>
           </property>
          </widget>
         </item>

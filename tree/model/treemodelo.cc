@@ -33,7 +33,7 @@ void TreeModelO::SyncStatus(QUuid node_id, int status, int version)
     const int column { node::StatusColumn(section_) };
     EmitDataChanged(row, row, column, column, index.parent());
 
-    const int coefficient { new_status == OrderStatus::kApproved ? 1 : -1 };
+    const int coefficient { new_status == OrderStatus::kReleased ? 1 : -1 };
 
     const node::Delta delta {
         .initial = coefficient * node->initial_total,
@@ -190,7 +190,7 @@ void TreeModelO::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
             break;
         case NodeKind::kLeaf: {
             auto* d_node { DerivedPtr<NodeO>(node) };
-            if (d_node->order_status == OrderStatus::kApproved) {
+            if (d_node->order_status == OrderStatus::kReleased) {
                 const node::Delta delta {
                     .initial = d_node->initial_total,
                     .count = d_node->count_total,
@@ -320,7 +320,7 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* d_node { static_cast<NodeO*>(node) };
     const NodeEnumO column { index.column() };
 
-    if (d_node->order_status == OrderStatus::kApproved && column != NodeEnumO::kTag && column != NodeEnumO::kColor)
+    if (d_node->order_status == OrderStatus::kReleased && column != NodeEnumO::kTag && column != NodeEnumO::kColor)
         return false;
 
     const QUuid id { node->id };
@@ -417,7 +417,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     Q_ASSERT(node);
 
-    const bool update_ancestor { node->kind == NodeKind::kBranch || node->order_status == OrderStatus::kApproved };
+    const bool update_ancestor { node->kind == NodeKind::kBranch || node->order_status == OrderStatus::kReleased };
 
     if (update_ancestor) {
         const node::Delta delta {
