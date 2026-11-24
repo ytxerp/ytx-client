@@ -53,7 +53,7 @@ inline const QString kTreeHeaderState = QStringLiteral("tree_header_state");
 inline const QString kTableHeaderState = QStringLiteral("table_header_state");
 inline const QString kMainwindow = QStringLiteral("mainwindow");
 inline const QString kPrinter = QStringLiteral("printer");
-inline const QString kCompanyName = QStringLiteral("company_name");
+inline const QString kCompany = QStringLiteral("company");
 inline const QString kSection = QStringLiteral("section");
 inline const QString kInputSide = QStringLiteral("input_side");
 inline const QString kSplitter = QStringLiteral("splitter");
@@ -249,9 +249,6 @@ inline const QString kDescendant = QStringLiteral("descendant");
 
 // Others
 inline const QString kYTX = QStringLiteral("ytx");
-inline const QString kUi = QStringLiteral("ui");
-inline const QString kPrint = QStringLiteral("print");
-inline const QString kExport = QStringLiteral("export");
 
 // Constants for sections
 inline const QString kFinance = QStringLiteral("finance");

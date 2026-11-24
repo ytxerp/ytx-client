@@ -16,22 +16,13 @@ void MainWindow::ReadLocalConfig()
     app_settings_ = QSharedPointer<QSettings>::create(
         QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + kYTX + kDotSuffixINI, QSettings::IniFormat);
 
-    app_settings_->beginGroup(kUi);
+    app_settings_->beginGroup(kYTX);
     app_config_.language = app_settings_->value(kLanguage, QLocale::system().name()).toString();
     app_config_.theme = app_settings_->value(kTheme, kSolarizedDark).toString();
     app_config_.separator = app_settings_->value(kSeparator, kDash).toString();
     app_config_.delete_confirm = app_settings_->value(kDeleteConfirm, true).toBool();
-    app_settings_->endGroup();
-
-    app_settings_->beginGroup(kPrint);
+    app_config_.company = app_settings_->value(kCompany).toString();
     app_config_.printer = app_settings_->value(kPrinter).toString();
-    app_settings_->endGroup();
-
-    app_settings_->beginGroup(kExport);
-    app_config_.company_name = app_settings_->value(kCompanyName).toString();
-    app_settings_->endGroup();
-
-    app_settings_->beginGroup(kStart);
     start_ = Section(app_settings_->value(kSection).toInt());
     app_settings_->endGroup();
 
@@ -76,19 +67,13 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
 
     app_config_ = app;
 
-    app_settings_->beginGroup(kUi);
+    app_settings_->beginGroup(kYTX);
     app_settings_->setValue(kLanguage, app.language);
     app_settings_->setValue(kSeparator, app.separator);
     app_settings_->setValue(kTheme, app.theme);
     app_settings_->setValue(kDeleteConfirm, app.delete_confirm);
-    app_settings_->endGroup();
-
-    app_settings_->beginGroup(kPrint);
     app_settings_->setValue(kPrinter, app.printer);
-    app_settings_->endGroup();
-
-    app_settings_->beginGroup(kExport);
-    app_settings_->setValue(kCompanyName, app.company_name);
+    app_settings_->setValue(kCompany, app.company);
     app_settings_->endGroup();
 }
 

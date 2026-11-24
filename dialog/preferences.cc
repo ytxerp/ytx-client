@@ -80,7 +80,7 @@ void Preferences::InitData()
     InitComboData(ui->comboSeparator, app_.separator);
     InitComboData(ui->comboPrinter, app_.printer);
 
-    ui->lineCompanyName->setText(app_.company_name);
+    ui->lineCompany->setText(app_.company);
     ui->chkBoxDeleteConfirm->setChecked(app_.delete_confirm);
 
     InitComboData(ui->comboDateFormat, section_.date_format);
@@ -257,10 +257,10 @@ void Preferences::on_comboOperation_currentIndexChanged(int index)
     section_.operation = ui->comboOperation->currentText();
 }
 
-void Preferences::on_lineCompanyName_editingFinished()
+void Preferences::on_lineCompany_editingFinished()
 {
-    app_.company_name = ui->lineCompanyName->text();
-    ResizeLine(ui->lineCompanyName, app_.company_name);
+    app_.company = ui->lineCompany->text();
+    ResizeLine(ui->lineCompany, app_.company);
 }
 
 void Preferences::on_comboPrinter_currentIndexChanged(int index)

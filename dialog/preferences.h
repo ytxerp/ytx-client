@@ -63,7 +63,7 @@ private slots:
     void on_comboLanguage_currentIndexChanged(int index);
     void on_comboDateFormat_currentIndexChanged(int index);
     void on_comboSeparator_currentIndexChanged(int index);
-    void on_lineCompanyName_editingFinished();
+    void on_lineCompany_editingFinished();
 
     void on_comboPrinter_currentIndexChanged(int index);
 

@@ -317,7 +317,7 @@ void MainWindow::WriteConfig()
         utils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
         utils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
         utils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
-        utils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
+        utils::WriteConfig(app_settings_, std::to_underlying(start_), kYTX, kSection);
     }
 }
 

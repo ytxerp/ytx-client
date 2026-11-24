@@ -163,7 +163,7 @@ void MainWindow::RShowTertiaryStatement(QUuid partner_id, utils::DateRange range
     const Section section { sc_->section };
 
     auto* widget { new StatementTertiaryWidget(
-        section, widget_id, header_info_.statement_tertiary, partner_id, partner_name, range, unit, app_config_.company_name, this) };
+        section, widget_id, header_info_.statement_tertiary, partner_id, partner_name, range, unit, app_config_.company, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 
