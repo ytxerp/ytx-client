@@ -228,7 +228,7 @@ void PrintHub::RenderAllPages(QPrinter* printer)
 
 void PrintHub::ScanTemplate()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     constexpr auto folder_name { "../Resources/print_template" };
 #elif defined(Q_OS_WIN32)
     constexpr auto folder_name { "print_template" };

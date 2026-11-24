@@ -29,6 +29,8 @@ QVariant EntryModelR::data(const QModelIndex& index, int role) const
         return d_entry->document;
     case EntryEnumR::kIssuedTime:
         return d_entry->issued_time;
+    case EntryEnumR::kStatus:
+        return d_entry->status;
     }
 }
 
@@ -53,6 +55,8 @@ void EntryModelR::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &EntryR::document, order);
         case EntryEnumR::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &EntryR::issued_time, order);
+        case EntryEnumR::kStatus:
+            return utils::CompareMember(lhs, rhs, &EntryR::status, order);
         }
     };
 

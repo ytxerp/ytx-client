@@ -146,7 +146,7 @@ QByteArray PasswordEncryption::GetMachineKey()
     machine_id = reg.value("MachineGuid").toString();
 #endif
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     QProcess process {};
     process.start("ioreg", QStringList() << "-rd1" << "-c" << "IOPlatformExpertDevice");
     process.waitForFinished();
