@@ -117,12 +117,11 @@ void TableWidgetR::UpdateButtons()
 {
     const bool draft { node_->reimbursement_status == ReimbursementStatus::kDraft };
     const bool pending { model_->HasPendingUpdate() || original_node_ != *node_ };
-    const bool no_pending { !pending };
     const bool has_entries { model_->rowCount() > 0 };
 
     ui->pushButtonSave->setEnabled(draft && pending);
     ui->pushButtonApprove->setEnabled(
-        no_pending && has_entries && draft && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
+        !pending && has_entries && draft && node_->sync_state == SyncState::kSynced && (permission_ & reimbursement_permission::kApprove));
     ui->pushButtonUnapprove->setEnabled(node_->reimbursement_status == ReimbursementStatus::kApproved && (permission_ & reimbursement_permission::kUnapprove));
 
     ui->dateTimeEdit->setEnabled(draft);
@@ -177,8 +176,7 @@ void TableWidgetR::on_pushButtonSave_clicked()
         return;
 
     if (!HasPendingUpdate()) {
-        ui->pushButtonSave->setEnabled(false);
-        ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove);
+        UpdateSaveApproveButtons();
         return;
     }
 

@@ -219,6 +219,7 @@ void TableWidgetO::UpdateButtons(OrderStatus value)
     const bool released { value == OrderStatus::kReleased };
     const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
     const bool no_pending { !pending };
+    const bool has_entries { table_model_->rowCount() > 0 };
 
     ui->comboPartner->setReadOnly(!draft);
     ui->comboEmployee->setReadOnly(released);
@@ -236,8 +237,8 @@ void TableWidgetO::UpdateButtons(OrderStatus value)
 
     ui->pBtnSave->setEnabled(!released && pending);
 
-    ui->pBtnRelease->setEnabled(
-        !released && no_pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kRelease));
+    ui->pBtnRelease->setEnabled(has_entries && !released && no_pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending
+        && (permission_ & order_permission::kRelease));
     ui->pBtnUnrelease->setEnabled(released && (permission_ & order_permission::kUnrelease));
 }
 
@@ -245,11 +246,11 @@ void TableWidgetO::UpdateSaveReleaseButtons()
 {
     const bool pending { table_model_->HasPendingUpdate() || original_node_ != *node_ };
     const bool released { node_->order_status == OrderStatus::kReleased };
+    const bool has_entries { table_model_->rowCount() > 0 };
 
     ui->pBtnSave->setEnabled(!released && pending);
-
-    ui->pBtnRelease->setEnabled(
-        !released && !pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending && (permission_ & order_permission::kRelease));
+    ui->pBtnRelease->setEnabled(has_entries && !released && !pending && node_->sync_state == SyncState::kSynced && node_->unit != NodeUnit::OPending
+        && (permission_ & order_permission::kRelease));
 }
 
 void TableWidgetO::InitUiValue()
@@ -354,8 +355,7 @@ void TableWidgetO::on_pBtnSave_clicked()
         return;
 
     if (!HasPendingUpdate()) {
-        ui->pBtnSave->setEnabled(false);
-        ui->pBtnRelease->setEnabled(permission_ & order_permission::kRelease);
+        UpdateSaveReleaseButtons();
         return;
     }
 
