@@ -106,10 +106,10 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_tree_or { IsTreeWidgetO(widget) || IsTreeWidgetR(widget) };
 
     const bool is_table { IsTableWidget(widget) };
-    const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_table_or { IsTableWidgetO(widget) || IsTableWidgetR(widget) };
 
     const bool is_order_section { IsOrderSection(section) };
+    const bool is_double_entry { IsDoubleEntry(section) };
     const bool is_finance_section { section == Section::kFinance };
     const bool is_inventory_section { section == Section::kInventory };
 
@@ -121,12 +121,12 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionRename->setEnabled(is_tree);
     ui->actionClearColor->setEnabled(is_tree);
 
-    ui->actionMarkAll->setEnabled(is_table_fipt || is_statement_tertiary);
-    ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_tertiary);
-    ui->actionMarkToggle->setEnabled(is_table_fipt || is_statement_tertiary);
+    ui->actionMarkAll->setEnabled(is_double_entry || is_statement_tertiary);
+    ui->actionMarkNone->setEnabled(is_double_entry || is_statement_tertiary);
+    ui->actionMarkToggle->setEnabled(is_double_entry || is_statement_tertiary);
 
-    ui->actionLockAll->setEnabled(is_table_fipt);
-    ui->actionUnlockAll->setEnabled(is_table_fipt);
+    ui->actionLockAll->setEnabled(is_double_entry);
+    ui->actionUnlockAll->setEnabled(is_double_entry);
 
     ui->actionJumpEntry->setEnabled(is_table);
 

@@ -13,8 +13,6 @@ TableModel::TableModel(CTableModelArg& arg, QObject* parent)
 {
 }
 
-void TableModel::RRefreshBatchEntries(int column) { EmitDataChanged(0, rowCount() - 1, column, column); }
-
 void TableModel::RRefreshField(QUuid entry_id, int start, int end)
 {
     auto idx { GetIndex(entry_id) };

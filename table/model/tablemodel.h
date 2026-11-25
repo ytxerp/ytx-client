@@ -64,7 +64,6 @@ public slots:
     };
     virtual void RAttachEntry(Entry* entry) { Q_UNUSED(entry) };
 
-    void RRefreshBatchEntries(int column);
     void RRefreshField(QUuid entry_id, int start, int end);
 
 public:

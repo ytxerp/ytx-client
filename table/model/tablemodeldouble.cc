@@ -28,6 +28,8 @@ void TableModelDouble::RDirectionRule(bool value)
     EmitDataChanged(0, rowCount() - 1, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 }
 
+void TableModelDouble::RRefreshBatchEntries(int column) { EmitDataChanged(0, rowCount() - 1, column, column); }
+
 void TableModelDouble::RAttachEntry(Entry* entry)
 {
     auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };

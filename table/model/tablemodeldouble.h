@@ -55,6 +55,7 @@ public slots:
     void RUpdateBalance(QUuid entry_id);
     void RDeleteEntries(const QSet<QUuid>& entry_id_set);
     void RDirectionRule(bool value);
+    void RRefreshBatchEntries(int column);
 
 public:
     // implemented functions

@@ -91,11 +91,14 @@ void TableSStation::RRefreshBatchEntries(const QSet<QUuid>& affected_node, int c
     for (const auto& node_id : affected_node) {
         Q_ASSERT(!node_id.isNull());
 
-        const auto* model { FindModel(node_id) };
-        if (!model)
-            continue;
+        const auto* base { FindModel(node_id) };
+        if (!base)
+            return;
 
-        connect(this, &TableSStation::SRefreshBatchEntries, model, &TableModel::RRefreshBatchEntries, Qt::SingleShotConnection);
+        Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
+        const auto* model { static_cast<const TableModelDouble*>(base) };
+
+        connect(this, &TableSStation::SRefreshBatchEntries, model, &TableModelDouble::RRefreshBatchEntries, Qt::SingleShotConnection);
         emit SRefreshBatchEntries(column);
     }
 }

@@ -90,8 +90,6 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
-
     connect(ui->tabWidgetP, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
     connect(ui->tabWidgetP, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
     connect(ui->tabWidgetP, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIPT, Qt::UniqueConnection);
