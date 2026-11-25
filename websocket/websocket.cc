@@ -561,8 +561,8 @@ void WebSocket::DeleteTag(const QJsonObject& obj)
 void WebSocket::PeriodClose(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QJsonArray entry_array { obj.value(kEntryArray).toArray() };
-    const QJsonArray total_array { obj.value(kTotalArray).toArray() };
+    const QJsonArray entry_array = obj.value(kEntryArray).toArray();
+    const QJsonArray total_array = obj.value(kTotalArray).toArray();
     const QUuid summary_node_id { obj.value(kSummaryNodeId).toString() };
 
     {
@@ -602,7 +602,7 @@ void WebSocket::FetchTable(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array = obj.value(kEntryArray).toArray();
 
     auto entry_hub { entry_hub_hash_.value(section) };
     entry_hub->FetchTable(node_id, array);
@@ -634,7 +634,7 @@ void WebSocket::FetchOrderOverview(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SOrderOverview(section, widget_id, array);
 }
@@ -643,7 +643,7 @@ void WebSocket::FetchStatementPrimary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SStatementPrimary(section, widget_id, array);
 }
@@ -652,7 +652,7 @@ void WebSocket::FetchStatementSecondary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SStatementSecondary(section, widget_id, array);
 }
@@ -661,7 +661,7 @@ void WebSocket::FetchStatementTertiary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SStatementTertiary(section, widget_id, array);
 }
@@ -670,7 +670,7 @@ void WebSocket::FetchSettlementPrimary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SSettlementPrimary(section, widget_id, array);
 }
@@ -679,7 +679,7 @@ void WebSocket::FetchSettlementSecondary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SSettlementSecondary(section, widget_id, array);
 }
@@ -687,7 +687,7 @@ void WebSocket::FetchSettlementSecondary(const QJsonObject& obj)
 void WebSocket::FetchWorkspaceMember(const QJsonObject& obj)
 {
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SWorkspaceMember(widget_id, array);
 }
@@ -695,7 +695,7 @@ void WebSocket::FetchWorkspaceMember(const QJsonObject& obj)
 void WebSocket::FetchAuditLog(const QJsonObject& obj)
 {
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SAuditLog(widget_id, array);
 }
@@ -712,7 +712,7 @@ void WebSocket::FetchInventoryHeat(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SInventoryHeat(widget_id, array);
 }
@@ -729,7 +729,7 @@ void WebSocket::FetchPartnerHeat(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SPartnerHeat(widget_id, array);
 }
@@ -746,8 +746,8 @@ void WebSocket::FetchBalanceSheet(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
+    const QJsonArray node_array = obj.value(kNodeArray).toArray();
+    const QJsonArray path_array = obj.value(kPathArray).toArray();
 
     emit SBalanceSheet(widget_id, node_array, path_array);
 }
@@ -788,7 +788,7 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
-    const QJsonArray total_array { obj.value(kTotalArray).toArray() };
+    const QJsonArray total_array = obj.value(kTotalArray).toArray();
 
     const auto leaf_entry { ParseLinkedEntry(linked_entry_obj) };
 
@@ -805,7 +805,7 @@ void WebSocket::DeletePartnerLeaf(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
-    const auto linked_entry_array { obj.value(kLinkedEntry).toArray() };
+    const auto linked_entry_array = obj.value(kLinkedEntry).toArray();
     const auto leaf_entry { ParseLinkedEntryP(linked_entry_array) };
 
     auto* entry_hub { static_cast<EntryHubP*>(entry_hub_hash_.value(section).data()) };
@@ -1032,7 +1032,7 @@ void WebSocket::SearchEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array = obj.value(kEntryArray).toArray();
 
     emit SEntrySearch(section, widget_id, array);
 }
@@ -1041,7 +1041,7 @@ void WebSocket::SearchNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray node_array = obj.value(kNodeArray).toArray();
 
     emit SNodeSearch(section, widget_id, node_array);
 }
@@ -1333,7 +1333,7 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
+    const QJsonArray selected_array = obj.value(kSettlementItemSelected).toArray();
     const auto settlement { obj.value(kSettlement).toObject() };
 
     auto* order_model = static_cast<TreeModelO*>(tree_model_hash_.value(section).data());
@@ -1370,7 +1370,7 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
+    const QJsonArray selected_array = obj.value(kSettlementItemSelected).toArray();
     const auto update { obj.value(kUpdate).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -1438,7 +1438,7 @@ void WebSocket::FetchSettlementView(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kArray).toArray() };
+    const QJsonArray array = obj.value(kArray).toArray();
 
     emit SSettlementView(section, widget_id, array);
 }
@@ -1489,7 +1489,7 @@ QHash<QUuid, QSet<QUuid>> WebSocket::ParseLinkedEntry(const QJsonObject& obj) co
         const QUuid key { QUuid(it.key()) };
         QSet<QUuid>& set = map[key];
 
-        const QJsonArray arr { it.value().toArray() };
+        const QJsonArray arr = it.value().toArray();
         for (const auto& val : arr) {
             set.insert(QUuid(val.toString()));
         }

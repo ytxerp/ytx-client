@@ -45,11 +45,11 @@ void MainWindow::RCashFlowStatement(QUuid widget_id, const QJsonObject& obj)
     if (!d_widget)
         return;
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray carrier_array { obj.value(cash_flow::kCarrierArray).toArray() };
-    const QJsonArray counterpart_array { obj.value(cash_flow::kCounterPartArray).toArray() };
-    const QJsonArray special_array { obj.value(cash_flow::kSpecialArray).toArray() };
-    const QJsonArray wrong_entry_array { obj.value(cash_flow::kWrongEntryArray).toArray() };
+    const QJsonArray node_array = obj.value(kNodeArray).toArray();
+    const QJsonArray carrier_array = obj.value(cash_flow::kCarrierArray).toArray();
+    const QJsonArray counterpart_array = obj.value(cash_flow::kCounterPartArray).toArray();
+    const QJsonArray special_array = obj.value(cash_flow::kSpecialArray).toArray();
+    const QJsonArray wrong_entry_array = obj.value(cash_flow::kWrongEntryArray).toArray();
 
     auto* model { d_widget->Model() };
     model->Rebuild(node_array);

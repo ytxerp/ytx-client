@@ -33,7 +33,7 @@ namespace utils {
 inline QStringList ReadStringList(const QJsonObject& object, const QString& key)
 {
     QStringList result {};
-    const QJsonArray array { object.value(key).toArray() };
+    const QJsonArray array = object.value(key).toArray();
 
     for (const QJsonValue& value : array)
         result.append(value.toString());

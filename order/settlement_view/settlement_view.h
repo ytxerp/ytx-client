@@ -71,7 +71,7 @@ inline void Row::ReadJson(const QJsonObject& object)
         previous_balance = val.toString().toDouble();
 
     if (const auto val = object.value(kMonths); val.isArray()) {
-        const auto array { val.toArray() };
+        const auto array = val.toArray();
         months.reserve(array.size());
 
         for (const auto& value : array) {

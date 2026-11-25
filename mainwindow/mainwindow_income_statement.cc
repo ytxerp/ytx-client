@@ -29,8 +29,8 @@ void MainWindow::RIncomeStatement(QUuid widget_id, const QJsonObject& obj)
     if (!d_widget)
         return;
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
+    const QJsonArray node_array = obj.value(kNodeArray).toArray();
+    const QJsonArray path_array = obj.value(kPathArray).toArray();
 
     const auto profits { obj.value(income_statement::kProfits).toObject() };
     const double net_profit { profits.value(income_statement::kNetProfit).toString().toDouble() };

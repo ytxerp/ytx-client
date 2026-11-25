@@ -1005,8 +1005,8 @@ void TreeModel::SyncTree(const QJsonObject& data)
 
 void TreeModel::BuildTreeData(const QJsonObject& data, QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
 {
-    const QJsonArray node_array { data.value(kNodeArray).toArray() };
-    const QJsonArray path_array { data.value(kPathArray).toArray() };
+    const QJsonArray node_array = data.value(kNodeArray).toArray();
+    const QJsonArray path_array = data.value(kPathArray).toArray();
 
     node_hash.reserve(node_array.size());
 

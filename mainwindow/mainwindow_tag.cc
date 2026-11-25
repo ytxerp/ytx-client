@@ -43,7 +43,7 @@ void MainWindow::RTag(const QJsonObject& obj)
     const QJsonValue tags { obj.value(kTagArray) };
     Q_ASSERT(tags.isArray());
 
-    const QJsonArray tag_array { tags.toArray() };
+    const QJsonArray tag_array = tags.toArray();
 
     for (const QJsonValue& value : tag_array) {
         Q_ASSERT(value.isObject());

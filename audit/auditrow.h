@@ -32,7 +32,7 @@ inline QString JsonValueToString(const QJsonValue& value, QJsonDocument::JsonFor
         return obj.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(obj).toJson(format));
     }
     case QJsonValue::Array: {
-        const QJsonArray arr { value.toArray() };
+        const QJsonArray arr = value.toArray();
         return arr.isEmpty() ? QString {} : QString::fromUtf8(QJsonDocument(arr).toJson(format));
     }
     case QJsonValue::String:
