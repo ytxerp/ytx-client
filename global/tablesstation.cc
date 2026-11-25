@@ -61,10 +61,11 @@ void TableSStation::RUpdateBalance(QUuid node_id, QUuid entry_id)
     Q_ASSERT(!entry_id.isNull());
 
     const auto* base { FindModel(node_id) };
+    if (!base)
+        return;
+
     Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
     const auto* model { static_cast<const TableModelDouble*>(base) };
-    if (!model)
-        return;
 
     connect(this, &TableSStation::SUpdateBalance, model, &TableModelDouble::RUpdateBalance, Qt::SingleShotConnection);
     emit SUpdateBalance(entry_id);
@@ -117,10 +118,11 @@ void TableSStation::RDirectionRule(QUuid node_id, bool rule)
     Q_ASSERT(!node_id.isNull());
 
     const auto* base { FindModel(node_id) };
+    if (!base)
+        return;
+
     Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
     const auto* model { static_cast<const TableModelDouble*>(base) };
-    if (!model)
-        return;
 
     connect(this, &TableSStation::SDirectionRule, model, &TableModelDouble::RDirectionRule, Qt::SingleShotConnection);
     emit SDirectionRule(rule);
@@ -135,10 +137,11 @@ void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
         const QSet<QUuid>& entry_id_set = it.value();
 
         const auto* base { FindModel(node_id) };
+        if (!base)
+            return;
+
         Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
         const auto* model { static_cast<const TableModelDouble*>(base) };
-        if (!model)
-            continue;
 
         connect(this, &TableSStation::SDeleteEntries, model, &TableModelDouble::RDeleteEntries, Qt::SingleShotConnection);
         emit SDeleteEntries(entry_id_set);
@@ -150,6 +153,9 @@ void TableSStation::RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_se
     Q_ASSERT(!node_id.isNull());
 
     const auto* base { FindModel(node_id) };
+    if (!base)
+        return;
+
     Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
     const auto* model { static_cast<const TableModelDouble*>(base) };
 
