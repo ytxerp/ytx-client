@@ -177,6 +177,7 @@ void TableWidgetR::on_pushButtonSave_clicked()
         return;
 
     if (!HasPendingUpdate()) {
+        ui->pushButtonSave->setEnabled(false);
         ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove);
         return;
     }

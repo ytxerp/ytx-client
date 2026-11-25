@@ -354,6 +354,7 @@ void TableWidgetO::on_pBtnSave_clicked()
         return;
 
     if (!HasPendingUpdate()) {
+        ui->pBtnSave->setEnabled(false);
         ui->pBtnRelease->setEnabled(permission_ & order_permission::kRelease);
         return;
     }
