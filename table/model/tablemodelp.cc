@@ -70,20 +70,6 @@ void TableModelP::RAttachEntry(Entry* entry)
         EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 }
 
-QModelIndex TableModelP::GetIndex(QUuid entry_id) const
-{
-    int row { 0 };
-
-    for (const auto* entry : entry_list_) {
-        if (entry->id == entry_id) {
-            return index(row, 0);
-        }
-        ++row;
-    }
-
-    return QModelIndex();
-}
-
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent*/)
 {
     Q_ASSERT(row >= 0 && row <= entry_list_.size() - 1);
@@ -337,14 +323,6 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     }
 
     return flags;
-}
-
-QModelIndex TableModelP::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    return createIndex(row, column, entry_list_.at(row));
 }
 
 bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
