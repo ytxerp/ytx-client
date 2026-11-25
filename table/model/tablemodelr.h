@@ -39,7 +39,7 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     void Purify() override;
-    bool HasZeroUnitPrice() const override;
+    bool HasZeroValue() const override;
 
 private:
     bool UpdateInitial(EntryR* entry, double value);

@@ -30,8 +30,8 @@ inline constexpr int kUnapprove = 1 << 3;
 }
 
 namespace order_permission {
-inline constexpr int kApprove = 1 << 2;
-inline constexpr int kUnapprove = 1 << 3;
+inline constexpr int kRelease = 1 << 2;
+inline constexpr int kUnrelease = 1 << 3;
 }
 
 namespace section {

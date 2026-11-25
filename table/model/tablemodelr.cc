@@ -155,7 +155,7 @@ void TableModelR::Purify()
     }
 }
 
-bool TableModelR::HasZeroUnitPrice() const
+bool TableModelR::HasZeroValue() const
 {
     for (const Entry* entry : entry_list_) {
         const auto* d_entry { static_cast<const EntryR*>(entry) };

@@ -14,7 +14,7 @@ TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
 {
 }
 
-bool TableModelO::HasZeroUnitPrice() const
+bool TableModelO::HasZeroValue() const
 {
     for (const Entry* entry : entry_list_) {
         const auto* d_entry { static_cast<const EntryO*>(entry) };

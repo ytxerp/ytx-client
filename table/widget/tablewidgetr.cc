@@ -173,7 +173,10 @@ void TableWidgetR::on_pushButtonSave_clicked()
 
     model_->Purify();
 
-    if (!model_->HasPendingUpdate() && original_node_ == *node_) {
+    if (!ValidateAmount())
+        return;
+
+    if (!HasPendingUpdate()) {
         ui->pushButtonApprove->setEnabled(permission_ & reimbursement_permission::kApprove);
         return;
     }
@@ -276,4 +279,15 @@ bool TableWidgetR::ValidateSyncState() const
     qDebug() << Q_FUNC_INFO << static_cast<int>(node_->sync_state);
 
     return true;
+}
+
+bool TableWidgetR::ValidateAmount() const
+{
+    if (!model_->HasZeroValue())
+        return true;
+
+    const auto result { QMessageBox::question(const_cast<TableWidgetR*>(this), tr("Operation Warning"),
+        tr("Some entries have an amount of zero. Do you want to continue saving?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) };
+
+    return result == QMessageBox::Yes;
 }

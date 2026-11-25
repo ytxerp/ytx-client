@@ -50,7 +50,7 @@ signals:
 
 public:
     virtual void Purify() = 0;
-    virtual bool HasZeroUnitPrice() const = 0;
+    virtual bool HasZeroValue() const = 0;
 
     const QList<Entry*>& GetEntryList() const { return entry_list_; }
 

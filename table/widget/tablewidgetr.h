@@ -65,6 +65,7 @@ private:
     QJsonObject BuildStatusMessage() const;
 
     bool ValidateSyncState() const;
+    bool ValidateAmount() const;
 
 private:
     Ui::TableWidgetR* ui;
