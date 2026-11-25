@@ -2,11 +2,7 @@
 
 #include "global/entrypool.h"
 
-TableModelSingleDeferred::~TableModelSingleDeferred()
-{
-    FlushTimers();
-    EntryPool::Instance().Recycle(entry_list_, section_);
-}
+TableModelSingleDeferred::~TableModelSingleDeferred() { EntryPool::Instance().Recycle(entry_list_, section_); }
 
 void TableModelSingleDeferred::Finalize(QJsonObject& message)
 {

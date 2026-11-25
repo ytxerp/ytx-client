@@ -32,7 +32,7 @@ namespace search {
 class NodeModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ~NodeModel() override { };
+    ~NodeModel() override = default;
 
 protected:
     NodeModel(Section section, const QStringList& header, CTreeModel* tree_model, const QHash<QUuid, tag::Row>& tag_hash, QObject* parent = nullptr);

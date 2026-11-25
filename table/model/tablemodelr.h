@@ -26,7 +26,7 @@ class TableModelR final : public TableModelSingleDeferred {
     Q_OBJECT
 public:
     explicit TableModelR(CTableModelArg& arg, QObject* parent = nullptr);
-    ~TableModelR() override;
+    ~TableModelR() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

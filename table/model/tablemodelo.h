@@ -79,7 +79,7 @@ class TableModelO final : public TableModelSingleDeferred {
 
 public:
     explicit TableModelO(CTableModelArg& arg, QObject* parent = nullptr);
-    ~TableModelO() override;
+    ~TableModelO() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

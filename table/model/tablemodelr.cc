@@ -13,8 +13,6 @@ TableModelR::TableModelR(CTableModelArg& arg, QObject* parent)
 {
 }
 
-TableModelR::~TableModelR() { EntryPool::Instance().Recycle(entry_list_, section_); }
-
 QVariant TableModelR::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())

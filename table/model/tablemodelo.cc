@@ -14,8 +14,6 @@ TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
 {
 }
 
-TableModelO::~TableModelO() { EntryPool::Instance().Recycle(entry_list_, section_); }
-
 bool TableModelO::HasZeroUnitPrice() const
 {
     for (const Entry* entry : entry_list_) {
