@@ -62,7 +62,6 @@ public slots:
 
     // receive from EntryHub
     void RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set);
     void RAppendEntries(QUuid node_id, const EntryList& entry_list);
 
     void RRefreshField(QUuid node_id, QUuid entry_id, int start, int end);

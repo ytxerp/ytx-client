@@ -39,7 +39,6 @@ protected:
 signals:
     // send to LeafSStation
     void SDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set);
     void SAppendEntries(QUuid node_id, const EntryList& entry_list);
 
     void SAttachEntry(QUuid node_id, Entry* entry);

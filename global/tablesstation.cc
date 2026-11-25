@@ -147,18 +147,3 @@ void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
         emit SDeleteEntries(entry_id_set);
     }
 }
-
-void TableSStation::RDeleteEntries(QUuid node_id, const QSet<QUuid>& entry_id_set)
-{
-    Q_ASSERT(!node_id.isNull());
-
-    const auto* base { FindModel(node_id) };
-    if (!base)
-        return;
-
-    Q_ASSERT(qobject_cast<const TableModelDouble*>(base));
-    const auto* model { static_cast<const TableModelDouble*>(base) };
-
-    connect(this, &TableSStation::SDeleteEntries, model, &TableModelDouble::RDeleteEntries, Qt::SingleShotConnection);
-    emit SDeleteEntries(entry_id_set);
-}

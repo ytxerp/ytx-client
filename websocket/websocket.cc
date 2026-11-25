@@ -862,8 +862,7 @@ void WebSocket::MergeLeaf(const QJsonObject& obj)
     }
 
     {
-        auto entry_hub_p { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
-
+        auto* entry_hub_p { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
         if (partner)
             entry_hub_p->ReplaceInternalInventoryRef(source_node_id, target_node_id);
     }

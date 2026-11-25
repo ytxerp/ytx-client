@@ -11,7 +11,6 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
@@ -37,7 +36,6 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
@@ -63,7 +61,6 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SDeleteEntries, TableSStation::Instance(), &TableSStation::RDeleteEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendEntries, TableSStation::Instance(), &TableSStation::RAppendEntries, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshBatchEntries, TableSStation::Instance(), &TableSStation::RRefreshBatchEntries, Qt::UniqueConnection);
 
