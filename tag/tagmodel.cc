@@ -269,7 +269,7 @@ void Model::RestartTimer(QUuid id)
         connect(timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    timer->start(time_const::kAutoCloseMs);
+    timer->start(time_const::kDebounceInterval);
 }
 
 void Model::FlushTimer(QUuid id)

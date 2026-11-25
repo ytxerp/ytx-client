@@ -42,6 +42,8 @@ inline constexpr int kHeartbeatIntervalMs = 30000;
 inline constexpr int kTimeoutThresholdMs = 75000;
 inline constexpr int kAutoCloseMs = 3000;
 inline constexpr int kCooldownMs = 2000;
+inline constexpr int kDebounceInterval = 3000;
+inline constexpr int kDebounceIntervalSix = 6000;
 }
 
 namespace pool_const {

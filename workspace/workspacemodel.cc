@@ -71,10 +71,10 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return row->sale_permissions;
     case RowField::kPurchasePermissions:
         return row->purchase_permissions;
+    case RowField::kReimbursementPermissions:
+        return row->reimbursement_permissions;
     case RowField::kCreatedTime:
         return row->created_time;
-    case RowField::kPlaceholder:
-        return QVariant();
     }
 }
 
@@ -134,10 +134,13 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
         row->purchase_permissions = raw;
         changes.insert(kPurchasePermissions, raw);
         break;
+    case RowField::kReimbursementPermissions:
+        row->reimbursement_permissions = raw;
+        changes.insert(kReimbursementPermissions, raw);
+        break;
     case RowField::kEmail:
     case RowField::kUsername:
     case RowField::kName:
-    case RowField::kPlaceholder:
     case RowField::kCreatedTime:
         // These columns are read-only in this model
         return false;
@@ -155,8 +158,6 @@ void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
     const RowField e_column { column };
-    if (e_column == RowField::kPlaceholder)
-        return;
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
@@ -182,10 +183,10 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::sale_permissions, order);
         case RowField::kPurchasePermissions:
             return utils::CompareMember(lhs, rhs, &Row::purchase_permissions, order);
+        case RowField::kReimbursementPermissions:
+            return utils::CompareMember(lhs, rhs, &Row::reimbursement_permissions, order);
         case RowField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Row::created_time, order);
-        case RowField::kPlaceholder:
-            return false;
         }
     };
 
@@ -220,6 +221,7 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
     case RowField::kPartnerPermissions:
     case RowField::kSalePermissions:
     case RowField::kPurchasePermissions:
+    case RowField::kReimbursementPermissions:
         // Enable editing for specific roles
         flags |= Qt::ItemIsEditable;
         break;
@@ -228,7 +230,6 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
     case RowField::kUsername:
     case RowField::kName:
     case RowField::kCreatedTime:
-    case RowField::kPlaceholder:
         // Disable editing for all other columns
         flags &= ~Qt::ItemIsEditable;
         break;
@@ -310,7 +311,7 @@ void Model::RestartTimer(QUuid id)
         connect(timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    timer->start(time_const::kAutoCloseMs);
+    timer->start(time_const::kDebounceIntervalSix);
 }
 
 void Model::FlushTimer(QUuid id)

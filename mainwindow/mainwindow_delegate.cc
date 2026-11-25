@@ -543,6 +543,9 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 
     auto* purchase_permissions { new SectionPermissionsDelegate(Section::kPurchase, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(workspace::RowField::kPurchasePermissions), purchase_permissions);
+
+    auto* reimbursement_permissions { new SectionPermissionsDelegate(Section::kReimbursement, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::RowField::kReimbursementPermissions), reimbursement_permissions);
 }
 
 void MainWindow::DelegateAuditLog(QTableView* table_view) const

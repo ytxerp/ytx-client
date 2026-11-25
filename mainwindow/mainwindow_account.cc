@@ -67,7 +67,7 @@ void MainWindow::on_actionWorkspaceManager_triggered()
     WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberFetch, message);
 
     auto* view { dialog->View() };
-    InitTableView(view, std::to_underlying(workspace::RowField::kPlaceholder));
+    InitTableView(view, std::to_underlying(workspace::RowField::kCreatedTime));
     DelegateWorkspaceMember(view);
 
     dialog->show();

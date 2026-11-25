@@ -918,7 +918,7 @@ void TreeModel::RestartTimer(QUuid id)
         connect(timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    timer->start(time_const::kAutoCloseMs);
+    timer->start(time_const::kDebounceInterval);
 }
 
 void TreeModel::FlushTimer(QUuid id)

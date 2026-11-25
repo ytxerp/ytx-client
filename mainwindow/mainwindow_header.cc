@@ -53,7 +53,6 @@ void MainWindow::InitHeader()
         tr("Email"),
         tr("Username"),
         tr("Name", "Person"),
-        QString(),
         tr("Workspace Role"),
         tr("Finance"),
         tr("Task"),
@@ -61,6 +60,7 @@ void MainWindow::InitHeader()
         tr("Partner"),
         tr("Sale"),
         tr("Purchase"),
+        tr("Reimbursement"),
         tr("Issued Time"),
     };
 

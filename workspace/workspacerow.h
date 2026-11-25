@@ -33,7 +33,6 @@ enum class RowField : int {
     kEmail,
     kUsername,
     kName,
-    kPlaceholder,
     kWorkspaceRole,
     kFinancePermissions,
     kTaskPermissions,
@@ -41,6 +40,7 @@ enum class RowField : int {
     kPartnerPermissions,
     kSalePermissions,
     kPurchasePermissions,
+    kReimbursementPermissions,
     kCreatedTime,
 };
 
@@ -59,6 +59,7 @@ struct Row final {
     int partner_permissions {};
     int sale_permissions {};
     int purchase_permissions {};
+    int reimbursement_permissions {};
     QDateTime created_time {};
 
     void Reset();
@@ -109,6 +110,10 @@ inline void Row::ReadJson(const QJsonObject& object)
 
     if (const auto val = object.value(kPurchasePermissions); val.isDouble()) {
         purchase_permissions = val.toInt();
+    }
+
+    if (const auto val = object.value(kReimbursementPermissions); val.isDouble()) {
+        reimbursement_permissions = val.toInt();
     }
 
     if (const auto val = object.value(kCreatedTime); val.isString())
