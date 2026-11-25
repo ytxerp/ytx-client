@@ -79,6 +79,11 @@ void WebSocket::Connect()
         return;
     }
 
+    qDebug() << QSslSocket::supportsSsl();
+    qDebug() << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << QSslSocket::sslLibraryVersionString();
+    qDebug() << QSslSocket::activeBackend();
+
     qInfo() << "[WS]" << "Connecting to server...";
     socket_.open(server_url_);
 }
