@@ -703,7 +703,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             /wd4244 # Disable double to int conversion warning (corresponding to part of
             # -Wconversion)
             /wd4267 # Disable size_t to int conversion warning (corresponding to
-        # -Wno-shorten-64-to-32)
+            # -Wno-shorten-64-to-32)
     )
 endif()
 
@@ -744,9 +744,9 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
         ${PROJECT_NAME}
         PRIVATE
             $<$<CONFIG:Debug>:
-                -fsanitize=address,undefined
-                -fno-omit-frame-pointer
-                -g
+            -fsanitize=address,undefined
+            -fno-omit-frame-pointer
+            -g
             >
     )
 
@@ -755,7 +755,7 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
         ${PROJECT_NAME}
         PRIVATE
             $<$<CONFIG:Debug>:
-                -fsanitize=address,undefined
+            -fsanitize=address,undefined
             >
     )
 endif()
