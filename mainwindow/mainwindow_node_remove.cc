@@ -112,6 +112,9 @@ void MainWindow::DeleteBranch(Node* node)
 
             const auto message { JsonGen::BranchDelete(sc_->section, node->id, node->parent->id, node->version) };
             WebSocket::Instance()->SendMessage(WsKey::kBranchDelete, message);
+
+            this->raise();
+            this->activateWindow();
         }
     });
 
