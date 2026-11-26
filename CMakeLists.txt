@@ -759,3 +759,9 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
             >
     )
 endif()
+
+option(YTX_BUILD_TESTS "Build YTX tests" OFF)
+if(YTX_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()

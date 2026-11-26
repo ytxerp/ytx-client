@@ -11,7 +11,7 @@ SOURCE_EXTS = [".cc", ".cpp"]
 HEADER_EXTS = [".h", ".hpp"]
 UI_EXTS = [".ui"]
 # Directories to exclude from scanning
-EXCLUDE_DIRS = {"external", "build", ".git"}
+EXCLUDE_DIRS = {"external", "build", ".git", "test"}
 
 
 def collect_files():
