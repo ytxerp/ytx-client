@@ -89,8 +89,18 @@ private slots:
     void appendEntry()
     {
         QVERIFY(EnsureActive(w_));
-        QVERIFY(DoAppendEntry());
-        QTest::qWait(500);
+
+        auto* widget = CurrentTableWidget(w_);
+        QVERIFY(widget);
+        const int rows_before = widget->Model()->rowCount();
+
+        constexpr int kCount = 20;
+        for (int i = 0; i != kCount; ++i) {
+            QVERIFY2(DoAppendEntry(), qPrintable(QStringLiteral("第 %1 次追加失败").arg(i)));
+            QTest::qWait(200);
+        }
+
+        QCOMPARE(widget->Model()->rowCount(), rows_before + kCount);
     }
 
     void cleanupTestCase()
