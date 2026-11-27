@@ -109,7 +109,7 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_table_or { IsTableWidgetO(widget) || IsTableWidgetR(widget) };
 
     const bool is_order_section { IsOrderSection(section) };
-    const bool is_double_entry { IsDoubleEntry(section) };
+    const bool is_double_entry { IsDoubleEntry(section) && is_table };
     const bool is_finance_section { section == Section::kFinance };
     const bool is_inventory_section { section == Section::kInventory };
 
