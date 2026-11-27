@@ -1,5 +1,6 @@
 #include <QtWidgets/qcombobox.h>
 
+#include <QLineEdit>
 #include <QResource>
 #include <QTest>
 
@@ -158,6 +159,89 @@ private:
         return true;
     }
 
+    bool DoUpdateDesc()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        const int col = node::DescriptionColumn(Section::kFinance);
+        if (col < 0)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        QList<QUuid> candidates;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : parent->children) {
+                if (child->IsValid() && child->name.startsWith("test", Qt::CaseInsensitive))
+                    candidates.append(child->id);
+                collect(child);
+            }
+        };
+        collect(root);
+
+        if (candidates.isEmpty())
+            return false;
+
+        const QUuid target_id = candidates.at(RandomInt(0, static_cast<int>(candidates.size()) - 1));
+        const QModelIndex row_idx = model->GetIndex(target_id);
+        if (!row_idx.isValid())
+            return false;
+
+        const QModelIndex desc_idx = model->index(row_idx.row(), col, row_idx.parent());
+        if (!desc_idx.isValid())
+            return false;
+
+        // 选中对应节点，让详情面板同步到该节点
+        tree->setCurrentIndex(row_idx);
+        QTest::qWait(50);
+
+        // 按实际控件对象名替换（如 QLineEdit）
+        const QRect rect = tree->visualRect(desc_idx);
+        if (!rect.isValid() || rect.width() <= 0 || rect.height() <= 0)
+            return false;
+
+        const QPoint pos = rect.center();
+        const QString before_desc = desc_idx.data(Qt::DisplayRole).toString();
+        const QString next_desc = RandomName("desc", 8);
+
+        // 1. 单击选中后双击打开 QLineEdit 代理
+        QTest::mouseClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(50);
+        QTest::mouseDClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+
+        // 2. 等待代理创建并聚焦 QLineEdit
+        QLineEdit* line = nullptr;
+        if (!QTest::qWaitFor(
+                [&] {
+                    line = qobject_cast<QLineEdit*>(QApplication::focusWidget());
+                    return line != nullptr && line->isVisible();
+                },
+                1000)) {
+            return false;
+        }
+
+        // 3. 替换内容并回车提交（触发后续防抖计时）
+        line->selectAll();
+        QTest::keyClick(line, Qt::Key_Backspace);
+        QTest::keyClicks(line, next_desc);
+        QTest::keyClick(line, Qt::Key_Return);
+
+        QTest::qWait(50);
+        qInfo() << "[desc]" << row_idx.data().toString() << before_desc << "->" << next_desc;
+        return true;
+    }
+
     bool DoDelete()
     {
         if (!EnsureActive())
@@ -210,6 +294,65 @@ private:
 
         QMetaObject::invokeMethod(w_, "on_actionDelete_triggered", Qt::DirectConnection);
         return true; // 等待时间交给 monkey() 的随机间隔
+    }
+
+    bool DoOpenNodeTab()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        QList<QUuid> candidates;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : parent->children) {
+                if (child->IsValid() && child->kind == NodeKind::kLeaf && child->name.startsWith("test", Qt::CaseInsensitive)) {
+                    candidates.append(child->id);
+                }
+                collect(child);
+            }
+        };
+        collect(root);
+
+        if (candidates.isEmpty())
+            return false;
+
+        const QUuid target_id = candidates.at(RandomInt(0, static_cast<int>(candidates.size()) - 1));
+        const QModelIndex row_idx = model->GetIndex(target_id);
+        if (!row_idx.isValid())
+            return false;
+
+        const QModelIndex name_idx = model->index(row_idx.row(), 0, row_idx.parent());
+        if (!name_idx.isValid())
+            return false;
+
+        tree->scrollTo(name_idx);
+        tree->setCurrentIndex(name_idx);
+
+        const QRect rect = tree->visualRect(name_idx);
+        if (!rect.isValid() || rect.width() <= 0 || rect.height() <= 0)
+            return false;
+
+        const QPoint pos = rect.center();
+        const QString node_name = name_idx.data(Qt::DisplayRole).toString();
+
+        QTest::mouseClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(50);
+        QTest::mouseDClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(100);
+
+        qInfo() << "[open_tab]" << node_name;
+        return true;
     }
 
 private slots:
@@ -265,6 +408,8 @@ private slots:
             { "rename", [this] { return DoRename(); } },
             { "delete", [this] { return DoDelete(); } },
             { "direction_rule", [this] { return DoChangeDirectionRule(); } },
+            { "desc", [this] { return DoUpdateDesc(); } },
+            { "open_tab", [this] { return DoOpenNodeTab(); } },
         };
 
         const int steps = qEnvironmentVariable("YTX_STEPS", "50").toInt();
@@ -339,7 +484,6 @@ private slots:
 
     void manual()
     {
-        w_->resize(1400, 900);
         w_->show();
         w_->raise();
         w_->activateWindow();
