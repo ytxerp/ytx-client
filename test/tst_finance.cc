@@ -521,6 +521,93 @@ private:
         return true;
     }
 
+    bool DoMoveNode()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        QList<Node*> leaves;
+        QList<Node*> branches;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : std::as_const(parent->children)) {
+                if (child->IsValid() && child->name.startsWith("test", Qt::CaseInsensitive)) {
+                    if (child->kind == NodeKind::kLeaf)
+                        leaves.append(child);
+                    else if (child->kind == NodeKind::kBranch)
+                        branches.append(child);
+                }
+                collect(child);
+            }
+        };
+        collect(root);
+
+        if (leaves.isEmpty() || branches.isEmpty())
+            return false;
+
+        Node* leaf = leaves.at(RandomInt(0, static_cast<int>(leaves.size()) - 1));
+        Node* target_branch = nullptr;
+
+        // 挑一个不是当前父节点的 branch，减少无效拖拽
+        QList<Node*> valid_branches;
+        for (auto* b : std::as_const(branches)) {
+            if (b != leaf->parent)
+                valid_branches.append(b);
+        }
+        if (valid_branches.isEmpty())
+            return false;
+
+        target_branch = valid_branches.at(RandomInt(0, static_cast<int>(valid_branches.size()) - 1));
+
+        const QModelIndex src_row = model->GetIndex(leaf->id);
+        const QModelIndex dst_row = model->GetIndex(target_branch->id);
+        if (!src_row.isValid() || !dst_row.isValid())
+            return false;
+
+        const QModelIndex src_idx = model->index(src_row.row(), 0, src_row.parent());
+        const QModelIndex dst_idx = model->index(dst_row.row(), 0, dst_row.parent());
+        if (!src_idx.isValid() || !dst_idx.isValid())
+            return false;
+
+        tree->expand(dst_idx);
+        tree->scrollTo(dst_idx, QAbstractItemView::PositionAtCenter);
+        tree->setCurrentIndex(src_idx);
+        QApplication::processEvents();
+
+        const QUuid old_parent_id = leaf->parent ? leaf->parent->id : QUuid();
+
+        // ===== 新增:直接走 model 的拖放逻辑 =====
+        QMimeData* mime = model->mimeData({ src_idx });
+        if (!mime) {
+            qWarning() << "[move] mimeData returned null";
+            return false;
+        }
+
+        const bool can_drop = model->canDropMimeData(mime, Qt::MoveAction, -1, 0, dst_idx);
+
+        if (can_drop)
+            model->dropMimeData(mime, Qt::MoveAction, -1, 0, dst_idx);
+        delete mime;
+
+        QApplication::processEvents();
+        // ===== 新增结束 =====
+
+        const QUuid new_parent_id = leaf->parent ? leaf->parent->id : QUuid();
+        qInfo() << "[move]" << leaf->name << "-> branch" << target_branch->name << "parent_changed:" << (old_parent_id != new_parent_id);
+        return (old_parent_id != new_parent_id);
+    }
+
 private slots:
     void initTestCase()
     {
@@ -578,6 +665,8 @@ private slots:
             { "open_tab", [this] { return DoOpenNodeTab(); } },
             { "color", [this] { return DoChangeColor(); } },
             { "clear_color", [this] { return DoClearColor(); } },
+            { "move node", [this] { return DoMoveNode(); } },
+
         };
 
         const int steps = qEnvironmentVariable("YTX_STEPS", "50").toInt();

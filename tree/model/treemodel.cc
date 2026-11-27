@@ -511,6 +511,8 @@ QMimeData* TreeModel::mimeData(const QModelIndexList& indexes) const
 
 bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    qDebug() << Q_FUNC_INFO;
+
     if (!canDropMimeData(data, action, row, column, parent))
         return false;
 
