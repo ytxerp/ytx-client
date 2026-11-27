@@ -1,3 +1,4 @@
+#include <QtWidgets/qcolordialog.h>
 #include <QtWidgets/qcombobox.h>
 
 #include <QLineEdit>
@@ -242,6 +243,87 @@ private:
         return true;
     }
 
+    bool DoChangeColor()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        const int col = node::ColorColumn(Section::kFinance);
+        if (col < 0)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        QList<QUuid> candidates;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : std::as_const(parent->children)) {
+                if (child->IsValid() && child->name.startsWith("test", Qt::CaseInsensitive))
+                    candidates.append(child->id);
+                collect(child);
+            }
+        };
+        collect(root);
+
+        if (candidates.isEmpty())
+            return false;
+
+        const QUuid target_id = candidates.at(RandomInt(0, static_cast<int>(candidates.size()) - 1));
+        const QModelIndex row_idx = model->GetIndex(target_id);
+        if (!row_idx.isValid())
+            return false;
+
+        const QModelIndex color_idx = model->index(row_idx.row(), col, row_idx.parent());
+        if (!color_idx.isValid())
+            return false;
+
+        tree->scrollTo(color_idx);
+        tree->setCurrentIndex(color_idx);
+
+        const QRect rect = tree->visualRect(color_idx);
+        if (!rect.isValid() || rect.width() <= 0 || rect.height() <= 0)
+            return false;
+
+        const QPoint pos = rect.center();
+        const QString before_color = color_idx.data().toString();
+        const QColor target_color(RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255), RandomInt(128, 255));
+        const bool accept_dialog = (RandomInt(0, 99) < 70);
+        QPointer<TestFinance> guard(this);
+
+        // 双击前提前排好动作：等原生 QColorDialog 弹出后随机决定确认或取消
+        QTimer::singleShot(50, this, [guard, target_color, accept_dialog] {
+            if (!guard)
+                return;
+
+            if (auto* dlg = qobject_cast<QColorDialog*>(QApplication::activeModalWidget())) {
+                if (accept_dialog) {
+                    dlg->setCurrentColor(target_color);
+                    dlg->accept();
+                } else {
+                    dlg->reject();
+                }
+            }
+        });
+
+        QTest::mouseClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(50);
+        QTest::mouseDClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(100);
+
+        const QString after_color = model->index(row_idx.row(), col, row_idx.parent()).data().toString();
+        qInfo() << "[color]" << row_idx.data().toString() << before_color << "->" << after_color << (accept_dialog ? "(accepted)" : "(rejected)");
+        return true;
+    }
+
     bool DoDelete()
     {
         if (!EnsureActive())
@@ -294,6 +376,76 @@ private:
 
         QMetaObject::invokeMethod(w_, "on_actionDelete_triggered", Qt::DirectConnection);
         return true; // 等待时间交给 monkey() 的随机间隔
+    }
+
+    bool DoClearColor()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        const int col = node::ColorColumn(Section::kFinance);
+        if (col < 0)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        // 优先挑已有颜色的 test* 节点，便于验证清空效果；无则退化为所有 test* 节点
+        QList<Node*> colored_candidates;
+        QList<Node*> all_candidates;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : std::as_const(parent->children)) {
+                if (child->IsValid() && child->name.startsWith("test", Qt::CaseInsensitive)) {
+                    all_candidates.append(child);
+                    if (!child->color.isEmpty())
+                        colored_candidates.append(child);
+                }
+                collect(child);
+            }
+        };
+        collect(root);
+
+        const auto& pool = !colored_candidates.isEmpty() ? colored_candidates : all_candidates;
+        if (pool.isEmpty())
+            return false;
+
+        Node* target = pool.at(RandomInt(0, static_cast<int>(pool.size()) - 1));
+        const QModelIndex row_idx = model->GetIndex(target->id);
+        if (!row_idx.isValid())
+            return false;
+
+        const QModelIndex color_idx = model->index(row_idx.row(), col, row_idx.parent());
+        if (!color_idx.isValid())
+            return false;
+
+        tree->scrollTo(color_idx);
+        tree->setCurrentIndex(color_idx);
+        tree->setFocus(Qt::OtherFocusReason);
+        QTest::qWait(50);
+
+        const QString before_color = target->color;
+        const QString node_name = target->name;
+
+        if (w_) {
+            if (auto* act = w_->findChild<QAction*>("actionClearColor")) {
+                act->trigger();
+            } else {
+                QMetaObject::invokeMethod(w_, "on_actionClearColor_triggered", Qt::DirectConnection);
+            }
+        }
+        QTest::qWait(100);
+
+        qInfo() << "[clear_color]" << node_name << before_color << "->" << target->color;
+        return true;
     }
 
     bool DoOpenNodeTab()
@@ -351,7 +503,21 @@ private:
         QTest::mouseDClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
         QTest::qWait(100);
 
-        qInfo() << "[open_tab]" << node_name;
+        if (w_) {
+            if (auto* tab_widget = w_->findChild<QTabWidget*>("tabWidgetF")) {
+                if (tab_widget->count() > 0) {
+                    tab_widget->setCurrentIndex(0);
+                    if (auto* page = tab_widget->widget(0))
+                        tab_widget->setCurrentWidget(page);
+                }
+            }
+        }
+        EnsureActive();
+        tree->setFocus(Qt::OtherFocusReason);
+        tree->setCurrentIndex(name_idx);
+        QTest::qWait(50);
+
+        qInfo() << "[open_tab]" << node_name << "tree_focus:" << tree->hasFocus();
         return true;
     }
 
@@ -410,6 +576,8 @@ private slots:
             { "direction_rule", [this] { return DoChangeDirectionRule(); } },
             { "desc", [this] { return DoUpdateDesc(); } },
             { "open_tab", [this] { return DoOpenNodeTab(); } },
+            { "color", [this] { return DoChangeColor(); } },
+            { "clear_color", [this] { return DoClearColor(); } },
         };
 
         const int steps = qEnvironmentVariable("YTX_STEPS", "50").toInt();
