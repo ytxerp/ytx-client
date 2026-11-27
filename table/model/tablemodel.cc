@@ -82,8 +82,12 @@ void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, i
     // top_left and bottom_right must share the same parent, behavior is undefined otherwise
     Q_ASSERT(!parent.isValid() || parent.model() == this);
 
-    if (start_row < 0 || end_row >= rowCount(parent) || start_row > end_row) {
-        qDebug() << "EmitDataChanged: invalid row range" << start_row << end_row << "rowCount" << rowCount(parent);
+    const int rows { rowCount(parent) };
+    if (rows <= 0)
+        return;
+
+    if (start_row < 0 || end_row >= rows || start_row > end_row) {
+        qDebug() << "EmitDataChanged: invalid row range" << start_row << end_row << "rowCount" << rows;
         return;
     }
 
