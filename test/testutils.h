@@ -36,7 +36,10 @@ void HandleDeleteBranch();
 QTreeView* VisibleTree(QWidget* root);
 
 void FillLine(QDialog* dlg, const char* object_name, const QString& text);
-
 void HandleInsertNodeFIT(const InsertArg& arg);
+bool Login();
+bool EnsureActive(QWidget* w);
+
+QTreeView* CurrentTree(QWidget* w);
 
 }

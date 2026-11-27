@@ -12,7 +12,7 @@
 
 using namespace test_utils;
 
-class TestFinance : public QObject {
+class TestDoubleNode : public QObject {
     Q_OBJECT
 
 private:
@@ -20,42 +20,12 @@ private:
     QString resource_file_ {};
 
 private:
-    QTreeView* CurrentTree()
-    {
-        EnsureActive();
-        auto* tabs = w_->findChild<QTabWidget*>("tabWidgetF");
-        return tabs ? tabs->currentWidget()->findChild<QTreeView*>() : nullptr;
-    }
-
-    bool EnsureActive()
-    {
-        for (int i = 0; i != 3; ++i) {
-            w_->raise();
-            w_->activateWindow();
-            if (QTest::qWaitFor([&] { return QApplication::activeWindow() == w_; }, 1000))
-                return true;
-        }
-        qWarning() << "主窗口未能激活, active:" << QApplication::activeWindow();
-        return false;
-    }
-
-    bool Login()
-    {
-        QPushButton* btn = nullptr;
-        if (!QTest::qWaitFor([&] { return (btn = FindLoginButton()) != nullptr; }, 5000))
-            return false;
-        if (!btn->isEnabled())
-            return false;
-        QTest::mouseClick(btn, Qt::LeftButton);
-        return true;
-    }
-
     bool DoInsert()
     {
-        EnsureActive();
+        EnsureActive(w_);
 
         auto* act = w_->findChild<QAction*>("actionInsertNode");
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!act || !act->isEnabled() || !tree)
             return false;
 
@@ -69,10 +39,10 @@ private:
 
     bool DoRename()
     {
-        EnsureActive();
+        EnsureActive(w_);
 
         auto* act = w_->findChild<QAction*>("actionRename");
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!act || !tree)
             return false;
 
@@ -98,10 +68,10 @@ private:
 
     bool DoChangeDirectionRule()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -162,10 +132,10 @@ private:
 
     bool DoUpdateDesc()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -245,10 +215,10 @@ private:
 
     bool DoChangeColor()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -297,7 +267,7 @@ private:
         const QString before_color = color_idx.data().toString();
         const QColor target_color(RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255), RandomInt(128, 255));
         const bool accept_dialog = (RandomInt(0, 99) < 70);
-        QPointer<TestFinance> guard(this);
+        QPointer<TestDoubleNode> guard(this);
 
         // 双击前提前排好动作：等原生 QColorDialog 弹出后随机决定确认或取消
         QTimer::singleShot(50, this, [guard, target_color, accept_dialog] {
@@ -326,10 +296,10 @@ private:
 
     bool DoDelete()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -380,10 +350,10 @@ private:
 
     bool DoClearColor()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -450,10 +420,10 @@ private:
 
     bool DoOpenNodeTab()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -512,7 +482,7 @@ private:
                 }
             }
         }
-        EnsureActive();
+        EnsureActive(w_);
         tree->setFocus(Qt::OtherFocusReason);
         tree->setCurrentIndex(name_idx);
         QTest::qWait(50);
@@ -523,10 +493,10 @@ private:
 
     bool DoMoveNode()
     {
-        if (!EnsureActive())
+        if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree();
+        auto* tree = CurrentTree(w_);
         if (!tree)
             return false;
 
@@ -636,7 +606,7 @@ private slots:
         // 树同步完成（finance 树有数据）
         QVERIFY(QTest::qWaitFor(
             [this] {
-                auto* tree = CurrentTree();
+                auto* tree = CurrentTree(w_);
                 return tree && tree->model() && tree->model()->rowCount() > 0;
             },
             15000));
@@ -750,5 +720,5 @@ private slots:
     }
 };
 
-QTEST_MAIN(TestFinance)
-#include "tst_finance.moc"
+QTEST_MAIN(TestDoubleNode)
+#include "tst_double_node.moc"

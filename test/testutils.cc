@@ -10,6 +10,7 @@
 #include <QElapsedTimer>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QPointer>
 #include <QPushButton>
 #include <QRandomGenerator>
 #include <QResource>
@@ -226,6 +227,44 @@ QPushButton* FindLoginButton()
             return b;
     }
     return nullptr;
+}
+
+bool Login()
+{
+    QPushButton* btn = nullptr;
+    if (!QTest::qWaitFor([&] { return (btn = FindLoginButton()) != nullptr; }, 5000))
+        return false;
+    if (!btn->isEnabled())
+        return false;
+    QTest::mouseClick(btn, Qt::LeftButton);
+    return true;
+}
+
+bool EnsureActive(QWidget* w)
+{
+    if (!w) {
+        qWarning() << "目标窗口为空";
+        return false;
+    }
+
+    for (int i = 0; i != 3; ++i) {
+        w->raise();
+        w->activateWindow();
+        if (QTest::qWaitFor([&] { return QApplication::activeWindow() == w; }, 1000))
+            return true;
+    }
+    qWarning() << "主窗口未能激活, active:" << QApplication::activeWindow();
+    return false;
+}
+
+QTreeView* CurrentTree(QWidget* w)
+{
+    if (!EnsureActive(w))
+        return nullptr;
+
+    auto* tabs = w->findChild<QTabWidget*>("tabWidgetF");
+    auto* current = tabs ? tabs->currentWidget() : nullptr;
+    return current ? current->findChild<QTreeView*>() : nullptr;
 }
 
 }
