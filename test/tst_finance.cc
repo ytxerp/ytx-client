@@ -1,9 +1,12 @@
+#include <QtWidgets/qcombobox.h>
+
 #include <QResource>
 #include <QTest>
 
 #include "mainwindow/mainwindow.h"
 #include "testutils.h"
 #include "utils/mainutils.h"
+#include "utils/nodeutils.h"
 
 using namespace test_utils;
 
@@ -88,6 +91,70 @@ private:
 
         HandleEditNodeName(new_name);
         act->trigger();
+        return true;
+    }
+
+    bool DoChangeDirectionRule()
+    {
+        if (!EnsureActive())
+            return false;
+
+        auto* tree = CurrentTree();
+        if (!tree)
+            return false;
+
+        auto* model = qobject_cast<TreeModel*>(tree->model());
+        if (!model)
+            return false;
+
+        const int col = node::DirectionRuleColumn(Section::kFinance);
+        if (col < 0)
+            return false;
+
+        auto* root = model->GetNodeByIndex(QModelIndex());
+        if (!root)
+            return false;
+
+        QList<QUuid> candidates;
+        std::function<void(Node*)> collect = [&](Node* parent) {
+            for (auto* child : std::as_const(parent->children)) {
+                if (child->IsValid() && child->name.startsWith("test", Qt::CaseInsensitive))
+                    candidates.append(child->id);
+                collect(child);
+            }
+        };
+        collect(root);
+
+        if (candidates.isEmpty())
+            return false;
+
+        const QUuid target_id = candidates.at(RandomInt(0, static_cast<int>(candidates.size()) - 1));
+        const QModelIndex row_idx = model->GetIndex(target_id);
+        if (!row_idx.isValid())
+            return false;
+
+        const QModelIndex target_idx = model->index(row_idx.row(), col, row_idx.parent());
+        if (!target_idx.isValid())
+            return false;
+
+        // 选中目标列索引
+        tree->setCurrentIndex(target_idx);
+
+        const QRect rect = tree->visualRect(target_idx);
+        if (!rect.isValid() || rect.width() <= 0 || rect.height() <= 0)
+            return false;
+
+        const QPoint pos = rect.center();
+        const QString before_val = target_idx.data(Qt::DisplayRole).toString();
+
+        // 点击并双击该列单元格
+        QTest::mouseClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(50);
+        QTest::mouseDClick(tree->viewport(), Qt::LeftButton, Qt::NoModifier, pos);
+        QTest::qWait(100);
+
+        const QString after_val = model->index(row_idx.row(), col, row_idx.parent()).data(Qt::DisplayRole).toString();
+        qInfo() << "[direction_rule]" << row_idx.data().toString() << before_val << "->" << after_val;
         return true;
     }
 
@@ -197,6 +264,7 @@ private slots:
             { "insert", [this] { return DoInsert(); } },
             { "rename", [this] { return DoRename(); } },
             { "delete", [this] { return DoDelete(); } },
+            { "direction_rule", [this] { return DoChangeDirectionRule(); } },
         };
 
         const int steps = qEnvironmentVariable("YTX_STEPS", "50").toInt();
@@ -221,7 +289,31 @@ private slots:
         }
     }
 
-    void deleteTestNodes()
+    void testInsertNodes()
+    {
+        for (int i = 0; i != 20; ++i) {
+            qInfo() << "[T] insert round" << (i + 1) << "/ 20";
+
+            if (!DoInsert()) {
+                qWarning() << "[T] insert skipped or unavailable at round" << (i + 1);
+                break;
+            }
+
+            // 等待服务端响应、树刷新以及可能的弹窗处理
+            QTest::qWait(1000);
+            QVERIFY(w_->isVisible());
+
+            // 兜底：清理残留模态窗口
+            while (auto* m = QApplication::activeModalWidget()) {
+                qWarning() << "[T] 残留模态窗口:" << m->metaObject()->className();
+                m->close();
+            }
+        }
+
+        QTest::qWait(500); // 让最后一次响应回来
+    }
+
+    void testdeleteNodes()
     {
         for (int i = 0; i != 20; ++i) {
             qInfo() << "[T] delete round" << (i + 1) << "/ 20";
