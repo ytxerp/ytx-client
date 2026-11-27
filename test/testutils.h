@@ -7,6 +7,8 @@
 #include <QRandomGenerator>
 #include <QString>
 
+#include "table/widget/tablewidget.h"
+
 struct InsertArg {
     QString name {};
     QString code {};
@@ -41,5 +43,6 @@ bool Login();
 bool EnsureActive(QWidget* w);
 
 QTreeView* CurrentTree(QWidget* w);
+TableWidget* CurrentTableWidget(QWidget* w);
 
 }
