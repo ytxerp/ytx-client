@@ -184,6 +184,7 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
+    tree_synced = false;
 
     utils::DeleteWidgets(widget_hash_);
 
