@@ -23,11 +23,9 @@ namespace test_utils {
 InsertArg RandomInsertArg()
 {
     return {
-        .name = RandomName("test"),
-        .code = RandomName("c", 6),
-        .description = RandomName("d", 10),
+        .name = RandomName("test_"),
         .kind = RandomInt(0, 1),
-        .unit = RandomInt(0, 10),
+        .unit = RandomInt(0, 3),
         .direction_rule = RandomInt(0, 1) == 1,
     };
 }
@@ -44,8 +42,6 @@ QString RandomName(const QString& prefix, int length)
 int RandomInt(int min, int max) { return QRandomGenerator::global()->bounded(min, max + 1); }
 
 QString RandomText(const QString& prefix, int length = 6) { return RandomName(prefix, length); }
-
-bool HasNode(QAbstractItemModel* model, const QString& name) { }
 
 void HandleEditNodeName(const QString& new_name)
 {
@@ -129,14 +125,6 @@ void HandleDeleteBranch()
         }
     });
     timer->start();
-}
-
-QTreeView* VisibleTree(QWidget* root)
-{
-    for (auto* v : root->findChildren<QTreeView*>())
-        if (v->isVisible() && v->model())
-            return v;
-    return nullptr;
 }
 
 void FillLine(QDialog* dlg, const char* object_name, const QString& text)
@@ -255,20 +243,6 @@ bool EnsureActive(QWidget* w)
     }
     qWarning() << "主窗口未能激活, active:" << QApplication::activeWindow();
     return false;
-}
-
-QTreeView* CurrentTree(QWidget* w)
-{
-    if (!w || !EnsureActive(w))
-        return nullptr;
-
-    auto* tabs = w->findChild<QTabWidget*>("tabWidgetF");
-    if (!tabs || tabs->count() <= 0)
-        return nullptr;
-
-    // 树固定在第 0 页，不随当前 tab 变化
-    auto* page = tabs->widget(0);
-    return page ? page->findChild<QTreeView*>() : nullptr;
 }
 
 TableWidget* CurrentTableWidget(QWidget* w)

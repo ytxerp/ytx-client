@@ -24,16 +24,9 @@ private:
     {
         EnsureActive(w_);
 
-        auto* act = w_->findChild<QAction*>("actionInsertNode");
-        auto* tree = CurrentTree(w_);
-        if (!act || !act->isEnabled() || !tree)
-            return false;
-
         const InsertArg arg { RandomInsertArg() };
-        qInfo() << "[insert]" << arg.name << "kind" << arg.kind << "rule" << arg.direction_rule << "unit" << arg.unit;
-
         HandleInsertNodeFIT(arg);
-        act->trigger();
+        w_->on_actionInsertNode_triggered();
         return true;
     }
 
@@ -42,7 +35,7 @@ private:
         EnsureActive(w_);
 
         auto* act = w_->findChild<QAction*>("actionRename");
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!act || !tree)
             return false;
 
@@ -71,11 +64,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -135,11 +128,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -218,11 +211,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -299,11 +292,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model()); // 不用 static_cast，代理模型时返回 nullptr
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -353,11 +346,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -423,11 +416,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -496,11 +489,11 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
+        auto tree = w_->sc_->tree_view;
         if (!tree)
             return false;
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
+        auto model = w_->sc_->tree_model;
         if (!model)
             return false;
 
@@ -596,20 +589,8 @@ private slots:
         w_->show();
         QVERIFY(QTest::qWaitForWindowExposed(w_));
 
-        QTest::qWait(1000);
-
         QVERIFY2(Login(), "登录框未出现或登录按钮不可用");
-
-        // 登录框关闭
-        QVERIFY(QTest::qWaitFor([] { return FindLoginButton() == nullptr; }, 10000));
-
-        // 树同步完成（finance 树有数据）
-        QVERIFY(QTest::qWaitFor(
-            [this] {
-                auto* tree = CurrentTree(w_);
-                return tree && tree->model() && tree->model()->rowCount() > 0;
-            },
-            15000));
+        QVERIFY(QTest::qWaitFor([this] { return w_->tree_synced; }, 15000));
     }
 
     void cleanupTestCase()
@@ -623,7 +604,6 @@ private slots:
 
     void monkey()
     {
-        QTRY_VERIFY_WITH_TIMEOUT(FindLoginButton() == nullptr, 10000);
         QTRY_VERIFY_WITH_TIMEOUT(w_->findChild<QAction*>("actionInsertNode")->isEnabled(), 15000);
 
         const std::vector<std::pair<const char*, std::function<bool()>>> actions {
@@ -648,12 +628,11 @@ private slots:
             const int delay = RandomInt(min_ms, max_ms);
             qInfo() << "step" << i << name << "next delay" << delay;
 
-            fn(); // 返回 false 表示这一步无事可做，属于正常情况
+            fn();
 
             QTest::qWait(delay);
             QVERIFY(w_->isVisible());
 
-            // 兜底：关掉残留的模态窗口，并提示出来
             while (auto* m = QApplication::activeModalWidget()) {
                 qWarning() << "残留模态窗口:" << m->metaObject()->className();
                 m->close();

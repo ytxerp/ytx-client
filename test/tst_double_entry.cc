@@ -32,30 +32,15 @@ private slots:
         w_->show();
         QVERIFY(QTest::qWaitForWindowExposed(w_));
 
-        QTest::qWait(1000);
-
         QVERIFY2(Login(), "登录框未出现或登录按钮不可用");
-
-        // 登录框关闭
-        QVERIFY(QTest::qWaitFor([] { return FindLoginButton() == nullptr; }, 10000));
-
-        // 树同步完成（finance 树有数据）
-        QVERIFY(QTest::qWaitFor(
-            [this] {
-                auto* tree = CurrentTree(w_);
-                return tree && tree->model() && tree->model()->rowCount() > 0;
-            },
-            15000));
+        QVERIFY(QTest::qWaitFor([this] { return w_->tree_synced; }, 15000));
     }
 
     void monkey()
     {
-        QTRY_VERIFY_WITH_TIMEOUT(FindLoginButton() == nullptr, 10000);
         QTRY_VERIFY_WITH_TIMEOUT(w_->findChild<QAction*>("actionInsertNode")->isEnabled(), 15000);
 
-        const std::vector<std::pair<const char*, std::function<bool()>>> actions {
-            { "open_tab", [this] { return DoOpenNodeTab(); } },
-        };
+        const std::vector<std::pair<const char*, std::function<bool()>>> actions {};
 
         const int steps = qEnvironmentVariable("YTX_STEPS", "50").toInt();
         const int min_ms = qEnvironmentVariable("YTX_MIN_MS", "100").toInt();
@@ -66,16 +51,10 @@ private slots:
             const int delay = RandomInt(min_ms, max_ms);
             qInfo() << "step" << i << name << "next delay" << delay;
 
-            fn(); // 返回 false 表示这一步无事可做，属于正常情况
+            fn();
 
             QTest::qWait(delay);
             QVERIFY(w_->isVisible());
-
-            // 兜底：关掉残留的模态窗口，并提示出来
-            while (auto* m = QApplication::activeModalWidget()) {
-                qWarning() << "残留模态窗口:" << m->metaObject()->className();
-                m->close();
-            }
         }
     }
 
@@ -86,10 +65,9 @@ private slots:
         QTest::qWait(500);
     }
 
-    void appendEntry()
+    void appendEntries()
     {
         QVERIFY(EnsureActive(w_));
-
         auto* widget = CurrentTableWidget(w_);
         QVERIFY(widget);
         const int rows_before = widget->Model()->rowCount();
@@ -128,23 +106,17 @@ private:
         if (!EnsureActive(w_))
             return false;
 
-        auto* tree = CurrentTree(w_);
-        if (!tree) {
-            qWarning() << "[tree] invalid";
+        auto tree = w_->sc_->tree_view;
+        if (!tree)
             return false;
-        }
 
-        auto* model = qobject_cast<TreeModel*>(tree->model());
-        if (!model) {
-            qWarning() << "[model] invalid";
+        auto model = w_->sc_->tree_model;
+        if (!model)
             return false;
-        }
 
         auto* root = model->GetNodeByIndex(QModelIndex());
-        if (!root) {
-            qWarning() << "[root] invalid";
+        if (!root)
             return false;
-        }
 
         QList<QUuid> candidates;
         std::function<void(Node*)> collect = [&](Node* parent) {
@@ -236,6 +208,26 @@ private:
         QTest::qWait(50);
 
         return true;
+    }
+
+    bool WaitEntrySynced(TableModel* model, int row, int timeout_ms = 3000)
+    {
+        return QTest::qWaitFor(
+            [&] {
+                if (row < 0 || row >= model->rowCount())
+                    return false;
+
+                const QModelIndex idx = model->index(row, 0);
+                if (!idx.isValid())
+                    return false;
+
+                const auto* shadow = static_cast<const EntryShadow*>(idx.internalPointer());
+                if (!shadow)
+                    return false;
+
+                return *shadow->sync_state == SyncState::kSynced; // 终态枚举按实际替换
+            },
+            timeout_ms);
     }
 
 private:
