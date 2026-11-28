@@ -58,6 +58,9 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+    friend class TestDoubleNode;
+    friend class TestDoubleEntry;
+
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override;
@@ -438,6 +441,7 @@ private:
 
     bool quitting_ { false };
     bool cleaned_up_ { false };
+    bool tree_synced { false };
 
     QSharedPointer<QSettings> app_settings_ {};
     QSharedPointer<QSettings> section_settings_ {};

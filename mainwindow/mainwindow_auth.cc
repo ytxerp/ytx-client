@@ -160,4 +160,5 @@ void MainWindow::RFinishTreeSync()
     sc_i_.tree_model->SyncFilterModels();
 
     tabWidget_currentChanged();
+    tree_synced = true;
 }
