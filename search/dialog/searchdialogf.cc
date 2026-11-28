@@ -3,10 +3,11 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogF::SearchDialogF(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, QWidget* parent)
+SearchDialogF::SearchDialogF(
+    SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QUuid widget_id, const FinanceInfo& finance_info, QWidget* parent)
     : SearchDialog(sc, search_node, search_entry, widget_id, parent)
 {
-    cash_kind_ = new IntStringNoneZeroR(info_.cash_kind_map, this);
+    cash_kind_ = new IntStringNoneZeroR(finance_info.cash_kind_map, this);
     roles_ = new FinanceRolesDelegateR(this);
 
     TreeViewDelegate(ui->searchViewNode);

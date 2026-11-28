@@ -34,11 +34,9 @@ struct SectionInfo {
     QMap<int, QString> unit_symbol_map {};
     QMap<bool, QString> rule_map {};
     QMap<int, QString> kind_map {};
-    QMap<int, QString> cash_kind_map {};
     QMap<int, QString> status_map {};
 
     QPointer<UnitModel> unit_model {};
-    QPointer<UnitModel> cash_kind_model {};
 };
 
 struct FinanceInfo {

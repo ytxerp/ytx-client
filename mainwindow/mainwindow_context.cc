@@ -195,55 +195,55 @@ void MainWindow::InitContextFinance()
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), QString());
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), QString());
 
     // Operating Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalesReceipt), QObject::tr("Sales Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxRefund), QObject::tr("Tax Refund"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingReceipt), QObject::tr("Other Operating Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalesReceipt), QObject::tr("Sales Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxRefund), QObject::tr("Tax Refund"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingReceipt), QObject::tr("Other Operating Receipt"));
 
     // Operating Outflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kPurchasePayment), QObject::tr("Purchase Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalaryPayment), QObject::tr("Salary Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxPayment), QObject::tr("Tax Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingPayment), QObject::tr("Other Operating Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kPurchasePayment), QObject::tr("Purchase Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalaryPayment), QObject::tr("Salary Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxPayment), QObject::tr("Tax Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingPayment), QObject::tr("Other Operating Payment"));
 
     // Investing Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentReceipt), QObject::tr("Investment Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentIncomeReceipt), QObject::tr("Investment Income Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetDisposalReceipt), QObject::tr("Asset Disposal Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryDisposalReceipt), QObject::tr("Subsidiary Disposal Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanRepaymentReceipt), QObject::tr("Loan Repayment Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingReceipt), QObject::tr("Other Investing Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentReceipt), QObject::tr("Investment Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentIncomeReceipt), QObject::tr("Investment Income Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetDisposalReceipt), QObject::tr("Asset Disposal Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryDisposalReceipt), QObject::tr("Subsidiary Disposal Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanRepaymentReceipt), QObject::tr("Loan Repayment Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingReceipt), QObject::tr("Other Investing Receipt"));
 
     // Investing Outflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetPurchasePayment), QObject::tr("Asset Purchase Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentPayment), QObject::tr("Investment Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryAcquisitionPayment), QObject::tr("Subsidiary Acquisition Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanPayment), QObject::tr("Loan Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingPayment), QObject::tr("Other Investing Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetPurchasePayment), QObject::tr("Asset Purchase Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentPayment), QObject::tr("Investment Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryAcquisitionPayment), QObject::tr("Subsidiary Acquisition Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanPayment), QObject::tr("Loan Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingPayment), QObject::tr("Other Investing Payment"));
 
     // Financing Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kCapitalContributionReceipt), QObject::tr("Capital Contribution Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kBorrowingReceipt), QObject::tr("Borrowing Receipt"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingReceipt), QObject::tr("Other Financing Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kCapitalContributionReceipt), QObject::tr("Capital Contribution Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kBorrowingReceipt), QObject::tr("Borrowing Receipt"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingReceipt), QObject::tr("Other Financing Receipt"));
 
     // Financing Outflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDebtRepaymentPayment), QObject::tr("Debt Repayment Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDividendPayment), QObject::tr("Dividend Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInterestPayment), QObject::tr("Interest Payment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingPayment), QObject::tr("Other Financing Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDebtRepaymentPayment), QObject::tr("Debt Repayment Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDividendPayment), QObject::tr("Dividend Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInterestPayment), QObject::tr("Interest Payment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingPayment), QObject::tr("Other Financing Payment"));
 
     // Special
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kExchangeRateEffect), QObject::tr("Exchange Rate Effect"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), QObject::tr("Adjustment"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), QObject::tr("Unclassified"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kExchangeRateEffect), QObject::tr("Exchange Rate Effect"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), QObject::tr("Adjustment"));
+    finance_info_.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), QObject::tr("Unclassified"));
 
     info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
     info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
 
-    info.cash_kind_model = new UnitModel(this);
-    info.cash_kind_model->Rebuild(info.cash_kind_map);
+    finance_info_.cash_kind_model = new UnitModel(this);
+    finance_info_.cash_kind_model->Rebuild(finance_info_.cash_kind_map);
 
     entry_hub = new EntryHubF(Section::kFinance, this);
     tree_model = new TreeModelF(Section::kFinance, info.node_header, app_config_.separator, this);

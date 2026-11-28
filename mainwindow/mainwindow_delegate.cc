@@ -249,8 +249,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* tag { new TagDelegate(sc_f_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kTag), tag);
 
-    const auto& info { sc_f_.info };
-    auto* cash_kind { new IntString(info.cash_kind_model, info.cash_kind_map, table_view) };
+    auto* cash_kind { new IntString(finance_info_.cash_kind_model, finance_info_.cash_kind_map, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCashKind), cash_kind);
 
     auto* lock_status { new StatusDelegate(
@@ -431,7 +430,7 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
         QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kStatus), status);
 
-    auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
+    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kIssuedTime), issued_time);
 }
 
@@ -461,7 +460,7 @@ void MainWindow::DelegateStatementTertiary(QTableView* table_view, CSectionConfi
         QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kStatus), status);
 
-    auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
+    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kIssuedTime), issued_time);
 
     auto* node_path { new NodePathR(sc_i_.tree_model, table_view) };
@@ -588,7 +587,7 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
     auto* status { new StatusR(std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), status);
 
-    auto* cash_kind { new IntStringNoneZeroR(sc_f_.info.cash_kind_map, table_view) };
+    auto* cash_kind { new IntStringNoneZeroR(finance_info_.cash_kind_map, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kCashKind), cash_kind);
 }
 
@@ -814,13 +813,10 @@ void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsDebit), value);
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsCredit), value);
 
-    auto* cash_kind { new IntStringNoneZeroR(info.cash_kind_map, view) };
+    auto* cash_kind { new IntStringNoneZeroR(finance_info_.cash_kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kCashKind), cash_kind);
 
     auto* node_path { new NodePathR(sc_f_.tree_model, view) };
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kLhsNode), node_path);
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsNode), node_path);
-
-    auto* kind { new IntStringR(info.cash_kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kCashKind), kind);
 }

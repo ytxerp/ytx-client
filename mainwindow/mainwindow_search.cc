@@ -39,7 +39,7 @@ void MainWindow::on_actionSearch_triggered()
     case Section::kFinance:
         node = new search::NodeModelF(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelF(section, info.full_entry_header, sc_->tag_hash, this);
-        dialog = new SearchDialogF(sc_, node, entry, widget_id, nullptr);
+        dialog = new SearchDialogF(sc_, node, entry, widget_id, finance_info_, nullptr);
         break;
     case Section::kInventory:
         node = new search::NodeModelI(section, info.node_header, sc_->tree_model, sc_->tag_hash, this);
